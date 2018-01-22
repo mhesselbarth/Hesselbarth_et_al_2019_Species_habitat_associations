@@ -7,10 +7,14 @@
 ##    maximilian.hesselbarth@uni-goettingen.de   ##
 ###################################################
 
+
+#### Install packages ####
+toc <- "cde286ffbe355d59b6d9ac4639bdb66d7bdda3ec" # remove for publication!
+
+devtools::install_github("mhesselbarth/SHAR", auth_token=toc, quiet=T)
+devtools::install_github("mhesselbarth/UtilityFunctions", auth_token=toc, quiet=T)
+
 #### Load libraries and data ####
-
-devtools::install_github("mhesselbarth/SHAR", auth_token="cde286ffbe355d59b6d9ac4639bdb66d7bdda3ec")
-
 library(SHAR)
 library(NLMR)
 library(UtilityFunctions)

@@ -1,6 +1,12 @@
+#### Example methods ####
 
-devtools::install_github("mhesselbarth/SHAR", auth_token="cde286ffbe355d59b6d9ac4639bdb66d7bdda3ec")
+#### Install packages ####
+toc <- "cde286ffbe355d59b6d9ac4639bdb66d7bdda3ec"
 
+devtools::install_github("mhesselbarth/SHAR", auth_token=toc, quiet=T)
+devtools::install_github("mhesselbarth/UtilityFunctions", auth_token=toc, quiet=T)
+
+#### Import packages and data ####
 library(ggplot2)
 library(NLMR)
 library(UtilityFunctions)
@@ -10,6 +16,8 @@ library(spatstat)
 library(viridis)
 
 figures <- paste0(getwd(), "/Figures")
+
+#### Create example data ####
 
 landscape_observed <- nlm_mpd(ncol=30, nrow=30, resolution=20, roughness=0.3)
 landscape_observed <- Habitat.Classification(landscape_observed)

@@ -1,6 +1,10 @@
-#### Strength Associations #### 
+#### Plot simulation study - Strength Associations #### 
 
-devtools::install_github("mhesselbarth/SHAR", auth_token="cde286ffbe355d59b6d9ac4639bdb66d7bdda3ec")
+#### Install packages ####
+toc <- "cde286ffbe355d59b6d9ac4639bdb66d7bdda3ec"
+
+devtools::install_github("mhesselbarth/SHAR", auth_token=toc, quiet=T)
+devtools::install_github("mhesselbarth/UtilityFunctions", auth_token=toc, quiet=T)
 
 #### Import packages and data ####
 # Packages #
