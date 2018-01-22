@@ -22,9 +22,9 @@ simulation_study_torus_translation <- readRDS(paste0(results, "/simulation_study
 simulation_study_point_process <- readRDS(paste0(results, "/simulation_study_point_process.rds"))
 
 #### Preprocessing data ####
-habitat_randomization_aggregated <- Aggregate.Result.List(data=simulation_study_habitat_randomization, id="Association")
-torus_translation_aggregated <- Aggregate.Result.List(data=simulation_study_torus_translation, id="Association")
-point_process_aggregated <- Aggregate.Result.List(data=simulation_study_point_process, id="Association")
+habitat_randomization_aggregated <- Aggregate.Result.List(result_list=simulation_study_habitat_randomization, id="Association")
+torus_translation_aggregated <- Aggregate.Result.List(result_list=simulation_study_torus_translation, id="Association")
+point_process_aggregated <- Aggregate.Result.List(result_list=simulation_study_point_process, id="Association")
 
 habitat_randomization_aggregated$Method <- "Habitat_randomization"
 torus_translation_aggregated$Method <- "Torus_translation"

@@ -20,7 +20,7 @@ figures <- paste0(getwd(), "/Figures")
 #### Create example data ####
 
 landscape_observed <- nlm_mpd(ncol=30, nrow=30, resolution=20, roughness=0.3)
-landscape_observed <- Habitat.Classification(landscape_observed)
+landscape_observed <- Habitat.Classification(raster=landscape_observed, classes=5)
 
 pattern_observed <- Create.Simulation.Pattern(habitats=landscape_observed, number_points=50, alpha=0.3)
 
@@ -53,8 +53,8 @@ plot_overall_point_process <- gridExtra::grid.arrange(plot_observed, plot_point_
                                                       plot_point_process[[2]], plot_point_process[[3]])
 # Save.Function.ggplot(plot=plot_overall_point_process, file=paste0(figures, "/Fig_1.jpeg"), dpi=1000)
 
-simulated_habitat <- Parallel.Habitat.Randomization(raster=landscape_observed, method="Random.Neighbour",
-                                                    no.maps=3)
+simulated_habitat <- Habitat.Randomization(raster=landscape_observed, method="randomization_algorithm",
+                                                    number_maps=3)
 
 plot_habitat_randomization <- list()
 for(i in 1:length(simulated_habitat)){
@@ -66,8 +66,6 @@ for(i in 1:length(simulated_habitat)){
     theme_classic() + 
     theme(legend.position="none") + 
     labs(title="Randomization data")
-    
-  
 }
 
 plot_overall_habitat_randomization <- gridExtra::grid.arrange(plot_observed, plot_habitat_randomization[[1]], 
