@@ -1,6 +1,18 @@
-#### Strength Associations #### 
+#### Plot simulation study - Strength Associations #### 
 
-devtools::install_github("mhesselbarth/SHAR", auth_token="cde286ffbe355d59b6d9ac4639bdb66d7bdda3ec")
+###################################################
+##    Author: Maximilian Hesselbarth             ##
+##    Department of Ecosystem Modelling          ##
+##    University of Goettingen                   ##
+##    maximilian.hesselbarth@uni-goettingen.de   ##
+###################################################
+
+
+#### Install packages ####
+toc <- "cde286ffbe355d59b6d9ac4639bdb66d7bdda3ec"
+
+devtools::install_github("mhesselbarth/SHAR", auth_token=toc, quiet=T)
+devtools::install_github("mhesselbarth/UtilityFunctions", auth_token=toc, quiet=T)
 
 #### Import packages and data ####
 # Packages #
@@ -18,9 +30,9 @@ simulation_study_torus_translation <- readRDS(paste0(results, "/simulation_study
 simulation_study_point_process <- readRDS(paste0(results, "/simulation_study_point_process.rds"))
 
 #### Preprocessing data ####
-habitat_randomization_aggregated <- Aggregate.Result.List(data=simulation_study_habitat_randomization, id="Association")
-torus_translation_aggregated <- Aggregate.Result.List(data=simulation_study_torus_translation, id="Association")
-point_process_aggregated <- Aggregate.Result.List(data=simulation_study_point_process, id="Association")
+habitat_randomization_aggregated <- Aggregate.Result.List(result_list=simulation_study_habitat_randomization, id="Association")
+torus_translation_aggregated <- Aggregate.Result.List(result_list=simulation_study_torus_translation, id="Association")
+point_process_aggregated <- Aggregate.Result.List(result_list=simulation_study_point_process, id="Association")
 
 habitat_randomization_aggregated$Method <- "Habitat_randomization"
 torus_translation_aggregated$Method <- "Torus_translation"
