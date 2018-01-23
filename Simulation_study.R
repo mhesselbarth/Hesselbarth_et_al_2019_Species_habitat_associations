@@ -10,9 +10,9 @@
 
 #### Install packages ####
 toc <- "cde286ffbe355d59b6d9ac4639bdb66d7bdda3ec" # remove for publication!
-
 devtools::install_github("mhesselbarth/SHAR", auth_token=toc, quiet=T)
 devtools::install_github("mhesselbarth/UtilityFunctions", auth_token=toc, quiet=T)
+rm(toc)
 
 #### Import packages ####
 # Packages #
@@ -46,30 +46,30 @@ simulation_habitat_randomization <- function(number_coloumns, number_rows,
   # Loop over association strength
   for(i in 1: length(alpha_sequence)){
     # Create landscape
-    capture.output(raster_mpd <- NLMR::nlm_mpd(ncol=number_coloumns, nrow=number_rows, 
-                                         resolution=resolution, roughness=roughness))
+    raster_mpd <- NLMR::nlm_mpd(ncol=number_coloumns, nrow=number_rows, 
+                                         resolution=resolution, roughness=roughness, verbose=F)
     # Classifiy landscape into discrete habitats
     simulation_habitats <- SHAR::Habitat.Classification(raster=raster_mpd, classes=5)
     # Create simulation pattern
-    simulation_pattern <- SHAR::Create.Simulation.Pattern(habitats=simulation_habitats, 
+    simulation_pattern <- SHAR::Create.Simulation.Pattern(raster=simulation_habitats, 
                                                     number_points=number_points, alpha=alpha_sequence[i])
 
     # Loop over runse
     for(j in 1:simulation_runs){
       # Random number to create new data in 25% of runs
       r <- runif(n=1)
-      if(r<=1/4){
+      if(r<=1/8){
         # Create new simulation data
-        capture.output(raster_mpd <- NLMR::nlm_mpd(ncol=number_coloumns, nrow=number_rows, 
-                                             resolution=resolution, roughness=roughness))
+        raster_mpd <- NLMR::nlm_mpd(ncol=number_coloumns, nrow=number_rows, 
+                                    resolution=resolution, roughness=roughness, verbose=F)
         simulation_habitats <- SHAR::Habitat.Classification(raster=raster_mpd, classes=5)
-        simulation_pattern <- SHAR::Create.Simulation.Pattern(habitats=simulation_habitats, 
+        simulation_pattern <- SHAR::Create.Simulation.Pattern(raster=simulation_habitats, 
                                                         number_points=number_points, alpha=alpha_sequence[i])      
       }
 
       # Harms et al. (2001) habitat randomization algorithm
-      capture.output(habitat_maps <- SHAR::Habitat.Randomization(raster=simulation_habitats, method="randomization_algorithm", 
-                                                                    number_maps=number_maps, parallel=T))
+      habitat_maps <- SHAR::Habitat.Randomization(raster=simulation_habitats, method="randomization_algorithm", 
+                                                                    number_maps=number_maps, parallel=T, verbose=F)
 
       # Habitat associations using simulated vs. observed data
       result <- SHAR::Results.Habitat.Association(pattern=simulation_pattern, raster=habitat_maps,
@@ -137,27 +137,27 @@ simulation_torus_translation <- function(number_coloumns, number_rows,
   # Loop over association strengths
   for(i in 1:length(alpha_sequence)){
     # Create  landscape
-    capture.output(raster_mpd <- NLMR::nlm_mpd(ncol=number_coloumns, nrow=number_rows, 
-                                              resolution=resolution, roughness=roughness))
+    raster_mpd <- NLMR::nlm_mpd(ncol=number_coloumns, nrow=number_rows, 
+                                resolution=resolution, roughness=roughness, verbose=F)
     # Classify landscape into discrete habitats
     simulation_habitats <- SHAR::Habitat.Classification(raster=raster_mpd, classes=5)
     # Create simulation pattern
-    simulation_pattern <- SHAR::Create.Simulation.Pattern(habitats=simulation_habitats, 
+    simulation_pattern <- SHAR::Create.Simulation.Pattern(raster=simulation_habitats, 
                                                     number_points=number_points, alpha=alpha_sequence[i])
     
     # Loop over simulation runs
     for(j in 1:simulation_runs){
       # Random number to create new simulation data in 25% of simulation runs
       r <- runif(n=1)
-      if(r<=1/4){
-        capture.output(raster_mpd <- NLMR::nlm_mpd(ncol=number_coloumns, nrow=number_rows, 
-                                                  resolution=resolution, roughness=roughness))
+      if(r<=1/8){
+        raster_mpd <- NLMR::nlm_mpd(ncol=number_coloumns, nrow=number_rows, 
+                                    resolution=resolution, roughness=roughness, verbose=F)
         simulation_habitats <- SHAR::Habitat.Classification(raster=raster_mpd, classes=5)
-        simulation_pattern <- SHAR::Create.Simulation.Pattern(habitats=simulation_habitats, 
+        simulation_pattern <- SHAR::Create.Simulation.Pattern(raster=simulation_habitats, 
                                                               number_points=number_points, alpha=alpha_sequence[i])
       }
       
-      capture.output(shifted_raster <- SHAR::Habitat.Randomization(raster=simulation_habitats, method="torus_translation"))
+      shifted_raster <- SHAR::Habitat.Randomization(raster=simulation_habitats, method="torus_translation", verbose=F)
 
       # Results of habitat associations using observed vs. simulated data
       result <- SHAR::Results.Habitat.Association(pattern=simulation_pattern, 
@@ -223,25 +223,25 @@ simulation_point_process <- function(number_coloumns, number_rows,
   species_6_df <-  data.frame(Correct=numeric(), False=numeric(), Association=numeric())
 
   # Loop over association strengths
-  for(i in 1: length(alpha_sequence)){
+  for(i in 1:length(alpha_sequence)){
     # Create landscape
-    capture.output(raster_mpd <- NLMR::nlm_mpd(ncol=number_coloumns, nrow=number_rows, 
-                                              resolution=resolution, roughness=roughness))
+    raster_mpd <- NLMR::nlm_mpd(ncol=number_coloumns, nrow=number_rows, 
+                                resolution=resolution, roughness=roughness, verbose=F)
     # Classify landscape into discrete habitats
     simulation_habitats <- SHAR::Habitat.Classification(raster=raster_mpd, classes=5)
     # Create simulation pattern
-    simulation_pattern <- SHAR::Create.Simulation.Pattern(habitats=simulation_habitats, 
+    simulation_pattern <- SHAR::Create.Simulation.Pattern(raster=simulation_habitats, 
                                                     number_points=number_points, alpha=alpha_sequence[i])
 
     # Loop over simulation runs
     for(j in 1:simulation_runs){
       # Random number to create new simulation data in 25 % of simulation runs
       r <- runif(n=1)
-      if(r<=1/4){
-        capture.output(raster_mpd <- NLMR::nlm_mpd(ncol=number_coloumns, nrow=number_rows, 
-                                                  resolution=resolution, roughness=roughness))        
+      if(r<=1/8){
+        raster_mpd <- NLMR::nlm_mpd(ncol=number_coloumns, nrow=number_rows, 
+                                    resolution=resolution, roughness=roughness, verbose=F)
         simulation_habitats <- SHAR::Habitat.Classification(raster=raster_mpd, classes=5)
-        simulation_pattern <- SHAR::Create.Simulation.Pattern(habitats=simulation_habitats, 
+        simulation_pattern <- SHAR::Create.Simulation.Pattern(raster=simulation_habitats, 
                                                               number_points=number_points, alpha=alpha_sequence[i])
       }
 
@@ -250,7 +250,7 @@ simulation_point_process <- function(number_coloumns, number_rows,
       # Fit point process model to data
       species_1_model <- spatstat::ppm(spatstat::unmark(species_1_pattern))
       # Simulate point pattern using fitted model 
-      capture.output(randomized_pattern_species_1 <- spatstat::simulate.ppm(species_1_model, nsim=number_pattern))
+      randomized_pattern_species_1 <- spatstat::simulate.ppm(species_1_model, nsim=number_pattern, progress=F)
       randomized_pattern_species_1[[length(randomized_pattern_species_1)+1]] <- species_1_pattern
       
       # Results using simulated vs. observed data 
@@ -260,7 +260,7 @@ simulation_point_process <- function(number_coloumns, number_rows,
 
       species_2_pattern <- spatstat::subset.ppp(simulation_pattern, Species=="Species_2")
       species_2_model <- spatstat::ppm(spatstat::unmark(species_2_pattern))
-      capture.output(randomized_pattern_species_2 <- spatstat::simulate.ppm(species_2_model, nsim=number_pattern))
+      randomized_pattern_species_2 <- spatstat::simulate.ppm(species_2_model, nsim=number_pattern, progress=F)
       randomized_pattern_species_2[[length(randomized_pattern_species_2)+1]] <- species_2_pattern
       
       result_species_2 <- SHAR::Results.Habitat.Association(pattern=randomized_pattern_species_2,
@@ -270,7 +270,7 @@ simulation_point_process <- function(number_coloumns, number_rows,
       species_3_pattern <- spatstat::subset.ppp(simulation_pattern, Species=="Species_3")
       species_3_model <- spatstat::kppm(spatstat::unmark(species_3_pattern), cluster="Thomas",
                                       statistic="pcf", statargs=list(divisor="d"))
-      capture.output(randomized_pattern_species_3 <- spatstat::simulate.kppm(species_3_model, nsim=number_pattern))
+      randomized_pattern_species_3 <- spatstat::simulate.kppm(species_3_model, nsim=number_pattern, verbose=F)
       randomized_pattern_species_3[[length(randomized_pattern_species_3)+1]] <- species_3_pattern
       
       result_species_3 <- SHAR::Results.Habitat.Association(pattern=randomized_pattern_species_3,
@@ -279,7 +279,7 @@ simulation_point_process <- function(number_coloumns, number_rows,
 
       species_4_pattern <- spatstat::subset.ppp(simulation_pattern, Species=="Species_4")
       species_4_model <- spatstat::ppm(spatstat::unmark(species_4_pattern))
-      capture.output(randomized_pattern_species_4 <- spatstat::simulate.ppm(species_4_model, nsim=number_pattern))
+      randomized_pattern_species_4 <- spatstat::simulate.ppm(species_4_model, nsim=number_pattern, progress=F)
       randomized_pattern_species_4[[length(randomized_pattern_species_4)+1]] <- species_4_pattern
       
       result_species_4 <- SHAR::Results.Habitat.Association(pattern=randomized_pattern_species_4,
@@ -289,7 +289,7 @@ simulation_point_process <- function(number_coloumns, number_rows,
       species_5_pattern <- spatstat::subset.ppp(simulation_pattern, Species=="Species_5")
       species_5_model <- spatstat::kppm(spatstat::unmark(species_5_pattern), cluster="Thomas",
                                       statistic="pcf", statargs=list(divisor="d"))
-      capture.output(randomized_pattern_species_5 <- spatstat::simulate.kppm(species_5_model, nsim=number_pattern))
+      randomized_pattern_species_5 <- spatstat::simulate.kppm(species_5_model, nsim=number_pattern, verbose=F)
       randomized_pattern_species_5[[length(randomized_pattern_species_5)+1]] <- species_5_pattern
       
       result_species_5 <- SHAR::Results.Habitat.Association(pattern=randomized_pattern_species_5,
@@ -298,7 +298,7 @@ simulation_point_process <- function(number_coloumns, number_rows,
 
       species_6_pattern <- spatstat::subset.ppp(simulation_pattern, Species=="Species_6")
       species_6_model <- spatstat::kppm(spatstat::unmark(species_6_pattern), cluster="Thomas")
-      capture.output(randomized_pattern_species_6 <- spatstat::simulate.kppm(species_6_model, nsim=number_pattern))
+      randomized_pattern_species_6 <- spatstat::simulate.kppm(species_6_model, nsim=number_pattern, verbose=F)
       randomized_pattern_species_6[[length(randomized_pattern_species_6)+1]] <- species_6_pattern
       
       result_species_6 <- SHAR::Results.Habitat.Association(pattern=randomized_pattern_species_6,
@@ -355,21 +355,21 @@ simulation_point_process <- function(number_coloumns, number_rows,
 
 #### Define parameters #### 
 # Number of coloumns and rows for neutral landscape 
-number_coloumns <- 20 # 30
-number_rows <- 20 # 30
+number_coloumns <- 30
+number_rows <- 30
 # Resolution of neutral landscape
 resolution <- 20
 # Roughness of neutral landscape
 roughness <- 0.3
 # Approxmitated number of points for each species
-number_points <- 100 # 500
+number_points <- 500
 # Number of runs
-simulation_runs <- 10 # 100
+simulation_runs <- 100
 # Number of randomized habitat maps / point patterns
-number_maps <- 19 # 199
-number_pattern <- 19 # 199
+number_maps <- 199
+number_pattern <- 199
 # Different association strengths 
-alpha_sequence <- seq(0, 1, 0.5) # seq(0, 1, 0.05)
+alpha_sequence <- seq(0, 1, 0.05)
 
 #### Simulation study of different methods to analyze species habitat assocations ####
 # Habitat randomization (Harms et al. 2001) # 
