@@ -1,5 +1,13 @@
 #### Plot simulation study - Strength Associations #### 
 
+###################################################
+##    Author: Maximilian Hesselbarth             ##
+##    Department of Ecosystem Modelling          ##
+##    University of Goettingen                   ##
+##    maximilian.hesselbarth@uni-goettingen.de   ##
+###################################################
+
+
 #### Install packages ####
 toc <- "cde286ffbe355d59b6d9ac4639bdb66d7bdda3ec"
 
