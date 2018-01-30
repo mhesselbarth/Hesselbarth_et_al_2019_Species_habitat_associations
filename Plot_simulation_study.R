@@ -58,5 +58,5 @@ p_strength_asso <- ggplot(data=subset(overall_association, Measure=="Correct")) 
   theme(legend.position="none")
 p_strength_asso
 
-# Save.Function.ggplot(plot=p_strength_asso, file=paste0(figures, "/Fig_3.jpeg"), dpi=1000)
+Save.Function.ggplot(plot=p_strength_asso, file=paste0(figures, "/Result_simulation_study.jpeg"), dpi=1000)
 
