@@ -13,6 +13,8 @@ toc <- "cde286ffbe355d59b6d9ac4639bdb66d7bdda3ec"
 devtools::install_github("mhesselbarth/SHAR", auth_token=toc, quiet=T)
 devtools::install_github("mhesselbarth/UtilityFunctions", auth_token=toc, quiet=T)
 
+rm(toc)
+
 #### Load packages and functions ####
 
 library(ggplot2)
@@ -22,10 +24,13 @@ library(SHAR)
 library(spatstat)
 
 data <- paste0(getwd(), "/Data")
+results <- paste0(getwd(), "/Results")
+
+set.seed(42)
 
 #### Functions ####
 
-foo <- function(pattern, species, raster, number_reconstructions, max_runs, fitting, parallel){
+Function.Habitat.Associations <- function(pattern, species, raster, number_reconstructions, max_runs, fitting, parallel){
   
   if(class(raster)!="list" || is.null(names(raster))){
     print("Please provide named list - No associations analysed")
@@ -33,17 +38,21 @@ foo <- function(pattern, species, raster, number_reconstructions, max_runs, fitt
   }
   
   else{
+    print("Starting pattern reconstruction")
     reconstructed_pattern <- Pattern.Reconstruction(pattern=spatstat::subset.ppp(pattern,Species==species), 
                                                   number_reconstructions=number_reconstructions, 
-                                                  max_runs = max_runs, fitting=fitting, parallel=parallel)
+                                                  max_runs=max_runs, fitting=fitting, parallel=parallel)
   
-
+    print("Starting analysing habitat associations")
+    pb <- utils::txtProgressBar(max=length(raster), style=3)
     associations <- list()
     for(i in 1:length(raster)){
       associations[[i]] <- Results.Habitat.Association(pattern=reconstructed_pattern, raster=raster[[i]], 
                                                      method="random_pattern", only_spatial=T)
       names(associations)[[i]] <- names(raster)[[i]]
+      utils::setTxtProgressBar(pb, i)
     }
+    close(pb)
   }
   
   return(associations)
@@ -84,6 +93,10 @@ raster_soil_depth <- Habitat.Classification(raster=rasterFromXYZ(soil_depth))
 raster_water_content_spring <- Habitat.Classification(raster=rasterFromXYZ(water_content_spring))
 raster_water_content_summer <- Habitat.Classification(raster=rasterFromXYZ(water_content_summer))
 
+raster_aspect <- Habitat.Classification(DEM$Aspect)
+raster_slope <- Habitat.Classification(DEM$Slope)
+raster_elevation <- Habitat.Classification(DEM$Elevation)
+
 raster_list <- list(raster_acidity=raster_acidity, 
                     raster_available_water_content=raster_available_water_content, 
                     raster_continentality=raster_continentality, 
@@ -91,23 +104,47 @@ raster_list <- list(raster_acidity=raster_acidity,
                     raster_nitrogen=raster_nitrogen, 
                     raster_soil_depth=raster_soil_depth,
                     raster_water_content_spring=raster_water_content_spring,
-                    raster_water_content_summer=raster_water_content_summer)
+                    raster_water_content_summer=raster_water_content_summer,
+                    raster_aspect=raster_aspect, 
+                    raster_slope=raster_slope,
+                    raster_elevation=raster_elevation)
 
-raster_aspect <- Habitat.Classification(raster=rasterFromXYZ(DEM$Aspect))
-raster_slope <- Habitat.Classification(raster=rasterFromXYZ(DEM$Slope))
-raster_elevation <- Habitat.Classification(raster=rasterFromXYZ(DEM$Elevation))
 
 
 #### Pattern reconstruction ####
 # Set parameters #
-number_reconstructions <- 19
-max_runs <- 10
+number_reconstructions <- 199
+max_runs <- 20000
 fitting <- T
 parallel <- T
 
-habitat_associations_ash <- foo(pattern=pattern_2007, species="Ash", raster=raster_list,
+habitat_associations_ash <- Function.Habitat.Associations(pattern=pattern_2007, species="Ash", raster=raster_list,
                                 number_reconstructions=number_reconstructions, max_runs=max_runs,
                                 fitting=fitting, parallel=parallel)
+Save.Function.rds(object=habitat_associations_ash, file=paste0(results, "/habitat_associations_ash.rds"))
+
+habitat_associations_beech <- Function.Habitat.Associations(pattern=pattern_2007, species="Beech", raster=raster_list,
+                                number_reconstructions=number_reconstructions, max_runs=max_runs,
+                                fitting=fitting, parallel=parallel)
+Save.Function.rds(object=habitat_associations_beech, file=paste0(results, "/habitat_associations_beech.rds"))
+
+
+habitat_associations_hornbeam <- Function.Habitat.Associations(pattern=pattern_2007, species="Hornbeam", raster=raster_list,
+                                number_reconstructions=number_reconstructions, max_runs=max_runs,
+                                fitting=fitting, parallel=parallel)
+Save.Function.rds(object=habitat_associations_hornbeam, file=paste0(results, "/habitat_associations_hornbeam.rds"))
+
+
+habitat_associations_others <- Function.Habitat.Associations(pattern=pattern_2007, species="others", raster=raster_list,
+                                     number_reconstructions=number_reconstructions, max_runs=max_runs,
+                                     fitting=fitting, parallel=parallel)
+Save.Function.rds(object=habitat_associations_others, file=paste0(results, "/habitat_associations_others.rds"))
+
+
+habitat_associations_sycamore <- Function.Habitat.Associations(pattern=pattern_2007, species="Sycamore", raster=raster_list,
+                                     number_reconstructions=number_reconstructions, max_runs=max_runs,
+                                     fitting=fitting, parallel=parallel)
+Save.Function.rds(object=habitat_associations_sycamore, file=paste0(results, "/habitat_associations_sycamore.rds"))
 
 
 
