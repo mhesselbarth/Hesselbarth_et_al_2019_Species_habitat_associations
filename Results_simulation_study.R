@@ -1,4 +1,4 @@
-#### Plot simulation study - Strength Associations #### 
+#### Results simulation study #### 
 
 ###################################################
 ##    Author: Maximilian Hesselbarth             ##
@@ -13,6 +13,8 @@ toc <- "cde286ffbe355d59b6d9ac4639bdb66d7bdda3ec"
 
 devtools::install_github("mhesselbarth/SHAR", auth_token=toc, quiet=T)
 devtools::install_github("mhesselbarth/UtilityFunctions", auth_token=toc, quiet=T)
+
+rm(toc)
 
 #### Import packages and data ####
 # Packages #
@@ -42,7 +44,7 @@ overall_association <- rbind(habitat_randomization_aggregated,
                              torus_translation_aggregated, 
                              point_process_aggregated)
 overall_association$Method <- as.factor(overall_association$Method)
-overall_association$Type <- factor(overall_association$Type, 
+overall_association$Type <- factor(overall_association$Type,
                                    levels=c("Poisson process (neutral)", "Poisson process (positive)", "Poisson process (negative)",
                                             "Thomas process (neutral)", "Thomas process (positive)", "Thomas process (negative)"))
 
@@ -54,9 +56,8 @@ p_strength_asso <- ggplot(data=subset(overall_association, Measure=="Correct")) 
   scale_y_continuous(limits=c(0,100), breaks=seq(0,100, 20)) +
   scale_x_continuous(limits=c(0, 1), breaks=seq(0,1, 0.2)) +
   labs(x="Strength of association", y="Mean correct detection [%]") +
-  theme_bw() +
-  theme(legend.position="none")
+  theme_bw() 
 p_strength_asso
 
-Save.Function.ggplot(plot=p_strength_asso, file=paste0(figures, "/Result_simulation_study.jpeg"), dpi=1000)
+Save.Function.ggplot(object=p_strength_asso, file=paste0(figures, "/Results_simulation_study.jpeg"), dpi=1000)
 

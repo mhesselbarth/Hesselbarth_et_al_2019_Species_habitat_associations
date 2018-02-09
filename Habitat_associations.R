@@ -30,7 +30,9 @@ set.seed(42)
 
 #### Functions ####
 
-Function.Habitat.Associations <- function(pattern, species, raster, number_reconstructions, max_runs, fitting, parallel){
+Function.Habitat.Associations <- function(pattern, species=NULL, raster, 
+                                          number_reconstructions=1, max_runs=10000, 
+                                          fitting=F, parallel=F){
   
   if(class(raster)!="list" || is.null(names(raster))){
     print("Please provide named list - No associations analysed")
@@ -38,34 +40,42 @@ Function.Habitat.Associations <- function(pattern, species, raster, number_recon
   }
   
   else{
-    print("Starting pattern reconstruction")
-    reconstructed_pattern <- Pattern.Reconstruction(pattern=spatstat::subset.ppp(pattern,Species==species), 
-                                                  number_reconstructions=number_reconstructions, 
-                                                  max_runs=max_runs, fitting=fitting, parallel=parallel)
-  
+    if(is.null(species)){
+      print("Starting pattern reconstruction - No species provided")
+      reconstructed_pattern <- Pattern.Reconstruction(pattern=pattern, 
+                                                      number_reconstructions=number_reconstructions, 
+                                                      max_runs=max_runs, fitting=fitting, parallel=parallel)
+      
+    }
+    else{
+      print(paste0("Starting pattern reconstruction - Species: ", species))
+      reconstructed_pattern <- Pattern.Reconstruction(pattern=spatstat::subset.ppp(pattern,Species==species), 
+                                                      number_reconstructions=number_reconstructions, 
+                                                      max_runs=max_runs, fitting=fitting, parallel=parallel)
+    }
+    
     print("Starting analysing habitat associations")
     pb <- utils::txtProgressBar(max=length(raster), style=3)
     associations <- list()
     for(i in 1:length(raster)){
       associations[[i]] <- Results.Habitat.Association(pattern=reconstructed_pattern, raster=raster[[i]], 
-                                                     method="random_pattern", only_spatial=T)
+                                                       method="random_pattern", only_spatial=T)
       names(associations)[[i]] <- names(raster)[[i]]
       utils::setTxtProgressBar(pb, i)
     }
     close(pb)
   }
-  
-  return(associations)
+  result_list <- list(Associations=associations, Pattern=reconstructed_pattern)
+  return(result_list)
 }
 
 ### Load data ####
 
 # Point pattern #
-pattern_1999 <- readRDS(paste0(data, "/pattern_1999.rds"))
 pattern_2007 <- readRDS(paste0(data, "/pattern_2007.rds"))
 
-pattern_1999_living <- subset(pattern_1999, Type!="dead")
 pattern_2007_living <- subset(pattern_2007, Type!="dead")
+pattern_2007_dead <- subset(pattern_2007, Type=="dead")
 
 pattern_2007_small <- spatstat::subset.ppp(pattern_2007_living, DBH_group=="small")
 pattern_2007_medium <- spatstat::subset.ppp(pattern_2007_living, DBH_group=="medium")
@@ -113,39 +123,73 @@ raster_list <- list(raster_acidity=raster_acidity,
 
 #### Pattern reconstruction ####
 # Set parameters #
-number_reconstructions <- 199
-max_runs <- 20000
+number_reconstructions <- 19
+max_runs <- 100
 fitting <- T
 parallel <- T
 
+# Species #
+
 habitat_associations_ash <- Function.Habitat.Associations(pattern=pattern_2007, species="Ash", raster=raster_list,
-                                number_reconstructions=number_reconstructions, max_runs=max_runs,
-                                fitting=fitting, parallel=parallel)
+                                                          number_reconstructions=number_reconstructions, max_runs=max_runs,
+                                                          fitting=fitting, parallel=parallel)
 Save.Function.rds(object=habitat_associations_ash, file=paste0(results, "/habitat_associations_ash.rds"))
 
 habitat_associations_beech <- Function.Habitat.Associations(pattern=pattern_2007, species="Beech", raster=raster_list,
-                                number_reconstructions=number_reconstructions, max_runs=max_runs,
-                                fitting=fitting, parallel=parallel)
+                                                            number_reconstructions=number_reconstructions, max_runs=max_runs,
+                                                            fitting=fitting, parallel=parallel)
 Save.Function.rds(object=habitat_associations_beech, file=paste0(results, "/habitat_associations_beech.rds"))
 
 
 habitat_associations_hornbeam <- Function.Habitat.Associations(pattern=pattern_2007, species="Hornbeam", raster=raster_list,
-                                number_reconstructions=number_reconstructions, max_runs=max_runs,
-                                fitting=fitting, parallel=parallel)
+                                                               number_reconstructions=number_reconstructions, max_runs=max_runs,
+                                                               fitting=fitting, parallel=parallel)
 Save.Function.rds(object=habitat_associations_hornbeam, file=paste0(results, "/habitat_associations_hornbeam.rds"))
 
 
 habitat_associations_others <- Function.Habitat.Associations(pattern=pattern_2007, species="others", raster=raster_list,
-                                     number_reconstructions=number_reconstructions, max_runs=max_runs,
-                                     fitting=fitting, parallel=parallel)
+                                                             number_reconstructions=number_reconstructions, max_runs=max_runs,
+                                                             fitting=fitting, parallel=parallel)
 Save.Function.rds(object=habitat_associations_others, file=paste0(results, "/habitat_associations_others.rds"))
 
 
 habitat_associations_sycamore <- Function.Habitat.Associations(pattern=pattern_2007, species="Sycamore", raster=raster_list,
-                                     number_reconstructions=number_reconstructions, max_runs=max_runs,
-                                     fitting=fitting, parallel=parallel)
+                                                               number_reconstructions=number_reconstructions, max_runs=max_runs,
+                                                               fitting=fitting, parallel=parallel)
 Save.Function.rds(object=habitat_associations_sycamore, file=paste0(results, "/habitat_associations_sycamore.rds"))
 
+
+# Height classes #
+habitat_associations_beech_small <- Function.Habitat.Associations(pattern=pattern_2007_small, species="Beech", 
+                                                                  raster=raster_list,
+                                                                  number_reconstructions=number_reconstructions,
+                                                                  max_runs=max_runs,
+                                                                  fitting=fitting, parallel=parallel)
+Save.Function.rds(object=habitat_associations_beech_small, file=paste0(results, "/habitat_associations_beech_small.rds"))
+
+
+habitat_associations_beech_medium <- Function.Habitat.Associations(pattern=pattern_2007_medium, species="Beech", 
+                                                                   raster=raster_list,
+                                                                   number_reconstructions=number_reconstructions,
+                                                                   max_runs=max_runs,
+                                                                   fitting=fitting, parallel=parallel)
+Save.Function.rds(object=habitat_associations_beech_medium, file=paste0(results, "/habitat_associations_beech_medium.rds"))
+
+
+habitat_associations_beech_large <- Function.Habitat.Associations(pattern=pattern_2007_large, species="Beech", 
+                                                                  raster=raster_list,
+                                                                  number_reconstructions=number_reconstructions,
+                                                                  max_runs=max_runs,
+                                                                  fitting=fitting, parallel=parallel)
+Save.Function.rds(object=habitat_associations_beech_large, file=paste0(results, "/habitat_associations_beech_large.rds"))
+
+# Dead #
+habitat_associations_beech_dead <- Function.Habitat.Associations(pattern=pattern_2007_dead, species="Beech", 
+                                                                  raster=raster_list,
+                                                                  number_reconstructions=number_reconstructions,
+                                                                  max_runs=max_runs,
+                                                                  fitting=fitting, parallel=parallel)
+Save.Function.rds(object=habitat_associations_beech_dead, file=paste0(results, "/habitat_associations_beech_dead.rds"))
 
 
 #### ENDE ####
