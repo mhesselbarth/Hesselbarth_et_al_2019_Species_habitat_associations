@@ -35,16 +35,17 @@ roughness <- 0.3
 # Approxmitated number of points for each species
 number_points <- 100 
 # Number of runs
-simulation_runs <- 10 
+simulation_runs <- 50
 # Number of randomized habitat maps / point patterns
-number_maps <- 19 
-number_pattern <- 19
+number_maps <- 199
+number_pattern <- 199
 # Number of itertations pattern reconstruction
-max_runs <- 100
+max_runs <- 2500
 # Different association strengths
-alpha_sequence <- seq(0.25, 0.75, 0.25) # seq(0.25, 0.75, 0.025)
+alpha_sequence <- seq(0.25, 0.75, 0.025) # seq(0.25, 0.75, 0.025)
 
-workers <- c(4, 4, 4)
+future::availableCores()
+workers <- c(6, 6, 6)
 
 
 #### Simulation study of different methods to analyze species habitat assocations ####
