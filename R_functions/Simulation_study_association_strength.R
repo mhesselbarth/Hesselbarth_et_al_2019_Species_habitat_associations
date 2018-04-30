@@ -1,18 +1,11 @@
 Simulation.Habitat.Randomization.Association.Strength <- function(number_coloumns, number_rows,
                                                                   resolution, roughness, number_maps,
                                                                   number_points, alpha_sequence,
-                                                                  simulation_runs,
-                                                                  workers = c(1, 1, 1)){
+                                                                  simulation_runs){
   
   simulation_habitats <- NLMR::nlm_mpd(ncol=number_coloumns, nrow=number_rows,
                                        resolution=resolution, roughness=roughness, verbose=F) %>%
     SHAR::Habitat.Classification(classes=5)
-  
-  # future::plan(list(future::tweak(future::multiprocess, workers = workers[[1]]),
-  #                   future::tweak(future::multiprocess, workers = workers[[2]]),
-  #                   future::tweak(future::multiprocess, workers = workers[[3]])))
-  
-  future::plan(future::multiprocess)
   
   simulation_pattern <- alpha_sequence %>%
     furrr::future_map(function(x){
@@ -42,18 +35,11 @@ Simulation.Habitat.Randomization.Association.Strength <- function(number_coloumn
 Simulation.Torus.Translation.Association.Strength <- function(number_coloumns, number_rows,
                                                               resolution, roughness, 
                                                               number_points, alpha_sequence,
-                                                              simulation_runs,
-                                                              workers = c(1, 1, 1)){
+                                                              simulation_runs){
   
   simulation_habitats <- NLMR::nlm_mpd(ncol=number_coloumns, nrow=number_rows,
                                        resolution=resolution, roughness=roughness, verbose=F) %>%
     SHAR::Habitat.Classification(classes=5)
-  
-  # future::plan(list(future::tweak(future::multiprocess, workers = workers[[1]]),
-  #                   future::tweak(future::multiprocess, workers = workers[[2]]),
-  #                   future::tweak(future::multiprocess, workers = workers[[3]])))
-  
-  future::plan(future::multiprocess)
   
   simulation_pattern <- alpha_sequence %>%
     furrr::future_map(function(x){
@@ -83,18 +69,11 @@ Simulation.Torus.Translation.Association.Strength <- function(number_coloumns, n
 Simulation.Point.Process.Association.Strength <- function(number_coloumns, number_rows,
                                                           resolution, roughness, 
                                                           number_points, alpha_sequence, number_pattern,
-                                                          simulation_runs,
-                                                          workers = c(1, 1, 1)){
+                                                          simulation_runs){
   
   simulation_habitats <- NLMR::nlm_mpd(ncol=number_coloumns, nrow=number_rows,
                                        resolution=resolution, roughness=roughness, verbose=F) %>%
     SHAR::Habitat.Classification(classes=5)
-  
-  # future::plan(list(future::tweak(future::multiprocess, workers = workers[[1]]),
-  #                   future::tweak(future::multiprocess, workers = workers[[2]]),
-  #                   future::tweak(future::multiprocess, workers = workers[[3]])))
-  
-  future::plan(future::multiprocess)
   
   simulation_pattern <- alpha_sequence %>%
     furrr::future_map(function(x){
@@ -162,18 +141,11 @@ Simulation.Point.Process.Association.Strength <- function(number_coloumns, numbe
 Simulation.Pattern.Reconstruction.Association.Strength <- function(number_coloumns, number_rows,
                                                                    resolution, roughness, number_pattern, 
                                                                    number_points, alpha_sequence,
-                                                                   max_runs, simulation_runs, 
-                                                                   workers = c(1, 1, 1)){
+                                                                   max_runs, simulation_runs){
   
   simulation_habitats <- NLMR::nlm_mpd(ncol=number_coloumns, nrow=number_rows,
                                        resolution=resolution, roughness=roughness, verbose=F) %>%
     SHAR::Habitat.Classification(classes=5)
-  
-  # future::plan(list(future::tweak(future::multiprocess, workers = workers[[1]]),
-  #                   future::tweak(future::multiprocess, workers = workers[[2]]),
-  #                   future::tweak(future::multiprocess, workers = workers[[3]])))
-  
-  future::plan(future::multiprocess)
   
   simulation_pattern <- alpha_sequence %>%
     furrr::future_map(function(x){
