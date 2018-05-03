@@ -10,6 +10,8 @@
 #### Import packages ####
 # Packages #
 library(furrr)
+library(future)
+library(future.batchtools)
 library(NLMR)
 library(SHAR)
 library(tidyverse)
@@ -17,7 +19,6 @@ library(UtilityFunctions)
 
 source(paste0(getwd(), '/R_functions/Fit_point_process.R'))
 source(paste0(getwd(), '/R_functions/Simulation_study_association_strength.R'))
-
 
 # Set seed
 set.seed(42)
@@ -35,20 +36,35 @@ number_points <- 100
 # Number of runs
 simulation_runs <- 50
 # Number of randomized habitat maps / point patterns
-number_maps <- 199
-number_pattern <- 199
+number_maps <- 199 # 199
+number_pattern <- 199 # 199
 # Number of itertations pattern reconstruction
-max_runs <- 2500
+max_runs <- 2500 # 2500
 # Different association strengths
 alpha_sequence <- seq(0.25, 0.75, 0.025) # seq(0.25, 0.75, 0.025)
 
-future::availableCores()
-workers <- c(6, 6, 6)
+# future::availableCores()
+# workers <- c(6, 6, 6)
+
+# Specify future topology
+# login node -> { cluster nodes } -> { multiple cores }
+login <- tweak(remote, workers = "gwdu101.gwdg.de", user = 'hesselbarth3')
+bsub <- tweak(batchtools_lsf, template = 'lsf.tmpl', 
+              resources = list(job.name = 'pattern_reconstruction',
+                               log.file = 'pattern_reconstruction.log',
+                               queue = 'mpi',
+                               walltime = '48:00',
+                               processes = 24))
+plan(list(
+  login,
+  bsub,
+  multiprocess
+))
 
 
 #### Simulation study of different methods to analyze species habitat assocations ####
 # Habitat randomization (Harms et al. 2001) #
-habitat_randomization <- Simulation.Habitat.Randomization.Association.Strength(
+habitat_randomization %<-% {Simulation.Habitat.Randomization.Association.Strength(
   number_coloumns = number_coloumns,
   number_rows = number_rows,
   roughness = roughness,
@@ -56,32 +72,31 @@ habitat_randomization <- Simulation.Habitat.Randomization.Association.Strength(
   number_maps = number_maps,
   number_points = number_points,
   alpha_sequence = alpha_sequence,
-  simulation_runs = simulation_runs, 
-  workers = workers
-  )
+  simulation_runs = simulation_runs)
+}
+View(habitat_randomization)
 
 # Save.Function.rds(object=habitat_randomization,
 #                   file=paste0(results,"/strength_association_habitat_randomization.rds"))
 
 
 # Torus translation (Harms et al. 2001) #
-torus_translation<- Simulation.Torus.Translation.Association.Strength(
+torus_translation %<-% {Simulation.Torus.Translation.Association.Strength(
   number_coloumns=number_coloumns,
   number_rows=number_rows,
   roughness=roughness,
   resolution=resolution,
   number_points=number_points,
   alpha_sequence=alpha_sequence,
-  simulation_runs=simulation_runs,
-  workers = workers
-  )
-
+  simulation_runs=simulation_runs)
+  }
+View(torus_translation)
 # Save.Function.rds(object=torus_translation,
 #                   file=paste0(results,"/strength_association_torus_translation.rds"))
 
 
 # Fitting point process (Plotkin et al. 2000) #
-point_process <- Simulation.Point.Process.Association.Strength(
+point_process %<-% {Simulation.Point.Process.Association.Strength(
   number_coloumns=number_coloumns,
   number_rows=number_rows,
   roughness=roughness,
@@ -89,15 +104,15 @@ point_process <- Simulation.Point.Process.Association.Strength(
   number_pattern=number_pattern,
   number_points=number_points,
   alpha_sequence=alpha_sequence,
-  simulation_runs=simulation_runs,
-  workers = workers
-  )
+  simulation_runs=simulation_runs)
+  }
+View(point_process)
 
 # Save.Function.rds(object=point_process,
 #                   file=paste0(results,"/strength_association_point_process.rds"))
 
 # Pattern reconstruction #
-pattern_reconstruction <- Simulation.Pattern.Reconstruction.Association.Strength(
+pattern_reconstruction %<-% {Simulation.Pattern.Reconstruction.Association.Strength(
   number_coloumns=number_coloumns,
   number_rows=number_rows,
   roughness=roughness,
@@ -106,8 +121,9 @@ pattern_reconstruction <- Simulation.Pattern.Reconstruction.Association.Strength
   number_points=number_points,
   simulation_runs=simulation_runs,
   max_runs=max_runs,
-  alpha_sequence=alpha_sequence,
-  workers = workers)
+  alpha_sequence=alpha_sequence)
+  }
+View(pattern_reconstruction)
 
 # Save.Function.rds(object=pattern_reconstruction,
 #                   file=paste0(results,"/strength_association_pattern_reconstruction.rds"))
