@@ -56,7 +56,7 @@ bsub <- future::tweak(future.batchtools::batchtools_lsf, template = 'lsf.tmpl',
 
 future::plan(list(login, bsub, future::multiprocess))
 
-future::plan(future::multiprocess)
+# future::plan(future::multiprocess)
 
 #### Simulation study of different methods to analyze species habitat assocations ####
 # Habitat randomization (Harms et al. 2001) #
@@ -70,7 +70,7 @@ habitat_randomization %<-% {Simulation.Habitat.Randomization.Association.Strengt
   alpha_sequence = alpha_sequence,
   simulation_runs = simulation_runs)
 }
-habitat_randomization
+print(habitat_randomization)
 
 # Save.Function.rds(object=habitat_randomization,
 #                   file=paste0(results,"/strength_association_habitat_randomization.rds"))
@@ -86,7 +86,7 @@ torus_translation %<-% {Simulation.Torus.Translation.Association.Strength(
   alpha_sequence=alpha_sequence,
   simulation_runs=simulation_runs)
   }
-torus_translation
+print(torus_translation)
 # Save.Function.rds(object=torus_translation,
 #                   file=paste0(results,"/strength_association_torus_translation.rds"))
 
@@ -102,7 +102,7 @@ point_process %<-% {Simulation.Point.Process.Association.Strength(
   alpha_sequence=alpha_sequence,
   simulation_runs=simulation_runs)
   }
-point_process
+print(point_process)
 
 # Save.Function.rds(object=point_process,
 #                   file=paste0(results,"/strength_association_point_process.rds"))
@@ -119,7 +119,7 @@ pattern_reconstruction %<-% {Simulation.Pattern.Reconstruction.Association.Stren
   max_runs=max_runs,
   alpha_sequence=alpha_sequence)
   }
-pattern_reconstruction
+print(pattern_reconstruction)
 
 # Save.Function.rds(object=pattern_reconstruction,
 #                   file=paste0(results,"/strength_association_pattern_reconstruction.rds"))
