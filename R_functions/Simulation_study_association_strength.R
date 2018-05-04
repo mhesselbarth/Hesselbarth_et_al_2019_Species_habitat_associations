@@ -3,9 +3,9 @@ Simulation.Habitat.Randomization.Association.Strength <- function(number_coloumn
                                                                   number_points, alpha_sequence,
                                                                   simulation_runs){
   
-  simulation_habitats <- NLMR::nlm_mpd(ncol=number_coloumns, nrow=number_rows,
-                                       resolution=resolution, roughness=roughness, verbose=F) %>%
-    SHAR::Habitat.Classification(classes=5)
+  simulation_habitats <- NLMR::nlm_mpd(ncol = number_coloumns, nrow = number_rows,
+                                       resolution = resolution, roughness = roughness, verbose = FALSE) %>%
+    SHAR::Habitat.Classification(classes = 5)
   
   simulation_pattern <- alpha_sequence %>%
     furrr::future_map(function(x){
@@ -25,7 +25,8 @@ Simulation.Habitat.Randomization.Association.Strength <- function(number_coloumn
           associations <- SHAR::Results.Habitat.Association(pattern = x,
                                                             raster = random_habitats, 
                                                             method = 'random_raster')
-          detection <- SHAR::Detection.Habitat.Association(associations)
+          
+          detection <- Detection.Habitat.Association(associations)
         }, .id = 'Association_strength')
     }, .id = 'Simulation_runs')
   
@@ -37,9 +38,9 @@ Simulation.Torus.Translation.Association.Strength <- function(number_coloumns, n
                                                               number_points, alpha_sequence,
                                                               simulation_runs){
   
-  simulation_habitats <- NLMR::nlm_mpd(ncol=number_coloumns, nrow=number_rows,
-                                       resolution=resolution, roughness=roughness, verbose=F) %>%
-    SHAR::Habitat.Classification(classes=5)
+  simulation_habitats <- NLMR::nlm_mpd(ncol = number_coloumns, nrow = number_rows,
+                                       resolution = resolution, roughness = roughness, verbose = FALSE) %>%
+    SHAR::Habitat.Classification(classes = 5)
   
   simulation_pattern <- alpha_sequence %>%
     furrr::future_map(function(x){
@@ -59,7 +60,7 @@ Simulation.Torus.Translation.Association.Strength <- function(number_coloumns, n
                                                             raster = random_habitats, 
                                                             method = 'random_raster')
           
-          detection <- SHAR::Detection.Habitat.Association(associations)
+          detection <- Detection.Habitat.Association(associations)
         }, .id = 'Association_strength')
     }, .id = 'Simulation_runs')
   
@@ -69,12 +70,13 @@ Simulation.Torus.Translation.Association.Strength <- function(number_coloumns, n
 Simulation.Point.Process.Association.Strength <- function(number_coloumns, number_rows,
                                                           resolution, roughness, 
                                                           number_points, alpha_sequence, number_pattern,
-                                                          simulation_runs){
+                                                          simulation_runs,
+                                                          workers = c(1, 1, 1)){
   
-  simulation_habitats <- NLMR::nlm_mpd(ncol=number_coloumns, nrow=number_rows,
-                                       resolution=resolution, roughness=roughness, verbose=F) %>%
-    SHAR::Habitat.Classification(classes=5)
-  
+  simulation_habitats <- NLMR::nlm_mpd(ncol = number_coloumns, nrow = number_rows,
+                                       resolution = resolution, roughness = roughness, verbose = FALSE) %>%
+    SHAR::Habitat.Classification(classes = 5)
+
   simulation_pattern <- alpha_sequence %>%
     furrr::future_map(function(x){
       Create.Simulation.Pattern(raster = simulation_habitats, 
@@ -91,44 +93,47 @@ Simulation.Point.Process.Association.Strength <- function(number_coloumns, numbe
             unique() %>%
             as.character()
           
-          pattern_spec_1 <- Fit.Point.Process(input = x, 
-                                              species = 1, process = 'Poisson',
-                                              number_pattern = number_pattern)
-          result_spec_1 <- list(SHAR::Results.Habitat.Association(pattern=pattern_spec_1,
-                                                                  raster=simulation_habitats,
-                                                                  method='random_pattern', only_spatial=T))
-          names(result_spec_1) <- names_species[[1]]
-          detection_spec_1 <- SHAR::Detection.Habitat.Association(result_spec_1)
+          detection_spec_1 <- x %>%
+            spatstat::subset.ppp(Species_code == 1) %>%
+            SHAR::Gamma.Test(process = 'poisson', 
+                             number_pattern = number_pattern) %>%
+            SHAR::Results.Habitat.Association(raster = simulation_habitats,
+                                              method = 'random_pattern', only_spatial = TRUE) %>%
+            list() %>%
+            setNames(names_species[[1]]) %>%
+            Detection.Habitat.Association()
+          
+          detection_spec_2 <- x %>%
+            spatstat::subset.ppp(Species_code == 2) %>%
+            SHAR::Gamma.Test(process = 'cluster', 
+                             number_pattern = number_pattern) %>% 
+            SHAR::Results.Habitat.Association(raster = simulation_habitats,
+                                              method = 'random_pattern', only_spatial = TRUE) %>%
+            list() %>%
+            setNames(names_species[[2]]) %>%
+            Detection.Habitat.Association()
           
           
-          pattern_spec_2 <- Fit.Point.Process(input = x, 
-                                              species = 2, process = 'Cluster',
-                                              number_pattern = number_pattern)
-          result_spec_2 <- list(SHAR::Results.Habitat.Association(pattern=pattern_spec_2,
-                                                                  raster=simulation_habitats,
-                                                                  method='random_pattern', only_spatial=T))
-          names(result_spec_2) <- names_species[[2]]
-          detection_spec_2 <- SHAR::Detection.Habitat.Association(result_spec_2)
+          detection_spec_3 <- x %>%
+            spatstat::subset.ppp(Species_code == 3) %>%
+            SHAR::Gamma.Test(process = 'poisson', 
+                             number_pattern = number_pattern) %>%
+            SHAR::Results.Habitat.Association(raster = simulation_habitats,
+                                              method = 'random_pattern', only_spatial = TRUE) %>%
+            list() %>%
+            setNames(names_species[[3]]) %>%
+            Detection.Habitat.Association()
           
           
-          pattern_spec_3 <- Fit.Point.Process(input = x, 
-                                              species = 3, process = 'Poisson',
-                                              number_pattern = number_pattern)
-          result_spec_3 <- list(SHAR::Results.Habitat.Association(pattern=pattern_spec_3,
-                                                                  raster=simulation_habitats,
-                                                                  method='random_pattern', only_spatial=T))
-          names(result_spec_3) <- names_species[[3]]
-          detection_spec_3 <- SHAR::Detection.Habitat.Association(result_spec_3)
-          
-          
-          pattern_spec_4 <- Fit.Point.Process(input = x, 
-                                              species = 4, process = 'Cluster',
-                                              number_pattern = number_pattern)
-          result_spec_4 <- list(SHAR::Results.Habitat.Association(pattern=pattern_spec_4,
-                                                                  raster=simulation_habitats,
-                                                                  method='random_pattern', only_spatial=T))
-          names(result_spec_4) <- names_species[[4]]
-          detection_spec_4 <- SHAR::Detection.Habitat.Association(result_spec_4)
+          detection_spec_4 <- x %>%
+            spatstat::subset.ppp(Species_code == 4) %>%
+            SHAR::Gamma.Test(process = 'cluster', 
+                             number_pattern = number_pattern) %>%
+            SHAR::Results.Habitat.Association(raster = simulation_habitats,
+                                              method = 'random_pattern', only_spatial = TRUE) %>%
+            list() %>%
+            setNames(names_species[[4]]) %>%
+            Detection.Habitat.Association()
           
           result_all <- dplyr::bind_rows(detection_spec_1, detection_spec_2, 
                                          detection_spec_3, detection_spec_4)
@@ -138,13 +143,14 @@ Simulation.Point.Process.Association.Strength <- function(number_coloumns, numbe
   return(result)
 }
 
+
 Simulation.Pattern.Reconstruction.Association.Strength <- function(number_coloumns, number_rows,
                                                                    resolution, roughness, number_pattern, 
                                                                    number_points, alpha_sequence,
                                                                    max_runs, simulation_runs){
   
-  simulation_habitats <- NLMR::nlm_mpd(ncol=number_coloumns, nrow=number_rows,
-                                       resolution=resolution, roughness=roughness, verbose=F) %>%
+  simulation_habitats <- NLMR::nlm_mpd(ncol = number_coloumns, nrow = number_rows,
+                                       resolution = resolution, roughness = roughness, verbose = FALSE) %>%
     SHAR::Habitat.Classification(classes=5)
   
   simulation_pattern <- alpha_sequence %>%
@@ -163,52 +169,48 @@ Simulation.Pattern.Reconstruction.Association.Strength <- function(number_coloum
             unique() %>%
             as.character()
           
-          pattern_spec_1 <- x %>%
-            spatstat::subset.ppp(Species_code==1) %>%
-            spatstat::unmark() %>%
-            SHAR::Pattern.Reconstruction(number_reconstructions=number_pattern, 
-                                         max_runs=max_runs, fitting=F)
-          result_spec_1 <- list(SHAR::Results.Habitat.Association(pattern=pattern_spec_1,
-                                                                  raster=simulation_habitats,
-                                                                  method='random_pattern', only_spatial=T))
-          names(result_spec_1) <- names_species[[1]]
-          detection_spec_1 <- SHAR::Detection.Habitat.Association(result_spec_1)
+          detection_spec_1 <- x %>%
+            spatstat::subset.ppp(Species_code == 1) %>%
+            SHAR::Pattern.Reconstruction(number_reconstructions = number_pattern, 
+                                         max_runs = max_runs, fitting = F) %>%
+            SHAR::Results.Habitat.Association(raster = simulation_habitats,
+                                              method = 'random_pattern', only_spatial=T) %>%
+            list() %>%
+            setNames(names_species[[1]]) %>% 
+            Detection.Habitat.Association()
           
           
-          pattern_spec_2 <- x %>%
-            spatstat::subset.ppp(Species_code==2) %>%
-            spatstat::unmark() %>%
-            SHAR::Pattern.Reconstruction(number_reconstructions=number_pattern, 
-                                         max_runs=max_runs, fitting=T)
-          result_spec_2 <- list(SHAR::Results.Habitat.Association(pattern=pattern_spec_2,
-                                                                  raster=simulation_habitats,
-                                                                  method='random_pattern', only_spatial=T))
-          names(result_spec_2) <- names_species[[2]]
-          detection_spec_2 <- SHAR::Detection.Habitat.Association(result_spec_2)
+          detection_spec_2 <- x %>%
+            spatstat::subset.ppp(Species_code == 2) %>%
+            SHAR::Pattern.Reconstruction(number_reconstructions = number_pattern, 
+                                         max_runs = max_runs, fitting = T) %>%
+            SHAR::Results.Habitat.Association(raster = simulation_habitats,
+                                              method = 'random_pattern', only_spatial=T) %>%
+            list() %>%
+            setNames(names_species[[2]]) %>% 
+            Detection.Habitat.Association()
           
           
-          pattern_spec_3 <- x %>%
-            spatstat::subset.ppp(Species_code==3) %>%
-            spatstat::unmark() %>%
-            SHAR::Pattern.Reconstruction(number_reconstructions=number_pattern, 
-                                         max_runs=max_runs, fitting=F)
-          result_spec_3 <- list(SHAR::Results.Habitat.Association(pattern=pattern_spec_3,
-                                                                  raster=simulation_habitats,
-                                                                  method='random_pattern', only_spatial=T))
-          names(result_spec_3) <- names_species[[3]]
-          detection_spec_3 <- SHAR::Detection.Habitat.Association(result_spec_3)
+          detection_spec_3 <- x %>%
+            spatstat::subset.ppp(Species_code == 3) %>%
+            SHAR::Pattern.Reconstruction(number_reconstructions = number_pattern, 
+                                         max_runs = max_runs, fitting = F) %>%
+            SHAR::Results.Habitat.Association(raster = simulation_habitats,
+                                              method = 'random_pattern', only_spatial=T) %>%
+            list() %>%
+            setNames(names_species[[3]]) %>% 
+            Detection.Habitat.Association()
           
           
-          pattern_spec_4 <- x %>%
-            spatstat::subset.ppp(Species_code==4) %>%
-            spatstat::unmark() %>%
-            SHAR::Pattern.Reconstruction(number_reconstructions=number_pattern, 
-                                         max_runs=max_runs, fitting=T)
-          result_spec_4 <- list(SHAR::Results.Habitat.Association(pattern=pattern_spec_4,
-                                                                  raster=simulation_habitats,
-                                                                  method='random_pattern', only_spatial=T))
-          names(result_spec_4) <- names_species[[4]]
-          detection_spec_4 <- SHAR::Detection.Habitat.Association(result_spec_4)
+          detection_spec_4 <- x %>%
+            spatstat::subset.ppp(Species_code == 4) %>%
+            SHAR::Pattern.Reconstruction(number_reconstructions = number_pattern, 
+                                         max_runs = max_runs, fitting = T) %>%
+            SHAR::Results.Habitat.Association(raster = simulation_habitats,
+                                              method = 'random_pattern', only_spatial=T) %>%
+            list() %>%
+            setNames(names_species[[4]]) %>% 
+            Detection.Habitat.Association()
           
           
           result_all <- dplyr::bind_rows(detection_spec_1, detection_spec_2, 
