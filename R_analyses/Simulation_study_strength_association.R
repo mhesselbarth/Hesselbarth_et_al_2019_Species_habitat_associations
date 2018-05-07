@@ -35,14 +35,14 @@ roughness <- 0.3
 # Approxmitated number of points for each species
 number_points <- 100 
 # Number of runs
-simulation_runs <- 5 # 50
+simulation_runs <- 50 # 50
 # Number of randomized habitat maps / point patterns
-number_maps <- 9 # 199
-number_pattern <- 9 # 199
+number_maps <- 199 # 199
+number_pattern <- 199 # 199
 # Number of itertations pattern reconstruction
-max_runs <- 100 # 2500
+max_runs <- 2500 # 2500
 # Different association strengths
-alpha_sequence <- seq(0.25, 0.75, 0.5) # seq(0.25, 0.75, 0.025)
+alpha_sequence <- seq(0.25, 0.75, 0.025) # seq(0.25, 0.75, 0.025)
 
 # Specify future topology
 # login node -> { cluster nodes } -> { multiple cores }
