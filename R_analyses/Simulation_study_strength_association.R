@@ -33,30 +33,31 @@ resolution <- 20
 # Roughness of neutral landscape
 roughness <- 0.3
 # Approxmitated number of points for each species
-number_points <- 100 
+number_points <- 50 #100 
 # Number of runs
-simulation_runs <- 50 # 50
+simulation_runs <- 5 # 25 (redo with 50 ?)
 # Number of randomized habitat maps / point patterns
-number_maps <- 199 # 199
-number_pattern <- 199 # 199
+number_maps <- 9 # 199
+number_pattern <- 9 # 199
 # Number of itertations pattern reconstruction
-max_runs <- 2500 # 2500
+max_runs <- 10 # 2500
 # Different association strengths
-alpha_sequence <- seq(0.25, 0.75, 0.025) # seq(0.25, 0.75, 0.025)
+alpha_sequence <- seq(0.25, 0.75, 0.5) # seq(0.25, 0.75, 0.025)
 
 # Specify future topology
+# future_map for 1) alpha (x) 2) simulation runs (y) 3) within null model function
 # login node -> { cluster nodes } -> { multiple cores }
-login <- future::tweak(remote, workers = "gwdu101.gwdg.de", user = 'hesselbarth3')
-bsub <- future::tweak(future.batchtools::batchtools_lsf, template = 'lsf.tmpl', 
-                      resources = list(job.name = 'pattern_reconstruction',
-                                       log.file = 'pattern_reconstruction.log',
-                                       queue = 'mpi',
-                                       walltime = '48:00',
-                                       processes = 24))
+# login <- future::tweak(remote, workers = "gwdu101.gwdg.de", user = 'hesselbarth3')
+# bsub <- future::tweak(future.batchtools::batchtools_lsf, template = 'lsf.tmpl', 
+#                       resources = list(job.name = 'pattern_reconstruction',
+#                                        log.file = 'pattern_reconstruction.log',
+#                                        queue = 'mpi',
+#                                        walltime = '48:00',
+#                                        processes = 24))
+# 
+# future::plan(list(login, bsub, future::multiprocess))
 
-future::plan(list(login, bsub, future::multiprocess))
-
-# future::plan(future::multiprocess)
+future::plan(future::multiprocess)
 
 #### Simulation study of different methods to analyze species habitat assocations ####
 # Habitat randomization (Harms et al. 2001) #
