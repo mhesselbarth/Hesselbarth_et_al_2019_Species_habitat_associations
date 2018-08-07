@@ -1,14 +1,15 @@
 simulate_pattern_recon_association_strength <- function(number_coloumns, number_rows,
-                                                                   resolution, roughness, number_pattern, 
-                                                                   number_points, alpha_sequence,
-                                                                   max_runs, simulation_runs){
+                                                        resolution, roughness,
+                                                        number_pattern, 
+                                                        number_points, alpha_sequence,
+                                                        simulation_runs){
   
   simulation_habitats <- NLMR::nlm_mpd(ncol = number_coloumns, nrow = number_rows,
                                        resolution = resolution, roughness = roughness, 
                                        verbose = FALSE) %>%
     SHAR::classify_habitats(classes=5)
   
-  result <- furrr::future_map_dfr( alpha_sequence , function(alpha_current){
+  result <- furrr::future_map_dfr(alpha_sequence , function(alpha_current){
       
     simulation_pattern <- create_simulation_pattern(raster = simulation_habitats, 
                                                       number_points = number_points, 

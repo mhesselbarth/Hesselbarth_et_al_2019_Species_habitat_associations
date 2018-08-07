@@ -123,18 +123,22 @@ pattern_reconstruction %<-% {simulate_pattern_recon_association_strength(
 
 UtilityFunctions::save_rds(object = habitat_randomization,
                            filename = paste0("1_habitat_randomization_", simulation_runs, ".rds"),
-                           path = paste0(getwd(), "/4_Output"))
+                           path = paste0(getwd(), "/4_Output"), 
+                           overwrite = FALSE)
 
 UtilityFunctions::save_rds(object = torus_translation,
                            filename = paste0("1_torus_translation_", simulation_runs, ".rds"),
-                           path = paste0(getwd(), "/4_Output"))
+                           path = paste0(getwd(), "/4_Output"),
+                           overwrite = FALSE)
 
 UtilityFunctions::save_rds(object = point_process,
                            filename = paste0("1_point_process_", simulation_runs, ".rds"),
-                           path = paste0(getwd(), "/4_Output"))
+                           path = paste0(getwd(), "/4_Output"),
+                           overwrite = FALSE)
 
 UtilityFunctions::save_rds(object=pattern_reconstruction,
                            filename = paste0("1_pattern_reconstruction_", simulation_runs, ".rds"),
-                           path = paste0(getwd(), "/4_Output"))
+                           path = paste0(getwd(), "/4_Output"),
+                           overwrite = FALSE)
 
 

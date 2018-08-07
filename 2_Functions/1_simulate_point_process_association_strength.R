@@ -1,6 +1,7 @@
 simulate_point_process_association_strength <- function(number_coloumns, number_rows,
-                                                        resolution, roughness, 
-                                                        number_points, alpha_sequence, number_pattern,
+                                                        resolution, roughness,
+                                                        number_pattern, 
+                                                        number_points, alpha_sequence,
                                                         simulation_runs){
   
   simulation_habitats <- NLMR::nlm_mpd(ncol = number_coloumns, nrow = number_rows,

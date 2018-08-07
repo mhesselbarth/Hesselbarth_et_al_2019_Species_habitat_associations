@@ -39,12 +39,12 @@ roughness <- 0.3 # 0.3
 # Approxmitated number of points for each species
 number_points <- 50 # 50 
 # Number of runs
-simulation_runs <- 3 # 50
+simulation_runs <- 50 # 50
 # Number of randomized habitat maps / point patterns
-number_maps <- 9 # 199
-number_pattern <- 9 # 199
+number_maps <- 199 # 199
+number_pattern <- 199 # 199
 # Number of itertations pattern reconstruction
-max_runs <- 10 # 2500
+max_runs <- 2500 # 2500
 
 #### 3. Specify future topology ####
 # 
@@ -67,39 +67,39 @@ future::plan(future::multiprocess)
 #### 4. Simulation study of different methods to analyze species habitat assocations ####
 
 # Habitat randomization (Harms et al. 2001) #
-habitat_randomization <- simulate_habitat_random_neutral(number_coloumns=number_coloumns,
-                                                         number_rows=number_rows,
-                                                         roughness=roughness,
-                                                         resolution=resolution,
-                                                         number_maps=number_maps,
-                                                         number_points=number_points,
-                                                         simulation_runs=simulation_runs)
+habitat_randomization %<-% simulate_habitat_random_neutral(number_coloumns=number_coloumns,
+                                                           number_rows=number_rows,
+                                                           roughness=roughness,
+                                                           resolution=resolution,
+                                                           number_maps=number_maps,
+                                                           number_points=number_points,
+                                                           simulation_runs=simulation_runs)
 
 # Torus translation (Harms et al. 2001) #
-torus_translation <- simulate_torus_trans_neutral(number_coloumns=number_coloumns,
+torus_translation %<-% simulate_torus_trans_neutral(number_coloumns=number_coloumns,
+                                                    number_rows=number_rows,
+                                                    roughness=roughness,
+                                                    resolution=resolution,
+                                                    number_points=number_points,
+                                                    simulation_runs=simulation_runs)
+
+# Gamma test (Plotkin et al. 2000) #
+point_process %<-% simulate_point_process_neutral(number_coloumns=number_coloumns, 
                                                   number_rows=number_rows,
                                                   roughness=roughness,
                                                   resolution=resolution,
+                                                  number_pattern=number_pattern,
                                                   number_points=number_points,
                                                   simulation_runs=simulation_runs)
 
-# Gamma test (Plotkin et al. 2000) #
-point_process <- simulate_point_process_neutral(number_coloumns=number_coloumns, 
-                                                number_rows=number_rows,
-                                                roughness=roughness,
-                                                resolution=resolution,
-                                                number_pattern=number_pattern,
-                                                number_points=number_points,
-                                                simulation_runs=simulation_runs)
-
 # Pattern reconstruction #
-pattern_reconstruction <- simulate_pattern_recon_neutral(number_coloumns=number_coloumns, 
-                                                         number_rows=number_rows,
-                                                         roughness=roughness,
-                                                         resolution=resolution,
-                                                         number_pattern=number_pattern,
-                                                         number_points=number_points,
-                                                         simulation_runs=simulation_runs)
+pattern_reconstruction %<-% simulate_pattern_recon_neutral(number_coloumns=number_coloumns, 
+                                                           number_rows=number_rows,
+                                                           roughness=roughness,
+                                                           resolution=resolution,
+                                                           number_pattern=number_pattern,
+                                                           number_points=number_points,
+                                                           simulation_runs=simulation_runs)
 
 #### 5. Save data ####
 

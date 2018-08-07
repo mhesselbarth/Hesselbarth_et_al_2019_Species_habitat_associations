@@ -30,7 +30,10 @@ alpha_sequence <- readr::read_rds(paste0(getwd(), '/4_Output/alpha_sequence.rds'
 
 results_summarised <- purrr::map_dfr(results, function(current_result) {
   
-  current_result$Type <- stringr::str_sub(current_result$Species, start = 1, end = -3)
+  names_split <- stringr::str_split(current_result$Species, "_", simplify = TRUE)[, 1:2]
+  names_combined <- paste0(names_split[, 1], "_", names_split[, 2])
+  
+  current_result$Type <- names_combined
   
   current_result_grouped <- dplyr::group_by(current_result, Type, Association_strength)
 
@@ -57,7 +60,7 @@ strength_association_correct_ggplot <- ggplot(data = results_summarised) +
                   fill = Method, group = Method), alpha = 0.3) +
   facet_wrap(~ Type, nrow = 2, ncol = 2) + 
   scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2)) +
-  scale_x_continuous(limits = alpha_sequence) +
+  scale_x_continuous(breaks = alpha_sequence) +
   scale_fill_viridis_d(name = '') +
   scale_colour_viridis_d(name = '') +
   labs(x = expression(paste("Association strength ", alpha)), y = "Mean correct detections") +
@@ -71,7 +74,7 @@ strength_association_false_ggplot <- ggplot(data = results_summarised) +
                   fill = Method, group = Method), alpha = 0.3) +
   facet_wrap(~ Type, nrow = 2, ncol = 2) + 
   scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2)) +
-  scale_x_continuous(limits = alpha_sequence) +
+  scale_x_continuous(breaks = alpha_sequence) +
   scale_fill_viridis_d(name = '') +
   scale_colour_viridis_d(name = '') +
   labs(x = expression(paste("Association strength ", alpha)), y = "Mean false detections") +
