@@ -61,7 +61,7 @@ threshold_list <- list(c(0.005, 0.995),
 UtilityFunctions::save_rds(object = threshold_list,
                            filename = "threshold_list.rds",
                            path = paste0(getwd(), "/4_Output"), 
-                           overwrite = TRUE)
+                           overwrite = FALSE)
 
 #### 3. Specify future topology ####
 # 
@@ -72,8 +72,8 @@ UtilityFunctions::save_rds(object = threshold_list,
 # bsub <- future::tweak(future.batchtools::batchtools_lsf, template = 'lsf.tmpl',
 #                       resources = list(job.name = 'significance_threshold',
 #                                        log.file = 'significance_threshold.log',
-#                                        queue = 'mpi-long',
-#                                        walltime = '120:00',
+#                                        queue = 'mpi',
+#                                        walltime = '48:00',
 #                                        processes = 24))
 # 
 # future::plan(list(login, bsub, future::multiprocess))

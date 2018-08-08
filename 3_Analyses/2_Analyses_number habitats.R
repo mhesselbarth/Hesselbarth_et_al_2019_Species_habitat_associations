@@ -59,7 +59,7 @@ number_habitats <- c(2,5,10)
 UtilityFunctions::save_rds(object = number_habitats,
                            filename = "number_habitats.rds",
                            path = paste0(getwd(), "/4_Output"), 
-                           overwrite = TRUE)
+                           overwrite = FALSE)
 
 #### 3. Specify future topology ####
 # 
@@ -70,8 +70,8 @@ UtilityFunctions::save_rds(object = number_habitats,
 # bsub <- future::tweak(future.batchtools::batchtools_lsf, template = 'lsf.tmpl',
 #                       resources = list(job.name = 'number_habitats',
 #                                        log.file = 'number_habitats.log',
-#                                        queue = 'mpi-long',
-#                                        walltime = '120:00',
+#                                        queue = 'mpi',
+#                                        walltime = '48:00',
 #                                        processes = 24))
 # 
 # future::plan(list(login, bsub, future::multiprocess))

@@ -56,7 +56,7 @@ alpha <- 0.35 # seq(0.25, 0.75, 0.025)
 UtilityFunctions::save_rds(object = number_maps,
                            filename = "number_null_models.rds",
                            path = paste0(getwd(), "/4_Output"), 
-                           overwrite = TRUE)
+                           overwrite = FALSE)
 
 #### 3. Specify future topology ####
 # 
@@ -67,8 +67,8 @@ UtilityFunctions::save_rds(object = number_maps,
 # bsub <- future::tweak(future.batchtools::batchtools_lsf, template = 'lsf.tmpl',
 #                       resources = list(job.name = 'number_null_model',
 #                                        log.file = 'number_null_model.log',
-#                                        queue = 'mpi-long',
-#                                        walltime = '120:00',
+#                                        queue = 'mpi',
+#                                        walltime = '48:00',
 #                                        processes = 24))
 # 
 # future::plan(list(login, bsub, future::multiprocess))

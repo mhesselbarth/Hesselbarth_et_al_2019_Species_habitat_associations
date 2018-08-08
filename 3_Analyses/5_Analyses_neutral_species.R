@@ -55,8 +55,8 @@ max_runs <- 2500 # 2500
 # bsub <- future::tweak(future.batchtools::batchtools_lsf, template = 'lsf.tmpl',
 #                       resources = list(job.name = 'neutral_species',
 #                                        log.file = 'neutral_species.log',
-#                                        queue = 'mpi-long',
-#                                        walltime = '120:00',
+#                                        queue = 'mpi',
+#                                        walltime = '48:00',
 #                                        processes = 24))
 # 
 # future::plan(list(login, bsub, future::multiprocess))
