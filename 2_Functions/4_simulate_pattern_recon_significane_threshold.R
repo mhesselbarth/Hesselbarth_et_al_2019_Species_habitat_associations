@@ -1,24 +1,24 @@
-simulate_pattern_recon_number_habitats <- function(number_coloumns, number_rows,
-                                                   resolution, roughness, 
-                                                   number_pattern, max_runs, 
-                                                   number_points, alpha, 
-                                                   number_habitats, 
-                                                   simulation_runs){
+simulate_pattern_recon_significane_threshold <- function(number_coloumns, number_rows,
+                                                     resolution, roughness,
+                                                     number_pattern, max_runs,
+                                                     number_points, alpha,
+                                                     threshold_list,
+                                                     simulation_runs){
   
-  result <- furrr::future_map_dfr(number_habitats , function(habitats_current){
-    
-    simulation_habitats <- NLMR::nlm_mpd(ncol = number_coloumns, nrow = number_rows,
+  simulation_habitats <- NLMR::nlm_mpd(ncol = number_coloumns, nrow = number_rows,
                                        resolution = resolution, roughness = roughness, 
                                        verbose = FALSE) %>%
-    SHAR::classify_habitats(classes = habitats_current)
+    SHAR::classify_habitats(classes=5)
   
-    simulation_pattern <- create_simulation_pattern(raster = simulation_habitats, 
-                                                    number_points = number_points, 
-                                                    alpha = alpha)
-    
-    names_species <- simulation_pattern$marks$Species %>%
-      unique() %>%
-      as.character()
+  simulation_pattern <- create_simulation_pattern(raster = simulation_habitats, 
+                                                  number_points = number_points, 
+                                                  alpha = alpha)
+  
+  names_species <- simulation_pattern$marks$Species %>%
+    unique() %>%
+    as.character()
+  
+  result <- furrr::future_map_dfr(threshold_list , function(threshold_current){
     
     furrr::future_map_dfr(1:simulation_runs, function(simulation_run_current){
       
@@ -27,7 +27,9 @@ simulate_pattern_recon_number_habitats <- function(number_coloumns, number_rows,
         SHAR::reconstruct_pattern(number_reconstructions = number_pattern, 
                                   max_runs = max_runs, fitting = F) %>%
         SHAR::results_habitat_association(raster = simulation_habitats,
-                                          method = 'random_pattern', only_spatial=T) %>%
+                                          method = 'random_pattern', 
+                                          only_spatial = T, 
+                                          threshold = threshold_current) %>%
         list() %>%
         setNames(names_species[[1]]) %>% 
         detect_habitat_associations()
@@ -37,7 +39,9 @@ simulate_pattern_recon_number_habitats <- function(number_coloumns, number_rows,
         SHAR::reconstruct_pattern(number_reconstructions = number_pattern, 
                                   max_runs = max_runs, fitting = T) %>%
         SHAR::results_habitat_association(raster = simulation_habitats,
-                                          method = 'random_pattern', only_spatial=T) %>%
+                                          method = 'random_pattern', 
+                                          only_spatial = T, 
+                                          threshold = threshold_current) %>%
         list() %>%
         setNames(names_species[[2]]) %>% 
         detect_habitat_associations()
@@ -47,7 +51,9 @@ simulate_pattern_recon_number_habitats <- function(number_coloumns, number_rows,
         SHAR::reconstruct_pattern(number_reconstructions = number_pattern,
                                   max_runs = max_runs, fitting = F) %>%
         SHAR::results_habitat_association(raster = simulation_habitats,
-                                          method = 'random_pattern', only_spatial=T) %>%
+                                          method = 'random_pattern', 
+                                          only_spatial = T, 
+                                          threshold = threshold_current) %>%
         list() %>%
         setNames(names_species[[3]]) %>% 
         detect_habitat_associations()
@@ -57,7 +63,9 @@ simulate_pattern_recon_number_habitats <- function(number_coloumns, number_rows,
         SHAR::reconstruct_pattern(number_reconstructions = number_pattern,
                                   max_runs = max_runs, fitting = T) %>%
         SHAR::results_habitat_association(raster = simulation_habitats,
-                                          method = 'random_pattern', only_spatial=T) %>%
+                                          method = 'random_pattern',
+                                          only_spatial = T, 
+                                          threshold = threshold_current) %>%
         list() %>%
         setNames(names_species[[4]]) %>% 
         detect_habitat_associations()
@@ -65,7 +73,7 @@ simulate_pattern_recon_number_habitats <- function(number_coloumns, number_rows,
       result_all <- dplyr::bind_rows(detection_spec_1, detection_spec_2, 
                                      detection_spec_3, detection_spec_4)
     }, .id = 'Simulation_runs')
-  }, .id = 'Number_habitats')
+  }, .id = 'Significance_threshold')
   
   return(result)
 }

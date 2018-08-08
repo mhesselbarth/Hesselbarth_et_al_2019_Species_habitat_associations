@@ -19,9 +19,10 @@ results <- list.files(paste0(getwd(), '/4_Output'), pattern = '1_', full.names =
   purrr::map(function(x) readr::read_rds(x))
 
 names_result <- list.files(paste0(getwd(), '/4_Output'), pattern = '1_', full.names = FALSE)
-names_result_short <- stringr::str_sub(names_result, start = 3, end = -7)
+names_split <- stringr::str_split(names_result, pattern = "_", simplify = TRUE)
+names_combined <- paste0(names_split[, 2], "_", names_split[, 3])
 
-names(results) <- names_result_short
+names(results) <- names_combined
 
 alpha_sequence <- readr::read_rds(paste0(getwd(), '/4_Output/alpha_sequence.rds'))
 

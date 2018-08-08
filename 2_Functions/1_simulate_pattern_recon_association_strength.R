@@ -1,6 +1,6 @@
 simulate_pattern_recon_association_strength <- function(number_coloumns, number_rows,
                                                         resolution, roughness,
-                                                        number_pattern, 
+                                                        number_pattern, max_runs,
                                                         number_points, alpha_sequence,
                                                         simulation_runs){
   

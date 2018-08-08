@@ -7,51 +7,77 @@
 ##    maximilian.hesselbarth@uni-goettingen.de   ##
 ###################################################
 
-#### Import packages and data ####
+#### 1. Import packages and data ####
+
 # Packages #
-library(ggplot2)
 library(UtilityFunctions)
 library(SHAR)
 library(tidyverse)
-library(viridis)
 
-# Working directories
-results <- paste0(getwd(), "/Results")
-figures <- paste0(getwd(), "/Figures")
+# Data #
+results <- list.files(paste0(getwd(), '/4_Output'), pattern = '5_', full.names = TRUE) %>%
+  purrr::map(function(x) readr::read_rds(x))
 
-# Import data #
-habitat_randomization <- readRDS(paste0(results, "/neutral_habitat_randomization.rds"))
-torus_translation <- readRDS(paste0(results, "/neutral_torus_translation.rds"))
-point_process <- readRDS(paste0(results, "/neutral_point_process.rds"))
+names_result <- list.files(paste0(getwd(), '/4_Output'), pattern = '5_', full.names = FALSE)
+names_split <- stringr::str_split(names_result, pattern = "_", simplify = TRUE)
+names_combined <- paste0(names_split[, 2], "_", names_split[, 3])
 
-habitat_randomization$Method <- "Randomized\nhabitats"
-torus_translation$Method <- "Torus\ntranslation"
-point_process$Method <- "Gamma\ntest"
+names(results) <- names_combined
 
-overall_neutral_species <- rbind(habitat_randomization, 
-                                 torus_translation, 
-                                 point_process) %>%
-  dplyr::mutate(Method=factor(Method, levels=c("Gamma\ntest", 
-                                               "Torus\ntranslation", 
-                                               "Randomized\nhabitats")),
-                Species_type=factor(dplyr::case_when(Species==1 ~ "Poisson process",
-                                                     Species==2 ~ "Thomas process"))) %>%
-  dplyr::group_by(Species_type, Method) %>%
-  dplyr::summarise(Correct_mean=mean(Correct),
-                   Correct_hi = mean(Correct) + (stats::sd(Correct, na.rm=T)/sqrt(length(Correct))),
-                   Correct_lo = mean(Correct) - (stats::sd(Correct, na.rm=T)/sqrt(length(Correct))))
+#### 2. Preprocessing data ####
 
-overall_neutral_species
+results_summarised <- purrr::map_dfr(results, function(current_result) {
+  
+  current_result_grouped <- dplyr::group_by(current_result, Species)
+  
+  current_result_means <- dplyr::summarise(current_result_grouped,
+                                           n = n(),
+                                           Correct_mean = mean(Correct / n),
+                                           Correct_hi = Correct_mean + (stats::sd(Correct / n, na.rm=T)/sqrt(n)),
+                                           Correct_lo = Correct_mean - (stats::sd(Correct / n, na.rm=T)/sqrt(n)),
+                                           False_mean = mean(False / n),
+                                           False_hi = False_mean + (stats::sd(False / n, na.rm=T)/sqrt(n)),
+                                           False_lo = False_mean - (stats::sd(False / n, na.rm=T)/sqrt(n)))
+}, .id = "Method")
 
-neutral_species_ggplot <- ggplot(data=overall_neutral_species, 
-                               aes(x=Method, y=Correct_mean)) +
-  geom_bar(stat="identity") +
-  geom_errorbar(aes(ymin=Correct_lo, ymax=Correct_hi), width=.2,
-                position=position_dodge(.9)) + 
-  facet_wrap(~Species_type) +
+results_summarised$Method <- as.factor(results_summarised$Method)
+results_summarised$Species <- as.factor(results_summarised$Species)
+
+#### 3. Plotting data ####
+
+neutral_species_correct_ggplot <- ggplot(data = results_summarised) +
+  geom_bar(aes(x = Method, y = Correct_mean), 
+           stat="identity") +
+  geom_errorbar(aes(x = Method,
+                    ymin = Correct_lo, ymax = Correct_hi),
+                width = 0.2, position = position_dodge(0.9)) +
+  facet_wrap(~ Species) +
+  scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2)) +
   labs(x="", y="Mean correct detections") +
   theme_bw() 
 
-UtilityFunctions::Save.Function.ggplot(plot=neutral_species_ggplot,
-       path=figures, filename="Neutral_species.png",
-       width=145, height=120, units="mm", dpi=500)
+neutral_species_false_ggplot <- ggplot(data = results_summarised) +
+  geom_bar(aes(x = Method, y = False_mean), 
+           stat="identity") +
+  geom_errorbar(aes(x = Method,
+                    ymin = False_lo, ymax = False_hi),
+                width = 0.2, position = position_dodge(0.9)) +
+  facet_wrap(~ Species) +
+  scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2)) +
+  labs(x="", y="Mean false detections") +
+  theme_bw() 
+
+#### 4. Save plots ####
+
+UtilityFunctions::save_ggplot(plot = neutral_species_correct_ggplot, 
+                              path = paste0(getwd(), "/6_Figures"),
+                              filename = "4_significane_threshold_correct.png",
+                              width = 145, height = 120, units = "mm", dpi = 500, 
+                              overwrite = FALSE)
+
+UtilityFunctions::save_ggplot(plot = neutral_species_false_ggplot, 
+                              path = paste0(getwd(), "/6_Figures"),
+                              filename = "4_significane_threshold_false.png",
+                              width = 145, height = 120, units = "mm", dpi = 500, 
+                              overwrite = FALSE)
+

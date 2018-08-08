@@ -30,19 +30,26 @@ seed <- set.seed(42)
 # Number of coloumns and rows for neutral landscape
 number_coloumns <- 30 # 30
 number_rows <- 30 # 30
+
 # Resolution of neutral landscape
 resolution <- 20 # 20
+
 # Roughness of neutral landscape
 roughness <- 0.3 # 0.3
+
 # Approxmitated number of points for each species
 number_points <- 50 # 50 
+
 # Number of runs
 simulation_runs <- 50 # 50
+
 # Number of randomized habitat maps / point patterns
 number_maps <- 199 # 199
 number_pattern <- 199 # 199
+
 # Number of itertations pattern reconstruction
 max_runs <- 2500 # 2500
+
 # Different association strengths
 alpha_sequence <- seq(0.25, 0.75, 0.025) # seq(0.25, 0.75, 0.025)
 
@@ -58,8 +65,8 @@ UtilityFunctions::save_rds(object = alpha_sequence,
 # 
 # login <- future::tweak(remote, workers = "gwdu101.gwdg.de", user = 'hesselbarth3')
 # bsub <- future::tweak(future.batchtools::batchtools_lsf, template = 'lsf.tmpl',
-#                       resources = list(job.name = 'pattern_reconstruction',
-#                                        log.file = 'pattern_reconstruction.log',
+#                       resources = list(job.name = 'association_strength',
+#                                        log.file = 'association_strength.log',
 #                                        queue = 'mpi-long',
 #                                        walltime = '120:00',
 #                                        processes = 24))

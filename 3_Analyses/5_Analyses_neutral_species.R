@@ -39,12 +39,12 @@ roughness <- 0.3 # 0.3
 # Approxmitated number of points for each species
 number_points <- 50 # 50 
 # Number of runs
-simulation_runs <- 50 # 50
+simulation_runs <- 5 # 50
 # Number of randomized habitat maps / point patterns
-number_maps <- 199 # 199
-number_pattern <- 199 # 199
+number_maps <- 9 # 199
+number_pattern <- 9 # 199
 # Number of itertations pattern reconstruction
-max_runs <- 2500 # 2500
+max_runs <- 5 # 2500
 
 #### 3. Specify future topology ####
 # 
@@ -53,8 +53,8 @@ max_runs <- 2500 # 2500
 # 
 # login <- future::tweak(remote, workers = "gwdu101.gwdg.de", user = 'hesselbarth3')
 # bsub <- future::tweak(future.batchtools::batchtools_lsf, template = 'lsf.tmpl',
-#                       resources = list(job.name = 'pattern_reconstruction',
-#                                        log.file = 'pattern_reconstruction.log',
+#                       resources = list(job.name = 'neutral_species',
+#                                        log.file = 'neutral_species.log',
 #                                        queue = 'mpi-long',
 #                                        walltime = '120:00',
 #                                        processes = 24))
@@ -62,7 +62,7 @@ max_runs <- 2500 # 2500
 # future::plan(list(login, bsub, future::multiprocess))
 # 
 # future::plan(list(future::multiprocess, future::multiprocess))
-future::plan(future::multiprocess)
+# future::plan(future::multiprocess)
 # 
 #### 4. Simulation study of different methods to analyze species habitat assocations ####
 
@@ -105,16 +105,20 @@ pattern_reconstruction %<-% simulate_pattern_recon_neutral(number_coloumns=numbe
 
 UtilityFunctions::save_rds(object = habitat_randomization,
                            filename = paste0("5_habitat_randomization_", simulation_runs, ".rds"),
-                           path = paste0(getwd(), "/4_Output"))
+                           path = paste0(getwd(), "/4_Output"), 
+                           overwrite = FALSE)
 
 UtilityFunctions::save_rds(object = torus_translation,
                            filename = paste0("5_torus_translation_", simulation_runs, ".rds"),
-                           path = paste0(getwd(), "/4_Output"))
+                           path = paste0(getwd(), "/4_Output"), 
+                           overwrite = FALSE)
 
 UtilityFunctions::save_rds(object = point_process,
                            filename = paste0("5_point_process_", simulation_runs, ".rds"),
-                           path = paste0(getwd(), "/4_Output"))
+                           path = paste0(getwd(), "/4_Output"), 
+                           overwrite = FALSE)
 
 UtilityFunctions::save_rds(object=pattern_reconstruction,
                            filename = paste0("5_pattern_reconstruction_", simulation_runs, ".rds"),
-                           path = paste0(getwd(), "/4_Output"))
+                           path = paste0(getwd(), "/4_Output"), 
+                           overwrite = FALSE)
