@@ -21,7 +21,7 @@ library(tidyverse)
 library(UtilityFunctions)
 
 # Source all functions in R_functions folder
-list.files(paste0(getwd(), '/2_Functions'), pattern = '.R', full.names = TRUE) %>%
+list.files(paste0(getwd(), '/2_Functions'), pattern = '^[0_ 5_]', full.names = TRUE) %>%
   purrr::walk(function(x) source(x))
 
 #### 2. Define parameters ####
@@ -39,12 +39,12 @@ roughness <- 0.3 # 0.3
 # Approxmitated number of points for each species
 number_points <- 50 # 50 
 # Number of runs
-simulation_runs <- 5 # 50
+simulation_runs <- 50 # 50
 # Number of randomized habitat maps / point patterns
-number_maps <- 9 # 199
-number_pattern <- 9 # 199
+number_maps <- 199 # 199
+number_pattern <- 199 # 199
 # Number of itertations pattern reconstruction
-max_runs <- 5 # 2500
+max_runs <- 2500 # 2500
 
 #### 3. Specify future topology ####
 # 

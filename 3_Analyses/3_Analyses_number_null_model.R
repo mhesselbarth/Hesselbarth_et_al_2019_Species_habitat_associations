@@ -19,7 +19,7 @@ library(tidyverse)
 library(UtilityFunctions)
 
 # Source all functions in R_functions folder
-list.files(paste0(getwd(), '/2_Functions'), pattern = '.R', full.names = TRUE) %>%
+list.files(paste0(getwd(), '/2_Functions'), pattern = '^[0_ 3_]', full.names = TRUE) %>%
   purrr::walk(function(x) source(x))
 
 #### 2. Define parameters ####
@@ -41,14 +41,14 @@ roughness <- 0.3 # 0.3
 number_points <- 50 # 50 
 
 # Number of runs
-simulation_runs <- 3 # 50
+simulation_runs <- 50 # 50
 
 # Number of randomized habitat maps / point patterns
-number_maps <- c(9, 19) # c(19, 39, 99, 199, 499)
-number_pattern <- c(9, 19) # c(19, 39, 99, 199, 499)
+number_maps <- c(19, 39, 99, 199, 499) # c(19, 39, 99, 199, 499)
+number_pattern <- c(19, 39, 99, 199, 499) # c(19, 39, 99, 199, 499)
 
 # Number of itertations pattern reconstruction
-max_runs <- 5 # 2500
+max_runs <- 2500 # 2500
 
 # Different association strengths
 alpha <- 0.35 # seq(0.25, 0.75, 0.025)
@@ -74,7 +74,7 @@ UtilityFunctions::save_rds(object = number_maps,
 # future::plan(list(login, bsub, future::multiprocess))
 # 
 # future::plan(list(future::multiprocess, future::multiprocess))
-future::plan(future::multiprocess)
+# future::plan(future::multiprocess)
 # 
 #### 4. Simulation study of different methods to analyze species habitat assocations ####
 
