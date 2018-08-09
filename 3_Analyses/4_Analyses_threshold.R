@@ -38,7 +38,7 @@ resolution <- 20 # 20
 roughness <- 0.3 # 0.3
 
 # Approxmitated number of points for each species
-number_points <- 50 # 50 
+number_points <- 100 # 100 
 
 # Number of runs
 simulation_runs <- 50 # 50
@@ -48,7 +48,7 @@ number_maps <- 199 # 199
 number_pattern <- 199 # 199
 
 # Number of itertations pattern reconstruction
-max_runs <- 2500 # 2500
+max_runs <- 5000 # 2500
 
 # Different association strengths
 alpha <- 0.35 # seq(0.25, 0.75, 0.025)

@@ -36,7 +36,7 @@ results_summarised <- purrr::map_dfr(results, function(current_result) {
   
   current_result$Type <- names_combined
   
-  current_result_grouped <- dplyr::group_by(current_result, Type, Association_strength)
+  current_result_grouped <- dplyr::group_by(current_result, Association_strength, Type)
 
   current_result_means <- dplyr::summarise(current_result_grouped,
                                            Correct_mean = mean(Correct),
@@ -47,7 +47,9 @@ results_summarised <- purrr::map_dfr(results, function(current_result) {
                                            False_lo = mean(False) - (stats::sd(False, na.rm=T)/sqrt(length(False))))
 }, .id = "Method")
 
-results_summarised$Method <- as.factor(results_summarised$Method)
+results_summarised$Method <- factor(results_summarised$Method,
+                                    levels = c("torus_translation", "habitat_randomization",
+                                               "point_process", "pattern_reconstruction"))
 results_summarised$Type <- as.factor(results_summarised$Type)
 results_summarised$Association_strength <- alpha_sequence
 
