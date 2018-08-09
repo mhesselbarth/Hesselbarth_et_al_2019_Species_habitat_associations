@@ -25,21 +25,20 @@ list.files(paste0(getwd(), '/2_Functions'), pattern = '^[0_ 1_]', full.names = T
 # future_map for 1) alpha (x) 2) simulation runs (y) 3) within null model function
 # login node -> { cluster nodes } -> { multiple cores }
 # 
-login <- future::tweak(remote, workers = "gwdu101.gwdg.de", user = 'hesselbarth3')
-bsub <- future::tweak(future.batchtools::batchtools_lsf, template = 'lsf.tmpl',
-                      resources = list(job.name = 'pattern_recon_example',
-                                       log.file = 'pattern_recon_example.log',
-                                       queue = 'mpi',
-                                       walltime = '48:00',
-                                       processes = 24))
-
-future::plan(list(login, bsub, future::multiprocess))
+# login <- future::tweak(remote, workers = "gwdu101.gwdg.de", user = 'hesselbarth3')
+# bsub <- future::tweak(future.batchtools::batchtools_lsf, template = 'lsf.tmpl',
+#                       resources = list(job.name = 'pattern_recon_example',
+#                                        log.file = 'pattern_recon_example.log',
+#                                        queue = 'mpi-short',
+#                                        walltime = '02:00',
+#                                        processes = 24))
+# 
+# future::plan(list(login, bsub, future::multiprocess))
 # 
 # future::plan(list(future::multiprocess, future::multiprocess))
 # future::plan(future::multiprocess)
 # 
-
-
+# 
 #### 3. Create data ####
 
 simulation_habitats <- NLMR::nlm_mpd(ncol = 30, nrow = 30,
