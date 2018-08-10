@@ -4,70 +4,100 @@ simulate_point_process_association_strength <- function(number_coloumns, number_
                                                         number_points, alpha_sequence,
                                                         simulation_runs){
   
-  simulation_habitats <- NLMR::nlm_mpd(ncol = number_coloumns, nrow = number_rows,
-                                       resolution = resolution, roughness = roughness, 
-                                       verbose = FALSE) %>%
-    SHAR::classify_habitats(classes = 5)
-  
-  result <- furrr::future_map_dfr(alpha_sequence, function(alpha_current){
+  furrr::future_map_dfr(alpha_sequence, function(alpha_current){
+      
+    simulation_habitats <- NLMR::nlm_mpd(ncol = number_coloumns, nrow = number_rows,
+                                         resolution = resolution, roughness = roughness, 
+                                         verbose = FALSE) %>%
+      SHAR::classify_habitats(classes = 5)
     
     simulation_pattern <- create_simulation_pattern(raster = simulation_habitats,
                                                     number_points = number_points,
                                                     alpha = alpha_current)
-
+    
     names_species <- simulation_pattern$marks$Species %>%
       unique() %>%
       as.character()
     
     furrr::future_map_dfr(1:simulation_runs, function(simulation_run_current){
       
-      detection_spec_1 <- simulation_pattern %>%
+      if(runif(n = 1) < 1/8){
+        simulation_habitats <- NLMR::nlm_mpd(ncol = number_coloumns, nrow = number_rows,
+                                             resolution = resolution, roughness = roughness, 
+                                             verbose = FALSE) %>%
+          SHAR::classify_habitats(classes = 5)
+        
+        simulation_pattern <- create_simulation_pattern(raster = simulation_habitats,
+                                                        number_points = number_points,
+                                                        alpha = alpha_current)
+        
+        names_species <- simulation_pattern$marks$Species %>%
+          unique() %>%
+          as.character()
+      }
+      
+      random_species_1 <- simulation_pattern %>%
         spatstat::subset.ppp(Species_code == 1) %>%
         SHAR::fit_point_process(process = 'poisson', 
-                                number_pattern = number_pattern) %>%
-        SHAR::results_habitat_association(raster = simulation_habitats,
-                                          method = 'random_pattern', 
-                                          only_spatial = TRUE) %>%
-        list() %>%
-        setNames(names_species[[1]]) %>%
-        detect_habitat_associations()
+                                number_pattern = number_pattern)
+        
+      associations_species_1 <- SHAR::results_habitat_association(pattern = random_species_1, 
+                                                                  raster = simulation_habitats,
+                                                                  method = 'random_pattern',
+                                                                  only_spatial = TRUE)
+      
+      detection_species_1 <- detect_habitat_associations(input = associations_species_1, 
+                                                         species_type = names_species[1], 
+                                                         species_code = 1, 
+                                                         variable = alpha_current)
           
-        detection_spec_2 <- simulation_pattern %>%
+      random_species_2 <- simulation_pattern %>%
           spatstat::subset.ppp(Species_code == 2) %>%
           SHAR::fit_point_process(process = 'cluster', 
-                                  number_pattern = number_pattern) %>% 
-          SHAR::results_habitat_association(raster = simulation_habitats,
-                                            method = 'random_pattern', 
-                                            only_spatial = TRUE) %>%
-          list() %>%
-          setNames(names_species[[2]]) %>%
-          detect_habitat_associations()
+                                  number_pattern = number_pattern)
+      
+      associations_species_2 <- SHAR::results_habitat_association(pattern = random_species_2, 
+                                                                  raster = simulation_habitats,
+                                                                  method = 'random_pattern', 
+                                                                  only_spatial = TRUE)
+      
+      detection_species_2 <- detect_habitat_associations(input = associations_species_2, 
+                                                         species_type = names_species[2], 
+                                                         species_code = 2,
+                                                         variable = alpha_current)
           
-        detection_spec_3 <- simulation_pattern %>%
+      random_species_3 <- simulation_pattern %>%
           spatstat::subset.ppp(Species_code == 3) %>%
           SHAR::fit_point_process(process = 'poisson', 
-                                  number_pattern = number_pattern) %>%
-          SHAR::results_habitat_association(raster = simulation_habitats,
-                                            method = 'random_pattern',
-                                            only_spatial = TRUE) %>%
-          list() %>%
-          setNames(names_species[[3]]) %>%
-          detect_habitat_associations()
-          
-        detection_spec_4 <- simulation_pattern %>%
+                                  number_pattern = number_pattern)
+      
+      associations_species_3 <- SHAR::results_habitat_association(pattern = random_species_3, 
+                                                                  raster = simulation_habitats,
+                                                                  method = 'random_pattern',
+                                                                  only_spatial = TRUE)
+      
+      detection_species_3 <- detect_habitat_associations(input = associations_species_3, 
+                                                         species_type = names_species[3],
+                                                         species_code = 3,
+                                                         variable = alpha_current)
+      
+      random_species_4 <- simulation_pattern %>%
           spatstat::subset.ppp(Species_code == 4) %>%
           SHAR::fit_point_process(process = 'cluster', 
-                                  number_pattern = number_pattern) %>%
-          SHAR::results_habitat_association(raster = simulation_habitats,
-                                            method = 'random_pattern', only_spatial = TRUE) %>%
-          list() %>%
-          setNames(names_species[[4]]) %>%
-          detect_habitat_associations()
-          
-        result_all <- dplyr::bind_rows(detection_spec_1, detection_spec_2,
-                                       detection_spec_3, detection_spec_4)
-      }, .id = 'Simulation_runs') 
-  }, .id = 'Association_strength')
-  
-  return(result)
+                                  number_pattern = number_pattern) 
+      
+      associations_species_4 <- SHAR::results_habitat_association(pattern = random_species_4, 
+                                                                  raster = simulation_habitats,
+                                                                  method = 'random_pattern', 
+                                                                  only_spatial = TRUE)
+      
+      detection_species_4 <- detect_habitat_associations(input = associations_species_4, 
+                                                         species_type = names_species[[4]],
+                                                         species_code = 4,
+                                                         variable = alpha_current)
+        
+      dplyr::bind_rows(detection_species_1, detection_species_2,
+                       detection_species_3, detection_species_4)
+    })
+  })
 }

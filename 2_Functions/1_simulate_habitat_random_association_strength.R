@@ -4,29 +4,68 @@ simulate_habitat_random_association_strength <- function(number_coloumns, number
                                                          number_points, alpha_sequence,
                                                          simulation_runs){
   
-  simulation_habitats <- NLMR::nlm_mpd(ncol = number_coloumns, nrow = number_rows,
-                                       resolution = resolution, roughness = roughness, 
-                                       verbose = FALSE) %>%
-    SHAR::classify_habitats(classes = 5)
-  
-  result <- furrr::future_map_dfr(alpha_sequence, function(alpha_current){
+  furrr::future_map_dfr(alpha_sequence, function(alpha_current){
+    
+    simulation_habitats <- NLMR::nlm_mpd(ncol = number_coloumns, nrow = number_rows,
+                                         resolution = resolution, roughness = roughness, 
+                                         verbose = FALSE) %>%
+      SHAR::classify_habitats(classes = 5)
       
-      simulation_pattern <- create_simulation_pattern(raster = simulation_habitats, 
+    simulation_pattern <- create_simulation_pattern(raster = simulation_habitats, 
                                                       number_points = number_points, 
                                                       alpha = alpha_current)
       
-      furrr::future_map_dfr(1:simulation_runs, function(simulation_run_current){
-        random_habitats <- SHAR::randomize_habitats(raster = simulation_habitats,
-                                                       method = 'randomization_algorithm', 
-                                                       number_maps = number_maps)
-         
-        associations <- SHAR::results_habitat_association(pattern = simulation_pattern,
-                                                          raster = random_habitats,
-                                                          method = 'random_raster')
+    names_species <- simulation_pattern$marks$Species %>%
+      unique() %>%
+      as.character()
+      
+    furrr::future_map_dfr(1:simulation_runs, function(simulation_run_current){
+      
+      if(runif(n = 1) < 1/8){
+        simulation_habitats <- NLMR::nlm_mpd(ncol = number_coloumns, nrow = number_rows,
+                                             resolution = resolution, roughness = roughness, 
+                                             verbose = FALSE) %>%
+          SHAR::classify_habitats(classes = 5)
+          
+        simulation_pattern <- create_simulation_pattern(raster = simulation_habitats,
+                                                        number_points = number_points,
+                                                        alpha = alpha_current)
+          
+        names_species <- simulation_pattern$marks$Species %>%
+          unique() %>%
+          as.character()
+      }
         
-        detection <- detect_habitat_associations(associations)
-      }, .id = 'Simulation_runs')
-    }, .id = 'Association_strength')
-  
-  return(result)
+      random_habitats <- SHAR::randomize_habitats(raster = simulation_habitats,
+                                                  method = 'randomization_algorithm', 
+                                                  number_maps = number_maps)
+         
+      associations <- SHAR::results_habitat_association(pattern = simulation_pattern,
+                                                        raster = random_habitats,
+                                                        method = 'random_raster')
+        
+      detection_species_1 <- detect_habitat_associations(input = associations[[1]], 
+                                                         species_type = names_species[1], 
+                                                         species_code = 1, 
+                                                         variable = alpha_current)
+        
+      detection_species_2 <- detect_habitat_associations(input = associations[[2]], 
+                                                         species_type = names_species[2], 
+                                                         species_code = 2, 
+                                                         variable = alpha_current)
+        
+      detection_species_3 <- detect_habitat_associations(input = associations[[3]],
+                                                         species_type = names_species[3], 
+                                                         species_code = 3,
+                                                         variable = alpha_current)
+        
+      detection_species_4 <- detect_habitat_associations(input = associations[[4]], 
+                                                         species_type = names_species[4], 
+                                                         species_code = 4, 
+                                                         variable = alpha_current)
+        
+      dplyr::bind_rows(detection_species_1, detection_species_2,
+                       detection_species_3, detection_species_4)
+    })
+  })
 }

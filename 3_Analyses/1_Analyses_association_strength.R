@@ -38,25 +38,25 @@ resolution <- 20 # 20
 roughness <- 0.3 # 0.3
 
 # Approxmitated number of points for each species
-number_points <- 100 # 100 
+number_points <- 100 # 100 - 250???
 
 # Number of runs
-simulation_runs <- 50 # 50
+simulation_runs <- 100 # 50 - 100?
 
 # Number of randomized habitat maps / point patterns
 number_maps <- 199 # 199
 number_pattern <- 199 # 199
 
 # Number of itertations pattern reconstruction
-max_runs <- 5000 # 2500
+max_runs <- 5000 # 5000
 
 # Different association strengths
 alpha_sequence <- seq(0.15, 0.75, 0.025) # seq(0.25, 0.75, 0.025)
 
-UtilityFunctions::save_rds(object = alpha_sequence,
-                           filename = "alpha_sequence.rds",
-                           path = paste0(getwd(), "/4_Output"), 
-                           overwrite = FALSE)
+# UtilityFunctions::save_rds(object = alpha_sequence,
+#                            filename = "alpha_sequence.rds",
+#                            path = paste0(getwd(), "/4_Output"), 
+#                            overwrite = FALSE)
 
 #### 3. Specify future topology ####
 # 

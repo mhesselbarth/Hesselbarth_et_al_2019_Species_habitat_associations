@@ -1,4 +1,4 @@
-#### Example methods ####
+#### Simulation study - Example methods ####
 
 ###################################################
 ##    Author: Maximilian Hesselbarth             ##
@@ -7,142 +7,118 @@
 ##    maximilian.hesselbarth@uni-goettingen.de   ##
 ###################################################
 
-#### Install packages ####
-# toc <- "cde286ffbe355d59b6d9ac4639bdb66d7bdda3ec"
-# devtools::install_github("mhesselbarth/SHAR", auth_token=toc, quiet=T)
-# devtools::install_github("mhesselbarth/UtilityFunctions", auth_token=toc, quiet=T)
-# rm(toc)
+#### 1. Import packages & functions ####
 
-#### Import packages and data ####
-library(ggplot2)
-library(patchwork)
+# Packages #
+library(furrr)
+library(future)
+library(future.batchtools)
 library(NLMR)
-library(UtilityFunctions)
-library(raster)
 library(SHAR)
 library(spatstat)
-library(viridis)
+library(tidyverse)
+library(UtilityFunctions)
 
-figures <- paste0(getwd(), "/Figures")
+# Source all functions in R_functions folder
+list.files(paste0(getwd(), '/2_Functions'), pattern = '0_', full.names = TRUE) %>%
+  purrr::walk(function(x) source(x))
 
 set.seed(42)
 
-#### Create example data ####
+#### 2. Create example data ####
 
-landscape_observed_original <- nlm_mpd(ncol=30, nrow=30, resolution=20, roughness=0.3)
-landscape_observed <- Habitat.Classification(raster=landscape_observed_original, classes=5)
-pattern_observed <- Create.Simulation.Pattern(raster=landscape_observed, number_points=50, alpha=0.3)
+simulation_landscape <- NLMR::nlm_mpd(ncol = 30, nrow = 30, 
+                                      resolution = 20, roughness = 0.3, 
+                                      verbose = FALSE) %>%
+  SHAR::classify_habitats(classes = 5)
 
-plot_landscape_original <- ggplot(data=as.data.frame(landscape_observed_original, xy=T)) +
-  geom_raster(aes(x=x, y=y, fill=factor(layer))) +
-  scale_fill_viridis(discrete=T) +
-  theme(aspect.ratio=1) +
-  theme_classic() + 
-  theme(legend.position="none") + 
-  labs(title="Unclassified data")
+simulation_pattern <- create_simulation_pattern(raster = simulation_landscape, 
+                                                number_points = 100, alpha=0.35)
 
-plot_landscape_classified <- ggplot(data=as.data.frame(landscape_observed, xy=T)) +
-  geom_raster(aes(x=x, y=y, fill=factor(layer))) +
-  scale_fill_viridis(discrete=T) +
-  theme(aspect.ratio=1) +
-  theme_classic() + 
-  theme(legend.position="none") + 
-  labs(title="Classified data")
-
-plot_landscape_overall <- plot_landscape_original + plot_landscape_classified
-
-# ggsave(plot=plot_landscape_overall, file=paste0(figures, "/Fig_1.tiff"), 
-#        dpi=500, width=140, height=90, units="mm")
-
-#### Point process method ####
-model_kppm<- kppm(unmark(pattern_observed), 
-                  cluster="Thomas", statistic="pcf", statargs=list(divisor="d"))
-simulated_pattern <- simulate.kppm(model_kppm, nsim=3)
+species_4 <- spatstat::subset.ppp(simulation_pattern, Species_code == 4)
 
 plot_observed <- ggplot() + 
-  geom_raster(data=as.data.frame(landscape_observed, xy=T), aes(x=x, y=y, fill=factor(layer))) + 
-  geom_point(data=as.data.frame(pattern_observed), aes(x=x, y=y), pch=1, size=1.5) +
-  scale_fill_viridis(discrete=T) +
-  theme_classic(base_size = 12) + 
-  theme(aspect.ratio=1, legend.position="none") +
+  geom_raster(data = as.data.frame(simulation_landscape, xy = T), 
+              aes(x = x, y = y, fill = factor(layer))) + 
+  geom_point(data = as.data.frame(species_4), 
+             aes(x = x, y = y), size = 2.5) +
+  scale_fill_viridis_d() +
+  theme_classic() + 
+  theme(aspect.ratio = 1, legend.position = "none") +
   labs(title="Observed data")
 
-plot_point_process <- list()
-for(i in 1:length(simulated_pattern)){
-  plot_point_process[[i]] <- ggplot() + 
-    geom_raster(data=as.data.frame(landscape_observed, xy=T), aes(x=x, y=y, fill=factor(layer))) + 
-    geom_point(data=as.data.frame(simulated_pattern[[i]]), aes(x=x, y=y), pch=1, size=1.5) +
-    scale_fill_viridis(discrete=T) +
-    theme_classic(base_size = 12) + 
-    theme(aspect.ratio=1, legend.position="none") +
-    labs(title="Randomization data")
-}
 
-plot_overall_point_process <- plot_observed + plot_point_process[[1]] +
-  plot_point_process[[2]] + plot_point_process[[3]] + 
-  plot_layout(ncol=2, nrow=2)
+#### 3. Point process method ####
+
+species_4_kppm <- spatstat::kppm(unmark(species_4), 
+                                 cluster = "Thomas", statistic = "pcf", 
+                                 statargs = list(divisor = "d")) %>%
+  simulate.kppm(nsim = 3)
+
+gamma_test <- purrr::map(1:length(species_4_kppm), function(i){
   
-ggsave(plot=plot_overall_point_process,
-       path=figures, filename="Gamma_test.png",
-       width=145, height=120, units="mm", dpi=500)
+  ggplot() + 
+    geom_raster(data = as.data.frame(simulation_landscape, xy = T), 
+                aes(x = x, y = y, fill = factor(layer))) + 
+    geom_point(data = spatstat::as.data.frame.ppp(species_4_kppm[[i]]), 
+               aes(x = x, y = y), size = 2.5) +
+    scale_fill_viridis_d() +
+    theme_classic() + 
+    theme(aspect.ratio = 1, legend.position = "none") +
+    labs(title=paste0("Randomzation ", i))
+})
 
-#### Pattern reconstruction ####
-# reconstructed_pattern <- Pattern.Reconstruction(pattern=pattern_observed,
-#                                                 number_reconstructions=3, max_runs=10000, fitting=T)
-# plot_pattern_reconstruction <- list()
-# for(i in c(1:3)){
-#   plot_pattern_reconstruction[[i]] <- ggplot() + 
-#     geom_raster(data=as.data.frame(landscape_observed, xy=T), aes(x=x, y=y, fill=factor(layer))) + 
-#     geom_point(data=as.data.frame(reconstructed_pattern[[i]]), aes(x=x, y=y), pch=1, size=1.5) +
-#     scale_fill_viridis(discrete=T) +
-#     theme_classic(base_size = 12) + 
-#     theme(aspect.ratio=1, legend.position="none") +
-#     labs(title="Randomization data")
-# }
-# plot_overall_reconstruction <- gridExtra::grid.arrange(plot_observed, plot_pattern_reconstruction[[1]], 
-#                                                        plot_pattern_reconstruction[[2]], plot_pattern_reconstruction[[3]])
-# Save.Function.ggplot(object=plot_overall_reconstruction, file=paste0(figures, "/Pattern_reconstruction.jpeg"), dpi=1000)
+plot_gamma_test <- plot_observed + gamma_test[[1]] +
+  gamma_test[[2]] + gamma_test[[3]] + 
+  plot_layout(ncol=4, nrow=1)
 
+#### 4. Habitat randomization ####
 
-#### Habitat randomization ####
-simulated_habitat <- Habitat.Randomization(raster=landscape_observed, method="randomization_algorithm",
-                                                    number_maps=3)
+habitats_randomized <- SHAR::randomize_habitats(raster = simulation_landscape, 
+                                                method = "randomization_algorithm",
+                                                number_maps = 3)
 
-plot_habitat_randomization <- list()
-for(i in 1:length(simulated_habitat)){
-  plot_habitat_randomization[[i]] <- ggplot() + 
-    geom_raster(data=as.data.frame(simulated_habitat[[i]], xy=T), aes(x=x, y=y, fill=factor(layer))) + 
-    geom_point(data=as.data.frame(pattern_observed), aes(x=x, y=y), pch=1, size=1.5) +
-    scale_fill_viridis(discrete=T) +
-    theme_classic(base_size = 12) + 
-    theme(aspect.ratio=1, legend.position="none") + 
-    labs(title="Randomization data")
-}
+random_test <- purrr::map(1:(length(habitats_randomized)-1), function(i) {
+  
+  ggplot() + 
+    geom_raster(data = as.data.frame(habitats_randomized[[i]], xy = T), 
+                aes(x = x, y = y, fill = factor(layer))) + 
+    geom_point(data = spatstat::as.data.frame.ppp(species_4), 
+               aes(x = x, y = y), size = 2.5) +
+    scale_fill_viridis_d() +
+    theme_classic() + 
+    theme(aspect.ratio = 1, legend.position = "none") +
+    labs(title=paste0("Randomzation ", i))
+})
 
-plot_overall_habitat_randomization <- plot_observed + plot_habitat_randomization[[1]] + 
-  plot_habitat_randomization[[2]] + plot_habitat_randomization[[3]]
+plot_random_test <- plot_observed + random_test[[1]] +
+  random_test[[2]] + random_test[[3]] + 
+  plot_layout(ncol=4, nrow=1)
 
-ggsave(plot=plot_overall_habitat_randomization,
-       path=figures, filename="Randomized_habitats.png",
-       width=145, height=120, units="mm", dpi=500)
+#### 5. Torus translation ####
 
-#### Torus translation ####
-torus_habitats <- Habitat.Randomization(raster=landscape_observed, method="torus_translation")
+habitats_torus <- SHAR::randomize_habitats(raster = simulation_landscape, 
+                                           method = "torus_translation")
 
-plot_torus_translation <- list()
-for(i in c(10,20,30)){
-  plot_torus_translation[[length(plot_torus_translation)+1]] <- ggplot() + 
-    geom_raster(data=as.data.frame(torus_habitats[[i]], xy=T), aes(x=x, y=y, fill=factor(layer))) + 
-    geom_point(data=as.data.frame(pattern_observed), aes(x=x, y=y), pch=1, size=1.5) +
-    scale_fill_viridis(discrete=T) +
-    theme_classic(base_size = 12) + 
-    theme(aspect.ratio=1, legend.position="none") +
-    labs(title="Randomization data")
-}
+torus_test <- purrr::map(c(10,20,30), function(i) {
+  
+  ggplot() + 
+    geom_raster(data = as.data.frame(habitats_torus[[i]], xy = T), 
+                aes(x = x, y = y, fill = factor(layer))) + 
+    geom_point(data = spatstat::as.data.frame.ppp(species_4), 
+               aes(x = x, y = y), size = 2.5) +
+    scale_fill_viridis_d() +
+    theme_classic() + 
+    theme(aspect.ratio = 1, legend.position = "none") +
+    labs(title=paste0("Randomzation ", i))
+})
 
-plot_overall_torus_translation <- plot_observed + plot_torus_translation[[1]] +
-  plot_torus_translation[[2]] + plot_torus_translation[[3]]
+plot_torus_test <- plot_observed + torus_test[[1]] +
+  torus_test[[2]] + torus_test[[3]] + 
+  plot_layout(ncol=4, nrow=1)
 
-ggsave(plot=plot_overall_torus_translation,
-       path=figures, filename="Torus_translation.png",
-       width=145, height=120, units="mm", dpi=500)
+plot_observed + gamma_test[[1]] + gamma_test[[2]] + gamma_test[[3]] + 
+  plot_observed + random_test[[1]] + random_test[[2]] + random_test[[3]] +
+  plot_observed + torus_test[[1]] +  torus_test[[2]] + torus_test[[3]] + 
+  plot_layout(ncol=4, nrow=3)
+
