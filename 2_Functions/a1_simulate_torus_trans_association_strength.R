@@ -1,39 +1,25 @@
 simulate_torus_trans_association_strength <- function(number_coloumns, number_rows,
-                                                      resolution, roughness,
+                                                      resolution, fract_dim,
                                                       number_points, alpha_sequence,
                                                       simulation_runs){
   
   furrr::future_map_dfr(alpha_sequence, function(alpha_current){
-    
-    simulation_habitats <- NLMR::nlm_mpd(ncol = number_coloumns, nrow = number_rows,
-                                         resolution = resolution, roughness = roughness, 
-                                         verbose = FALSE) %>%
-      SHAR::classify_habitats(classes = 5)
-      
-    simulation_pattern <- create_simulation_pattern(raster = simulation_habitats, 
-                                                    number_points = number_points, 
-                                                    alpha = alpha_current)
-    
-    names_species <- simulation_pattern$marks$Species %>%
-      unique() %>%
-      as.character()
-      
+
     furrr::future_map_dfr(1:simulation_runs, function(run){
       
-      if(runif(n = 1) < 1/8){
-        simulation_habitats <- NLMR::nlm_mpd(ncol = number_coloumns, nrow = number_rows,
-                                             resolution = resolution, roughness = roughness, 
-                                             verbose = FALSE) %>%
-          SHAR::classify_habitats(classes = 5)
+      simulation_habitats <- NLMR::nlm_fbm(ncol = number_coloumns, nrow = number_rows,
+                                           resolution = resolution, 
+                                           fract_dim = fract_dim, 
+                                           verbose = FALSE) %>%
+        SHAR::classify_habitats(classes = 5)
         
-        simulation_pattern <- create_simulation_pattern(raster = simulation_habitats,
-                                                        number_points = number_points,
-                                                        alpha = alpha_current)
+      simulation_pattern <- create_simulation_pattern(raster = simulation_habitats,
+                                                      number_points = number_points,
+                                                      alpha = alpha_current)
         
-        names_species <- simulation_pattern$marks$Species %>%
-          unique() %>%
-          as.character()
-      }
+      names_species <- simulation_pattern$marks$Species %>%
+        unique() %>%
+        as.character()
       
       random_habitats <- SHAR::randomize_habitats(raster = simulation_habitats,
                                                   method = 'torus_translation')

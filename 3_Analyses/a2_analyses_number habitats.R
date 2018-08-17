@@ -1,4 +1,4 @@
-#### Simulation study - Number null model ####
+#### Simulation study - Number habitats ####
 
 ###################################################
 ##    Author: Maximilian Hesselbarth             ##
@@ -11,7 +11,6 @@
 
 # Packages #
 library(furrr)
-library(future)
 library(future.batchtools)
 library(NLMR)
 library(SHAR)
@@ -19,7 +18,7 @@ library(tidyverse)
 library(UtilityFunctions)
 
 # Source all functions in R_functions folder
-list.files(paste0(getwd(), '/2_Functions'), pattern = '^[0_ 3_]', full.names = TRUE) %>%
+list.files(paste0(getwd(), '/2_Functions'), pattern = '^[a0_ a2_]', full.names = TRUE) %>%
   purrr::walk(function(x) source(x))
 
 #### 2. Define parameters ####
@@ -44,17 +43,20 @@ number_points <- 100 # 100
 simulation_runs <- 50 # 50
 
 # Number of randomized habitat maps / point patterns
-number_maps <- c(19, 39, 99, 199, 499) # c(19, 39, 99, 199, 499)
-number_pattern <- c(19, 39, 99, 199, 499) # c(19, 39, 99, 199, 499)
+number_maps <- 199 # 199
+number_pattern <- 199 # 199
 
 # Number of itertations pattern reconstruction
 max_runs <- 5000 # 2500
 
-# Different association strengths
-alpha <- 0.35 # seq(0.25, 0.75, 0.025)
+# Association strengths
+alpha <- 0.350 # seq(0.25, 0.75, 0.025)
 
-UtilityFunctions::save_rds(object = number_maps,
-                           filename = "number_null_models.rds",
+# Number of habitats
+number_habitats <- c(2,5,10)
+
+UtilityFunctions::save_rds(object = number_habitats,
+                           filename = "number_habitats.rds",
                            path = paste0(getwd(), "/4_Output"), 
                            overwrite = FALSE)
 
@@ -65,8 +67,8 @@ UtilityFunctions::save_rds(object = number_maps,
 # 
 # login <- future::tweak(remote, workers = "gwdu101.gwdg.de", user = 'hesselbarth3')
 # bsub <- future::tweak(future.batchtools::batchtools_lsf, template = 'lsf.tmpl',
-#                       resources = list(job.name = 'number_null_model',
-#                                        log.file = 'number_null_model.log',
+#                       resources = list(job.name = 'number_habitats',
+#                                        log.file = 'number_habitats.log',
 #                                        queue = 'mpi',
 #                                        walltime = '48:00',
 #                                        processes = 24))
@@ -79,60 +81,74 @@ UtilityFunctions::save_rds(object = number_maps,
 #### 4. Simulation study of different methods to analyze species habitat assocations ####
 
 # Habitat randomization (Harms et al. 2001) #
-habitat_randomization %<-% {simulate_habitat_random_number_null_model(
+habitat_randomization %<-% {simulate_habitat_random_number_habitats(
   number_coloumns = number_coloumns,
   number_rows = number_rows,
-  roughness = roughness,
   resolution = resolution,
+  roughness = roughness,
   number_maps = number_maps,
   number_points = number_points,
   alpha = alpha,
+  number_habitats = number_habitats,
   simulation_runs = simulation_runs)
 }
 
 # Torus translation (Harms et al. 2001) #
-# Doesn't make sense here
-
-# Fitting point process (Plotkin et al. 2000) #
-point_process %<-% {simulate_point_process_number_null_model(
+torus_translation %<-% {simulate_torus_trans_number_habitats(
   number_coloumns = number_coloumns,
   number_rows = number_rows,
-  roughness = roughness,
   resolution = resolution,
+  roughness = roughness,
+  number_points = number_points,
+  alpha = alpha,
+  number_habitats = number_habitats,
+  simulation_runs = simulation_runs)
+}
+
+# Fitting point process (Plotkin et al. 2000) #
+point_process %<-% {simulate_point_process_number_habitats(
+  number_coloumns = number_coloumns,
+  number_rows = number_rows,
+  resolution = resolution,
+  roughness = roughness,
   number_pattern = number_pattern,
   number_points = number_points,
   alpha = alpha,
+  number_habitats = number_habitats,
   simulation_runs = simulation_runs)
 }
 
 # Pattern reconstruction #
-pattern_reconstruction %<-% {simulate_pattern_recon_number_null_model(
+pattern_reconstruction %<-% {simulate_pattern_recon_number_habitats(
   number_coloumns = number_coloumns,
   number_rows = number_rows,
-  roughness = roughness,
   resolution = resolution,
+  roughness = roughness,
   number_pattern = number_pattern,
   number_points = number_points,
-  simulation_runs = simulation_runs,
-  max_runs = max_runs,
-  alpha = alpha)
+  alpha = alpha,
+  number_habitats = number_habitats,
+  simulation_runs = simulation_runs)
 }
 
 #### 5. Save data ####
 
 UtilityFunctions::save_rds(object = habitat_randomization,
-                           filename = paste0("3_habitat_randomization_", simulation_runs, ".rds"),
-                           path = paste0(getwd(), "/4_Output"), 
+                           filename = paste0("a2_habitat_randomization_", simulation_runs, "_", number_pattern, ".rds"),
+                           path = paste0(getwd(), "/4_Output"),
+                           overwrite = FALSE)
+
+UtilityFunctions::save_rds(object = torus_translation,
+                           filename = paste0("a2_torus_translation_", simulation_runs, "_", number_pattern, ".rds"),
+                           path = paste0(getwd(), "/4_Output"),
                            overwrite = FALSE)
 
 UtilityFunctions::save_rds(object = point_process,
-                           filename = paste0("3_point_process_", simulation_runs, ".rds"),
+                           filename = paste0("a2_point_process_", simulation_runs, "_", number_pattern, ".rds"),
                            path = paste0(getwd(), "/4_Output"),
                            overwrite = FALSE)
 
 UtilityFunctions::save_rds(object=pattern_reconstruction,
-                           filename = paste0("3_pattern_reconstruction_", simulation_runs, ".rds"),
+                           filename = paste0("a2_pattern_reconstruction_", simulation_runs, "_", number_pattern, ".rds"),
                            path = paste0(getwd(), "/4_Output"),
                            overwrite = FALSE)
-
-

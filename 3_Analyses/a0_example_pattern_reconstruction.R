@@ -17,7 +17,7 @@ library(tidyverse)
 library(UtilityFunctions)
 
 # Source all functions in R_functions folder
-list.files(paste0(getwd(), '/2_Functions'), pattern = '^[0_ 1_]', full.names = TRUE) %>%
+list.files(paste0(getwd(), '/2_Functions'), pattern = '^[a0_ a1_]', full.names = TRUE) %>%
   purrr::walk(function(x) source(x))
 
 #### 2. Specify future topology ####

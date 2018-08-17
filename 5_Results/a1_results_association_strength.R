@@ -24,6 +24,15 @@ names_combined <- paste0(names_split[, 2], "_", names_split[, 3])
 
 names(results) <- names_combined
 
+
+
+
+results <- list(point_process)
+names(results) <- "point_process"
+
+
+
+
 # alpha_sequence <- readr::read_rds(paste0(getwd(), '/4_Output/alpha_sequence.rds'))
 
 
@@ -73,7 +82,7 @@ strength_association_correct_ggplot <- ggplot(data = results_summarised) +
   geom_ribbon(aes(x = Variable, ymin = Correct_lo, ymax = Correct_hi, 
                   fill = Method, group = Method), alpha = 0.3) +
   facet_wrap(~ Species_type, nrow = 2, ncol = 2) + 
-  scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2)) +
+  # scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2)) +
   # scale_x_continuous(breaks = alpha_sequence) +
   scale_fill_viridis_d(name = '') +
   scale_colour_viridis_d(name = '') +

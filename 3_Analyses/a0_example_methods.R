@@ -11,7 +11,6 @@
 
 # Packages #
 library(furrr)
-library(future)
 library(future.batchtools)
 library(NLMR)
 library(SHAR)
@@ -20,7 +19,7 @@ library(tidyverse)
 library(UtilityFunctions)
 
 # Source all functions in R_functions folder
-list.files(paste0(getwd(), '/2_Functions'), pattern = '0_', full.names = TRUE) %>%
+list.files(paste0(getwd(), '/2_Functions'), pattern = 'a0_', full.names = TRUE) %>%
   purrr::walk(function(x) source(x))
 
 set.seed(42)

@@ -11,7 +11,6 @@
 
 # Packages #
 library(furrr)
-library(future)
 library(future.batchtools)
 library(NLMR)
 library(SHAR)
@@ -19,7 +18,7 @@ library(tidyverse)
 library(UtilityFunctions)
 
 # Source all functions in R_functions folder
-list.files(paste0(getwd(), '/2_Functions'), pattern = '^[0_ 4_]', full.names = TRUE) %>%
+list.files(paste0(getwd(), '/2_Functions'), pattern = '^[a0_ a4_]', full.names = TRUE) %>%
   purrr::walk(function(x) source(x))
 
 #### 2. Define parameters ####
@@ -138,23 +137,23 @@ pattern_reconstruction %<-% {simulate_pattern_recon_significane_threshold(
 #### 5. Save data ####
 
 UtilityFunctions::save_rds(object = habitat_randomization,
-                           filename = paste0("4_habitat_randomization_", simulation_runs, ".rds"),
+                           filename = paste0("a4_habitat_randomization_", simulation_runs, "_", number_pattern, ".rds"),
                            path = paste0(getwd(), "/4_Output"), 
                            overwrite = FALSE)
 
 UtilityFunctions::save_rds(object = torus_translation,
-                           filename = paste0("4_torus_translation_", simulation_runs, ".rds"),
+                           filename = paste0("a4_torus_translation_", simulation_runs, "_", number_pattern, ".rds"),
                            path = paste0(getwd(), "/4_Output"), 
                            overwrite = FALSE)
 
 
 UtilityFunctions::save_rds(object = point_process,
-                           filename = paste0("4_point_process_", simulation_runs, ".rds"),
+                           filename = paste0("a4_point_process_", simulation_runs, "_", number_pattern, ".rds"),
                            path = paste0(getwd(), "/4_Output"),
                            overwrite = FALSE)
 
 UtilityFunctions::save_rds(object=pattern_reconstruction,
-                           filename = paste0("4_pattern_reconstruction_", simulation_runs, ".rds"),
+                           filename = paste0("a4_pattern_reconstruction_", simulation_runs, "_", number_pattern, ".rds"),
                            path = paste0(getwd(), "/4_Output"),
                            overwrite = FALSE)
 

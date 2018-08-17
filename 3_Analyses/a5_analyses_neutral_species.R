@@ -13,7 +13,6 @@
 
 # Packages #
 library(furrr)
-library(future)
 library(future.batchtools)
 library(NLMR)
 library(SHAR)
@@ -21,7 +20,7 @@ library(tidyverse)
 library(UtilityFunctions)
 
 # Source all functions in R_functions folder
-list.files(paste0(getwd(), '/2_Functions'), pattern = '^[0_ 5_]', full.names = TRUE) %>%
+list.files(paste0(getwd(), '/2_Functions'), pattern = '^[a0_ a5_]', full.names = TRUE) %>%
   purrr::walk(function(x) source(x))
 
 #### 2. Define parameters ####
@@ -104,21 +103,21 @@ pattern_reconstruction %<-% simulate_pattern_recon_neutral(number_coloumns=numbe
 #### 5. Save data ####
 
 UtilityFunctions::save_rds(object = habitat_randomization,
-                           filename = paste0("5_habitat_randomization_", simulation_runs, ".rds"),
+                           filename = paste0("a5_habitat_randomization_",simulation_runs, "_", number_pattern, ".rds"),
                            path = paste0(getwd(), "/4_Output"), 
                            overwrite = FALSE)
 
 UtilityFunctions::save_rds(object = torus_translation,
-                           filename = paste0("5_torus_translation_", simulation_runs, ".rds"),
+                           filename = paste0("a5_torus_translation_", simulation_runs, "_", number_pattern, ".rds"),
                            path = paste0(getwd(), "/4_Output"), 
                            overwrite = FALSE)
 
 UtilityFunctions::save_rds(object = point_process,
-                           filename = paste0("5_point_process_", simulation_runs, ".rds"),
+                           filename = paste0("a5_point_process_", simulation_runs, "_", number_pattern, ".rds"),
                            path = paste0(getwd(), "/4_Output"), 
                            overwrite = FALSE)
 
 UtilityFunctions::save_rds(object=pattern_reconstruction,
-                           filename = paste0("5_pattern_reconstruction_", simulation_runs, ".rds"),
+                           filename = paste0("a5_pattern_reconstruction_", simulation_runs, "_", number_pattern, ".rds"),
                            path = paste0(getwd(), "/4_Output"), 
                            overwrite = FALSE)

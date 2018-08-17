@@ -11,37 +11,37 @@
 
 # Packages #
 library(furrr)
-library(future)
 library(future.batchtools)
+library(listenv)
 library(NLMR)
 library(SHAR)
 library(tidyverse)
 library(UtilityFunctions)
 
 # Source all functions in R_functions folder
-list.files(paste0(getwd(), '/2_Functions'), pattern = '^[0_ 1_]', full.names = TRUE) %>%
+list.files(paste0(getwd(), '/2_Functions'), pattern = '^[a0_ a1_]', full.names = TRUE) %>%
   purrr::walk(function(x) source(x))
 
 #### 2. Define parameters ####
 
 # Set seed
-seed <- set.seed(42)
+set.seed(42, kind = "L'Ecuyer-CMRG")
 
 # Number of coloumns and rows for neutral landscape
-number_coloumns <- 30 # 30
-number_rows <- 30 # 30
+number_coloumns <- 50 # 30
+number_rows <- 50 # 30
 
 # Resolution of neutral landscape
 resolution <- 20 # 20
 
-# Roughness of neutral landscape
-roughness <- 0.3 # 0.3
+# fract_dim of neutral landscape
+fract_dim <- 1.5 # 1.5
 
 # Approxmitated number of points for each species
-number_points <- 100 # 100 - 250???
+number_points <- 250 # 100 - 250 - 500???
 
 # Number of runs
-simulation_runs <- 100 # 50 - 100?
+simulation_runs <- 50 # 50 - 100?
 
 # Number of randomized habitat maps / point patterns
 number_maps <- 199 # 199
@@ -51,7 +51,10 @@ number_pattern <- 199 # 199
 max_runs <- 5000 # 5000
 
 # Different association strengths
-alpha_sequence <- seq(0.15, 0.75, 0.025) # seq(0.25, 0.75, 0.025)
+alpha_sequence <- seq(0, 1, 0.025) # seq(0, 1, 0.025)
+
+# Set seed for landscapes
+
 
 # UtilityFunctions::save_rds(object = alpha_sequence,
 #                            filename = "alpha_sequence.rds",
@@ -82,7 +85,7 @@ alpha_sequence <- seq(0.15, 0.75, 0.025) # seq(0.25, 0.75, 0.025)
 habitat_randomization %<-% {simulate_habitat_random_association_strength(
   number_coloumns = number_coloumns,
   number_rows = number_rows,
-  roughness = roughness,
+  fract_dim = fract_dim,
   resolution = resolution,
   number_maps = number_maps,
   number_points = number_points,
@@ -90,34 +93,87 @@ habitat_randomization %<-% {simulate_habitat_random_association_strength(
   simulation_runs = simulation_runs)
 }
 
+# while (TRUE) {
+#   
+#   if(future::resolved(future::futureOf(habitat_randomization))) {
+#     gmailr::send_message(
+#       gmailr::mime(
+#         To = "maximilian.hesselbarth@uni-goettingen.de",
+#         From = "hesselbarth.maximilian.gmail.com",
+#         Subject = "RStudio Server",
+#         body = paste0("Time: ", Sys.time(), 
+#                       "\n\nFile '", deparse(substitute(habitat_randomization)), "' written!
+#                       \n\nHuuurray!!1!1!!"))
+#     )
+#     break()
+#   }
+# }
+
+future::resolved(future::futureOf(habitat_randomization))
+
 # Torus translation (Harms et al. 2001) #
 torus_translation %<-% {simulate_torus_trans_association_strength(
   number_coloumns = number_coloumns,
   number_rows = number_rows,
-  roughness = roughness,
+  fract_dim = fract_dim,
   resolution = resolution,
   number_points = number_points,
   alpha_sequence = alpha_sequence,
   simulation_runs = simulation_runs)
 }
+
+# while (TRUE) {
+#   
+#   if(future::resolved(future::futureOf(torus_translation))) {
+#     gmailr::send_message(
+#       gmailr::mime(
+#         To = "maximilian.hesselbarth@uni-goettingen.de",
+#         From = "hesselbarth.maximilian.gmail.com",
+#         Subject = "RStudio Server",
+#         body = paste0("Time: ", Sys.time(), 
+#                       "\n\nFile '", deparse(substitute(torus_translation)), "' written!
+#                       \n\nHuuurray!!1!1!!"))
+#     )
+#     break()
+#   }
+# }
+
+future::resolved(future::futureOf(torus_translation))
 
 # Fitting point process (Plotkin et al. 2000) #
 point_process %<-% {simulate_point_process_association_strength(
   number_coloumns = number_coloumns,
   number_rows = number_rows,
-  roughness = roughness,
+  fract_dim = fract_dim,
   resolution = resolution,
   number_pattern = number_pattern,
   number_points = number_points,
   alpha_sequence = alpha_sequence,
-  simulation_runs = simulation_runs)
-}
+  simulation_runs = simulation_runs)}
+
+# while (TRUE) {
+#   
+#   if(future::resolved(future::futureOf(point_process))) {
+#     gmailr::send_message(
+#       gmailr::mime(
+#         To = "maximilian.hesselbarth@uni-goettingen.de",
+#         From = "hesselbarth.maximilian.gmail.com",
+#         Subject = "RStudio Server",
+#         body = paste0("Time: ", Sys.time(), 
+#                       "\n\nFile '", deparse(substitute(point_process)), "' written!
+#                       \n\nHuuurray!!1!1!!"))
+#     )
+#     break()
+#   }
+# }
+
+future::resolved(future::futureOf(point_process))
 
 # Pattern reconstruction #
 pattern_reconstruction %<-% {simulate_pattern_recon_association_strength(
   number_coloumns = number_coloumns,
   number_rows = number_rows,
-  roughness = roughness,
+  fract_dim = fract_dim,
   resolution = resolution,
   number_pattern = number_pattern,
   number_points = number_points,
@@ -126,25 +182,43 @@ pattern_reconstruction %<-% {simulate_pattern_recon_association_strength(
   alpha_sequence = alpha_sequence)
 }
 
+# while (TRUE) {
+#   
+#   if(future::resolved(future::futureOf(pattern_reconstruction))) {
+#     gmailr::send_message(
+#       gmailr::mime(
+#         To = "maximilian.hesselbarth@uni-goettingen.de",
+#         From = "hesselbarth.maximilian.gmail.com",
+#         Subject = "RStudio Server",
+#         body = paste0("Time: ", Sys.time(), 
+#                       "\n\nFile '", deparse(substitute(pattern_reconstruction)), "' written!
+#                       \n\nHuuurray!!1!1!!"))
+#     )
+#     break()
+#   }
+# }
+
+future::resolved(future::futureOf(pattern_reconstruction))
+
 #### 5. Save data ####
 
 UtilityFunctions::save_rds(object = habitat_randomization,
-                           filename = paste0("1_habitat_randomization_", simulation_runs, ".rds"),
+                           filename = paste0("a1_habitat_randomization_", simulation_runs, "_", number_pattern, ".rds"),
                            path = paste0(getwd(), "/4_Output"), 
                            overwrite = FALSE)
 
 UtilityFunctions::save_rds(object = torus_translation,
-                           filename = paste0("1_torus_translation_", simulation_runs, ".rds"),
+                           filename = paste0("a1_torus_translation_", simulation_runs, "_", number_pattern, ".rds"),
                            path = paste0(getwd(), "/4_Output"),
                            overwrite = FALSE)
 
 UtilityFunctions::save_rds(object = point_process,
-                           filename = paste0("1_point_process_", simulation_runs, ".rds"),
+                           filename = paste0("a1_point_process_", simulation_runs, "_", number_pattern, ".rds"),
                            path = paste0(getwd(), "/4_Output"),
                            overwrite = FALSE)
 
 UtilityFunctions::save_rds(object=pattern_reconstruction,
-                           filename = paste0("1_pattern_reconstruction_", simulation_runs, ".rds"),
+                           filename = paste0("a1_pattern_reconstruction_", simulation_runs, "_", number_pattern, ".rds"),
                            path = paste0(getwd(), "/4_Output"),
                            overwrite = FALSE)
 
