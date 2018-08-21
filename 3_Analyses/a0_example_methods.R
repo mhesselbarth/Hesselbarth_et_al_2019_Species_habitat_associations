@@ -10,8 +10,6 @@
 #### 1. Import packages & functions ####
 
 # Packages #
-library(furrr)
-library(future.batchtools)
 library(NLMR)
 library(SHAR)
 library(spatstat)
@@ -26,50 +24,58 @@ set.seed(42)
 
 #### 2. Create example data ####
 
-simulation_landscape <- NLMR::nlm_mpd(ncol = 30, nrow = 30, 
-                                      resolution = 20, roughness = 0.3, 
+simulation_landscape <- NLMR::nlm_fbm(ncol = 50, nrow = 50, 
+                                      resolution = 20, fract_dim = 1.5, 
                                       verbose = FALSE) %>%
   SHAR::classify_habitats(classes = 5)
 
 simulation_pattern <- create_simulation_pattern(raster = simulation_landscape, 
-                                                number_points = 100, alpha=0.35)
+                                                number_points = 250, 
+                                                association_strength = 0.65)
 
-species_4 <- spatstat::subset.ppp(simulation_pattern, Species_code == 4)
+example_species <- spatstat::subset.ppp(simulation_pattern, Species_code == 2)
 
-plot_observed <- ggplot() + 
+ggplot() + 
   geom_raster(data = as.data.frame(simulation_landscape, xy = T), 
-              aes(x = x, y = y, fill = factor(layer))) + 
-  geom_point(data = as.data.frame(species_4), 
-             aes(x = x, y = y), size = 2.5) +
-  scale_fill_viridis_d() +
-  theme_classic() + 
-  theme(aspect.ratio = 1, legend.position = "none") +
-  labs(title="Observed data")
+              aes(x = x, y = y, fill = layer)) + 
+  geom_point(data = as.data.frame(example_species), 
+             aes(x = x, y = y), size = 1.5) +
+  scale_fill_distiller(palette = "Spectral") + 
+  theme(aspect.ratio = 1, 
+        legend.position = "none", 
+        axis.title = element_blank(),
+        axis.text = element_blank(),
+        axis.ticks = element_blank())
 
 
 #### 3. Point process method ####
 
-species_4_kppm <- spatstat::kppm(unmark(species_4), 
-                                 cluster = "Thomas", statistic = "pcf", 
-                                 statargs = list(divisor = "d")) %>%
-  simulate.kppm(nsim = 3)
+example_species_kppm <- fit_point_process(unmark(example_species), 
+                                          process = "cluster", 
+                                          number_pattern = 3)
 
-gamma_test <- purrr::map(1:length(species_4_kppm), function(i){
-  
-  ggplot() + 
-    geom_raster(data = as.data.frame(simulation_landscape, xy = T), 
-                aes(x = x, y = y, fill = factor(layer))) + 
-    geom_point(data = spatstat::as.data.frame.ppp(species_4_kppm[[i]]), 
-               aes(x = x, y = y), size = 2.5) +
-    scale_fill_viridis_d() +
-    theme_classic() + 
-    theme(aspect.ratio = 1, legend.position = "none") +
-    labs(title=paste0("Randomzation ", i))
-})
+example_species_kppm_long <- purrr::map_dfr(example_species_kppm, function(current_pattern) {
+  tibble::as.tibble(spatstat::as.data.frame.ppp(current_pattern))
+}, .id = "pattern")
 
-plot_gamma_test <- plot_observed + gamma_test[[1]] +
-  gamma_test[[2]] + gamma_test[[3]] + 
-  plot_layout(ncol=4, nrow=1)
+example_species_kppm_long$pattern <- factor(example_species_kppm_long$pattern, 
+                                            levels = c("Observed", "Simulation_1", 
+                                                       "Simulation_2", "Simulation_3"),
+                                            labels = c("Observed", "Simulation 1", 
+                                                       "Simulation 2", "Simulation 3"))
+
+plot_gamma <- ggplot(data = example_species_kppm_long) + 
+  geom_raster(data = as.data.frame(simulation_landscape, xy = T),
+              aes(x = x, y = y, fill = layer)) +
+  geom_point(aes(x = x, y = y), size = 1.25) +
+  facet_wrap(~ pattern, ncol = 4, nrow = 1) +
+  scale_fill_distiller(palette = "Spectral") + 
+  theme(aspect.ratio = 1, 
+        legend.position = "none", 
+        text = element_text(size = 25),
+        axis.title = element_blank(),
+        axis.text = element_blank(),
+        axis.ticks = element_blank())
 
 #### 4. Habitat randomization ####
 
@@ -77,47 +83,90 @@ habitats_randomized <- SHAR::randomize_habitats(raster = simulation_landscape,
                                                 method = "randomization_algorithm",
                                                 number_maps = 3)
 
-random_test <- purrr::map(1:(length(habitats_randomized)-1), function(i) {
-  
-  ggplot() + 
-    geom_raster(data = as.data.frame(habitats_randomized[[i]], xy = T), 
-                aes(x = x, y = y, fill = factor(layer))) + 
-    geom_point(data = spatstat::as.data.frame.ppp(species_4), 
-               aes(x = x, y = y), size = 2.5) +
-    scale_fill_viridis_d() +
-    theme_classic() + 
-    theme(aspect.ratio = 1, legend.position = "none") +
-    labs(title=paste0("Randomzation ", i))
-})
+habitats_randomized_long <- purrr::map_dfr(habitats_randomized, function(current_raster) {
+  tibble::as.tibble(raster::as.data.frame(current_raster, xy = TRUE))
+}, .id = "raster")
 
-plot_random_test <- plot_observed + random_test[[1]] +
-  random_test[[2]] + random_test[[3]] + 
-  plot_layout(ncol=4, nrow=1)
+habitats_randomized_long$raster <- factor(habitats_randomized_long$raster, 
+                                          levels = c("Observed", "Randomized_1", 
+                                                     "Randomized_2", "Randomized_3"),
+                                          labels = c("Observed", "Simulation 1", 
+                                                     "Simulation 2", "Simulation 3"))
+
+plot_random_walk <- ggplot(data = habitats_randomized_long) + 
+  geom_raster(aes(x = x, y = y, fill = layer)) +
+  geom_point(data = as.data.frame(example_species), 
+             aes(x = x, y = y), size = 1.25) +
+  facet_wrap(~ raster, ncol = 4, nrow = 1) +
+  scale_fill_distiller(palette = "Spectral") + 
+  theme(aspect.ratio = 1, 
+        legend.position = "none",
+        text = element_text(size = 25),
+        axis.title = element_blank(),
+        axis.text = element_blank(),
+        axis.ticks = element_blank())
+
 
 #### 5. Torus translation ####
 
 habitats_torus <- SHAR::randomize_habitats(raster = simulation_landscape, 
                                            method = "torus_translation")
 
-torus_test <- purrr::map(c(10,20,30), function(i) {
-  
-  ggplot() + 
-    geom_raster(data = as.data.frame(habitats_torus[[i]], xy = T), 
-                aes(x = x, y = y, fill = factor(layer))) + 
-    geom_point(data = spatstat::as.data.frame.ppp(species_4), 
-               aes(x = x, y = y), size = 2.5) +
-    scale_fill_viridis_d() +
-    theme_classic() + 
-    theme(aspect.ratio = 1, legend.position = "none") +
-    labs(title=paste0("Randomzation ", i))
-})
+habitats_torus$Observed <- simulation_landscape
 
-plot_torus_test <- plot_observed + torus_test[[1]] +
-  torus_test[[2]] + torus_test[[3]] + 
-  plot_layout(ncol=4, nrow=1)
+habitats_torus_long <- purrr::map_dfr(habitats_torus[c(25, 500, 1000, 2598)], function(current_raster) {
+  tibble::as.tibble(raster::as.data.frame(current_raster, xy = TRUE))
+}, .id = "raster")
 
-plot_observed + gamma_test[[1]] + gamma_test[[2]] + gamma_test[[3]] + 
-  plot_observed + random_test[[1]] + random_test[[2]] + random_test[[3]] +
-  plot_observed + torus_test[[1]] +  torus_test[[2]] + torus_test[[3]] + 
-  plot_layout(ncol=4, nrow=3)
+habitats_torus_long$raster <- factor(habitats_torus_long$raster,
+                                     levels = c("Observed", "Randomized_25", 
+                                                "Randomized_500", "Randomized_1000"),
+                                     labels = c("Observed", "Simulation 1",
+                                                "Simulation 2", "Simulation 3"))
 
+plot_torus <- ggplot(data = habitats_torus_long) + 
+  geom_raster(aes(x = x, y = y, fill = layer)) +
+  geom_point(data = as.data.frame(example_species), 
+             aes(x = x, y = y), size = 1.25) +
+  facet_wrap(~ raster, ncol = 4, nrow = 1) +
+  scale_fill_distiller(palette = "Spectral") + 
+  theme(aspect.ratio = 1, 
+        legend.position = "none", 
+        text = element_text(size = 25),
+        axis.title = element_blank(),
+        axis.text = element_blank(),
+        axis.ticks = element_blank())
+
+
+#### 6. Save plot ####
+
+width = 45
+heigth = 15 
+dpi = 500
+
+UtilityFunctions::save_ggplot(plot = plot_gamma, 
+                              filename = "a0_plot_gamma.jpeg", 
+                              path = "6_Figures", 
+                              overwrite = FALSE, 
+                              width = width, 
+                              height = heigth, 
+                              units = "cm", 
+                              dpi = dpi)
+
+UtilityFunctions::save_ggplot(plot = plot_random_walk, 
+                              filename = "a0_plot_random_walk.jpeg", 
+                              path = "6_Figures", 
+                              overwrite = FALSE, 
+                              width = width, 
+                              height = heigth, 
+                              units = "cm", 
+                              dpi = dpi)
+
+UtilityFunctions::save_ggplot(plot = plot_torus, 
+                              filename = "a0_plot_torus.jpeg", 
+                              path = "6_Figures", 
+                              overwrite = FALSE, 
+                              width = width, 
+                              height = heigth, 
+                              units = "cm", 
+                              dpi = dpi)

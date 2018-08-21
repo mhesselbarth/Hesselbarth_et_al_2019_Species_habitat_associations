@@ -40,9 +40,6 @@ fract_dim <- 1.5 # 1.5
 # Approxmitated number of points for each species
 number_points <- 250 # 100 - 250 - 500???
 
-# Number of runs
-simulation_runs <- 50 # 50 - 100?
-
 # Number of randomized habitat maps / point patterns
 number_maps <- 199 # 199
 number_pattern <- 199 # 199
@@ -51,15 +48,7 @@ number_pattern <- 199 # 199
 max_runs <- 5000 # 5000
 
 # Different association strengths
-alpha_sequence <- seq(0, 1, 0.025) # seq(0, 1, 0.025)
-
-# Set seed for landscapes
-
-
-# UtilityFunctions::save_rds(object = alpha_sequence,
-#                            filename = "alpha_sequence.rds",
-#                            path = paste0(getwd(), "/4_Output"), 
-#                            overwrite = FALSE)
+alpha_sequence <- rep(seq(0, 1, 0.025), each = 50) # seq(0, 1, 0.025)
 
 #### 3. Specify future topology ####
 # 
@@ -71,13 +60,12 @@ alpha_sequence <- seq(0, 1, 0.025) # seq(0, 1, 0.025)
 #                       resources = list(job.name = 'association_strength',
 #                                        log.file = 'association_strength.log',
 #                                        queue = 'mpi',
-#                                        walltime = '48:00',
-#                                        processes = 24))
+#                                        walltime = '2:00',
+#                                        processes = 1))
 # 
-# future::plan(list(login, bsub, future::multiprocess))
+# future::plan(list(login, bsub, future::sequential))
 # 
-# future::plan(list(future::multiprocess, future::multiprocess))
-# future::plan(future::multiprocess)
+# future::plan(future::sequential)
 # 
 #### 4. Simulation study of different methods to analyze species habitat assocations ####
 
@@ -89,11 +77,13 @@ habitat_randomization %<-% {simulate_habitat_random_association_strength(
   resolution = resolution,
   number_maps = number_maps,
   number_points = number_points,
-  alpha_sequence = alpha_sequence,
-  simulation_runs = simulation_runs)
-}
+  alpha_sequence = 0.025)}
 
+
+# future::resolved(future::futureOf(habitat_randomization))
 # while (TRUE) {
+# 
+#   Sys.sleep(300)
 #   
 #   if(future::resolved(future::futureOf(habitat_randomization))) {
 #     gmailr::send_message(
@@ -109,8 +99,6 @@ habitat_randomization %<-% {simulate_habitat_random_association_strength(
 #   }
 # }
 
-future::resolved(future::futureOf(habitat_randomization))
-
 # Torus translation (Harms et al. 2001) #
 torus_translation %<-% {simulate_torus_trans_association_strength(
   number_coloumns = number_coloumns,
@@ -118,12 +106,14 @@ torus_translation %<-% {simulate_torus_trans_association_strength(
   fract_dim = fract_dim,
   resolution = resolution,
   number_points = number_points,
-  alpha_sequence = alpha_sequence,
-  simulation_runs = simulation_runs)
+  alpha_sequence = alpha_sequence)
 }
 
+# future::resolved(future::futureOf(torus_translation))
 # while (TRUE) {
 #   
+#   Sys.sleep(300)
+# 
 #   if(future::resolved(future::futureOf(torus_translation))) {
 #     gmailr::send_message(
 #       gmailr::mime(
@@ -138,8 +128,6 @@ torus_translation %<-% {simulate_torus_trans_association_strength(
 #   }
 # }
 
-future::resolved(future::futureOf(torus_translation))
-
 # Fitting point process (Plotkin et al. 2000) #
 point_process %<-% {simulate_point_process_association_strength(
   number_coloumns = number_coloumns,
@@ -148,10 +136,12 @@ point_process %<-% {simulate_point_process_association_strength(
   resolution = resolution,
   number_pattern = number_pattern,
   number_points = number_points,
-  alpha_sequence = alpha_sequence,
-  simulation_runs = simulation_runs)}
+  alpha_sequence = alpha_sequence)}
 
+# future::resolved(future::futureOf(point_process))
 # while (TRUE) {
+# 
+#   Sys.sleep(300)
 #   
 #   if(future::resolved(future::futureOf(point_process))) {
 #     gmailr::send_message(
@@ -167,8 +157,6 @@ point_process %<-% {simulate_point_process_association_strength(
 #   }
 # }
 
-future::resolved(future::futureOf(point_process))
-
 # Pattern reconstruction #
 pattern_reconstruction %<-% {simulate_pattern_recon_association_strength(
   number_coloumns = number_coloumns,
@@ -182,8 +170,11 @@ pattern_reconstruction %<-% {simulate_pattern_recon_association_strength(
   alpha_sequence = alpha_sequence)
 }
 
+# future::resolved(future::futureOf(pattern_reconstruction))
 # while (TRUE) {
-#   
+# 
+#   Sys.sleep(300)
+#  
 #   if(future::resolved(future::futureOf(pattern_reconstruction))) {
 #     gmailr::send_message(
 #       gmailr::mime(
@@ -198,27 +189,25 @@ pattern_reconstruction %<-% {simulate_pattern_recon_association_strength(
 #   }
 # }
 
-future::resolved(future::futureOf(pattern_reconstruction))
-
 #### 5. Save data ####
 
 UtilityFunctions::save_rds(object = habitat_randomization,
-                           filename = paste0("a1_habitat_randomization_", simulation_runs, "_", number_pattern, ".rds"),
+                           filename = paste0("a1_habitat_randomization_", simulation_runs, "_", number_points, ".rds"),
                            path = paste0(getwd(), "/4_Output"), 
                            overwrite = FALSE)
 
 UtilityFunctions::save_rds(object = torus_translation,
-                           filename = paste0("a1_torus_translation_", simulation_runs, "_", number_pattern, ".rds"),
+                           filename = paste0("a1_torus_translation_", simulation_runs, "_", number_points, ".rds"),
                            path = paste0(getwd(), "/4_Output"),
                            overwrite = FALSE)
 
 UtilityFunctions::save_rds(object = point_process,
-                           filename = paste0("a1_point_process_", simulation_runs, "_", number_pattern, ".rds"),
+                           filename = paste0("a1_point_process_", simulation_runs, "_", number_points, ".rds"),
                            path = paste0(getwd(), "/4_Output"),
                            overwrite = FALSE)
 
 UtilityFunctions::save_rds(object=pattern_reconstruction,
-                           filename = paste0("a1_pattern_reconstruction_", simulation_runs, "_", number_pattern, ".rds"),
+                           filename = paste0("a1_pattern_reconstruction_", simulation_runs, "_", number_points, ".rds"),
                            path = paste0(getwd(), "/4_Output"),
                            overwrite = FALSE)
 
