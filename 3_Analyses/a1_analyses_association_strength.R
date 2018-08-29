@@ -7,16 +7,10 @@
 ##    maximilian.hesselbarth@uni-goettingen.de   ##
 ###################################################
 
-#### 1. Import packages & sunctions ####
+#### 1. Import packages & functions ####
 
-# Packages #
-library(furrr)
-library(future.batchtools)
-library(listenv)
-library(NLMR)
-library(SHAR)
-library(tidyverse)
-library(UtilityFunctions)
+# Packages
+source(paste0(getwd(), '/2_Functions/setup_packages.R'))
 
 # Source all functions in R_functions folder
 list.files(paste0(getwd(), '/2_Functions'), pattern = '^[a0_ a1_]', full.names = TRUE) %>%
@@ -38,17 +32,20 @@ resolution <- 20 # 20
 fract_dim <- 1.5 # 1.5
 
 # Approxmitated number of points for each species
-number_points <- 250 # 100 - 250 - 500???
+number_points <- 100 # 250 - 250 - 500???
 
 # Number of randomized habitat maps / point patterns
 number_maps <- 199 # 199
 number_pattern <- 199 # 199
 
 # Number of itertations pattern reconstruction
-max_runs <- 5000 # 5000
+max_runs <- 1000 # 5000
+
+# Number of simulation runs
+simulation_runs <- 100 # 50
 
 # Different association strengths
-alpha_sequence <- rep(seq(0, 1, 0.025), each = 50) # seq(0, 1, 0.025)
+alpha_sequence <- rep(seq(0, 1, 0.025), each = simulation_runs) # seq(0, 1, 0.025)
 
 #### 3. Specify future topology ####
 # 
@@ -59,8 +56,8 @@ alpha_sequence <- rep(seq(0, 1, 0.025), each = 50) # seq(0, 1, 0.025)
 # bsub <- future::tweak(future.batchtools::batchtools_lsf, template = 'lsf.tmpl',
 #                       resources = list(job.name = 'association_strength',
 #                                        log.file = 'association_strength.log',
-#                                        queue = 'mpi',
-#                                        walltime = '2:00',
+#                                        queue = 'mpi-short',
+#                                        walltime = '02:00',
 #                                        processes = 1))
 # 
 # future::plan(list(login, bsub, future::sequential))
@@ -77,8 +74,7 @@ habitat_randomization %<-% {simulate_habitat_random_association_strength(
   resolution = resolution,
   number_maps = number_maps,
   number_points = number_points,
-  alpha_sequence = 0.025)}
-
+  alpha_sequence = alpha_sequence)}
 
 # future::resolved(future::futureOf(habitat_randomization))
 # while (TRUE) {
@@ -136,7 +132,8 @@ point_process %<-% {simulate_point_process_association_strength(
   resolution = resolution,
   number_pattern = number_pattern,
   number_points = number_points,
-  alpha_sequence = alpha_sequence)}
+  alpha_sequence = alpha_sequence)
+}
 
 # future::resolved(future::futureOf(point_process))
 # while (TRUE) {
@@ -165,7 +162,6 @@ pattern_reconstruction %<-% {simulate_pattern_recon_association_strength(
   resolution = resolution,
   number_pattern = number_pattern,
   number_points = number_points,
-  simulation_runs = simulation_runs,
   max_runs = max_runs,
   alpha_sequence = alpha_sequence)
 }
@@ -191,24 +187,26 @@ pattern_reconstruction %<-% {simulate_pattern_recon_association_strength(
 
 #### 5. Save data ####
 
+overwrite <- FALSE
+
 UtilityFunctions::save_rds(object = habitat_randomization,
                            filename = paste0("a1_habitat_randomization_", simulation_runs, "_", number_points, ".rds"),
                            path = paste0(getwd(), "/4_Output"), 
-                           overwrite = FALSE)
+                           overwrite = overwrite)
 
 UtilityFunctions::save_rds(object = torus_translation,
                            filename = paste0("a1_torus_translation_", simulation_runs, "_", number_points, ".rds"),
                            path = paste0(getwd(), "/4_Output"),
-                           overwrite = FALSE)
+                           overwrite = overwrite)
 
 UtilityFunctions::save_rds(object = point_process,
                            filename = paste0("a1_point_process_", simulation_runs, "_", number_points, ".rds"),
                            path = paste0(getwd(), "/4_Output"),
-                           overwrite = FALSE)
+                           overwrite = overwrite)
 
 UtilityFunctions::save_rds(object=pattern_reconstruction,
                            filename = paste0("a1_pattern_reconstruction_", simulation_runs, "_", number_points, ".rds"),
                            path = paste0(getwd(), "/4_Output"),
-                           overwrite = FALSE)
+                           overwrite = overwrite)
 
 

@@ -10,9 +10,7 @@
 #### 1. Import packages and data ####
 
 # Packages #
-library(UtilityFunctions)
-library(SHAR)
-library(tidyverse)
+source(paste0(getwd(), '/2_Functions/setup_packages.R'))
 
 # Data #
 results <- list.files(paste0(getwd(), '/4_Output'), pattern = 'a1_', full.names = TRUE) %>%
@@ -24,18 +22,17 @@ names_combined <- paste0(names_split[, 2], "_", names_split[, 3])
 
 names(results) <- names_combined
 
-alpha_sequence <- readr::read_rds(paste0(getwd(), '/4_Output/alpha_sequence.rds'))
+# alpha_sequence <- readr::read_rds(paste0(getwd(), '/4_Output/alpha_sequence.rds'))
 
 #### 2. Preprocessing data ####
 
 results_summarised <- purrr::map_dfr(results, function(current_result) {
 
   species_type_df <- dplyr::mutate(current_result,
-                                   Species_type=factor(
-                                     dplyr::case_when(Species_code == 1 ~ "Poisson process (positive association)",
-                                                      Species_code == 2 ~ "Thomas process (positive association)",
-                                                      Species_code == 3 ~ "Poisson procces (negative association)",
-                                                      Species_code == 4 ~ "Thomas process (negative association)")))
+                                   Species_type= dplyr::case_when(Species_code == 1 ~ "Complete spatial randomness (positive association)",
+                                                                  Species_code == 2 ~ "Cluster process (positive association)",
+                                                                  Species_code == 3 ~ "Complete spatial randomness (negative association)",
+                                                                  Species_code == 4 ~ "Cluster process (negative association)"))
   
   species_type_df_grouped <- dplyr::group_by(species_type_df, Species_type, Variable)
   
@@ -51,54 +48,69 @@ results_summarised <- purrr::map_dfr(results, function(current_result) {
 }, .id = "Method")
 
 results_summarised <- dplyr::mutate(results_summarised, Method = dplyr::case_when(Method == "point_process" ~ "(I) Gamma test", 
-                                                                                  Method == "torus_translation" ~ "(II) Torus-translation test"))
+                                                                                  Method == "torus_translation" ~ "(II) Torus-translation test", 
+                                                                                  Method == "habitat_randomization" ~ "(III) Patch randomization test", 
+                                                                                  Method == "pattern_reconstruction" ~ "(IV) Pattern reconstruction"))
+
+results_summarised$Method <- factor(results_summarised$Method, 
+                                    levels = c("(I) Gamma test",               
+                                               "(II) Torus-translation test", 
+                                               "(III) Patch randomization test", 
+                                               "(IV) Pattern reconstruction"))
+
+results_summarised$Species_type <- factor(results_summarised$Species_type, 
+                                          levels = c("Complete spatial randomness (positive association)", 
+                                                     "Cluster process (positive association)",
+                                                     "Complete spatial randomness (negative association)",
+                                                     "Cluster process (negative association)"))
+
 
 #### 3. Plotting data ####
 
+colors_spec <- rev(RColorBrewer::brewer.pal(n = 4, name = "Spectral"))
+
 strength_association_correct_ggplot <- ggplot(data = results_summarised) +
-  geom_line(aes(x = Variable, y = Correct_mean, 
-                col = Method, group = Method), size = 1) +
-  geom_ribbon(aes(x = Variable, ymin = Correct_lo, ymax = Correct_hi, 
-                  fill = Method, group = Method), alpha = 0.3) +
+  geom_line(aes(x = Variable, y = Correct_mean, col = Method, group = Method), size = 0.75) +
+  geom_ribbon(aes(x = Variable, ymin = Correct_lo, ymax = Correct_hi, fill = Method, group = Method), alpha = 0.3) +
   facet_wrap(~ Species_type, nrow = 2, ncol = 2) + 
-  scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2)) +
+  scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.25)) +
   scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2)) +
-  scale_fill_viridis_d(name = '') +
-  scale_colour_viridis_d(name = '') +
+  scale_fill_manual(values = colors_spec, name = '') +
+  scale_colour_manual(values = colors_spec, name = '') +
   labs(x = expression(paste("Association strength ", alpha)), y = "Mean correct detections") +
-  theme_bw(base_size = 25) + 
+  theme_classic(base_size = 40) + 
   theme(legend.position = "bottom")
 
 strength_association_false_ggplot <- ggplot(data = results_summarised) +
   geom_line(aes(x = Variable, y = False_mean, 
-                col = Method, group = Method), size = 0.75) +
+                col = Method, group = Method), size = 1) +
   geom_ribbon(aes(x = Variable, ymin = False_lo, ymax = False_hi, 
                   fill = Method, group = Method), alpha = 0.3) +
   facet_wrap(~ Species_type, nrow = 2, ncol = 2) + 
   scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2)) +
   scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2)) +
-  scale_fill_viridis_d(name = '') +
-  scale_colour_viridis_d(name = '') +
+  scale_fill_manual(values = colors_spec, name = '') +
+  scale_colour_manual(values = colors_spec, name = '') +
   labs(x = expression(paste("Association strength ", alpha)), y = "Mean false detections") +
-  theme_bw(base_size = 18.5) + 
+  theme_classic(base_size = 40) + 
   theme(legend.position = "bottom")
 
 
 #### 4. Save plots ####
 
-width = 650
-height = 250
-dpi = 900
+width <- 700
+height <- 400
+overwrite <- TRUE
 
 UtilityFunctions::save_ggplot(plot = strength_association_correct_ggplot, 
                               path = paste0(getwd(), "/6_Figures"),
                               filename = "a1_association_strength_correct.png",
-                              width = width, height = height, units = "mm", dpi = dpi, 
-                              overwrite = TRUE)
+                              width = width, height = height, units = "mm", 
+                              overwrite = overwrite)
 
 UtilityFunctions::save_ggplot(plot = strength_association_false_ggplot, 
                               path = paste0(getwd(), "/6_Figures"),
                               filename = "a1_association_strength_false.png",
-                              width = width, height = height, units = "mm", dpi = dpi, 
-                              overwrite = FALSE)
+                              width = width, height = height, units = "mm",
+                              overwrite = overwrite)
 

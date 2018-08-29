@@ -2,7 +2,7 @@
 #'
 #' Algorithm to create simulation species with choosen characteristics
 #' 
-#' @param raster [\code{raster(1)}]\cr Raster object of the raster package with habitats
+#' @param habitats_poly [\code{sf(1)}]\cr sf object with habitats
 #' @param type [\code{string(1)}]\cr 'positive' or 'negative' associations
 #' @param process [\code{string(1)}]\cr Process type to chose. Either 'Poisson' or 'Thomas'
 #' @param habitat [\code{numeric(1)}]\cr Habitat to which species is associated
@@ -14,31 +14,35 @@
 #' @return ppp object of the spatstat package with simulated species
 
 #' @export
-create_simulation_species <- function(raster, type, process, habitat, number_points = 100, association_strength = 0.3,
+create_simulation_species <- function(habitats_poly, owin_overall,  type, process, habitat, number_points = 100, association_strength = 0.3,
                                       species_code = 0, verbose = TRUE){
   
-  owin_overall <- raster %>%
-    raster::rasterToPolygons(fun = function(x) !is.na(x), na.rm = TRUE, dissolve = TRUE) %>%
-    maptools::unionSpatialPolygons(ID = rep(1, times = length(.))) %>%
-    maptools::as.owin.SpatialPolygons()
-  
-  lambda <- number_points / spatstat::area(owin_overall)
   scale <- mean(diff(owin_overall$yrange), diff(owin_overall$xrange)) / 25
   
   if(type=="positive"){
     
-    m_pos <- association_strength
-    
     if(process=="Poisson"){
       
-      pattern_a <- spatstat::rpoispp(lambda = lambda, nsim = 1, drop = TRUE, win = owin_overall)
+      owin_pattern <- maptools::as.owin.SpatialPolygons(habitats_poly[habitats_poly$layer == habitat,])
       
-      owin_pattern <- raster %>%
-        raster::rasterToPolygons(fun = function(x){x == habitat}, dissolve = TRUE) %>%
-        maptools::as.owin.SpatialPolygons() 
+      # owin_pattern <- habitats_poly %>% 
+      #   dplyr::filter(layer == habitat) %>%
+      #   # sf::as_Spatial() %>%
+      #   as("Spatial") %>%
+      #   maptools::as.owin.SpatialPolygons()
       
-      pattern <- spatstat::runifpoint(n = floor(pattern_a$n * m_pos), win = owin_pattern) %>%
-        spatstat::superimpose.ppp(pattern_a, W = owin_overall)
+      pattern_a <- mobsim::sim_poisson_community(s_pool = 1, 
+                                                 n_sim = number_points, 
+                                                 xrange = owin_overall$xrange,
+                                                 yrange = owin_overall$yrange)
+      
+      pattern_a <- spatstat::ppp(x = pattern_a$census$x,
+                                 y = pattern_a$census$y,
+                                 window = owin_overall)
+      
+      pattern_b <- spatstat::runifpoint(n = floor(pattern_a$n * association_strength), win = owin_pattern)
+      
+      pattern <- spatstat::superimpose.ppp(pattern_a, pattern_b, W = owin_overall)
       
       marks_pattern <- data.frame(Species = rep(paste0("Poisson_positive_", habitat), pattern$n),
                                   Species_code = species_code,
@@ -48,14 +52,27 @@ create_simulation_species <- function(raster, type, process, habitat, number_poi
     
     else if(process=="Thomas"){
       
-      pattern_a <- spatstat::rThomas(kappa = lambda/5, scale = scale, mu = 5, win = owin_overall)
+      # owin_pattern <- habitats_poly %>% 
+      #   dplyr::filter(layer == habitat) %>%
+      #   sf::as_Spatial() %>%
+      #   maptools::as.owin.SpatialPolygons() 
       
-      owin_pattern <- raster %>%
-        raster::rasterToPolygons(fun = function(x){x == habitat}, dissolve = TRUE) %>%
-        maptools::as.owin.SpatialPolygons() 
+      owin_pattern <- maptools::as.owin.SpatialPolygons(habitats_poly[habitats_poly$layer == habitat,])
       
-      pattern <- spatstat::runifpoint(n = floor(pattern_a$n*m_pos), win = owin_pattern) %>%
-        spatstat::superimpose(pattern_a, W = owin_overall)
+      pattern_a <- mobsim::sim_thomas_community(s_pool = 1, 
+                                                n_sim = number_points, 
+                                                sigma = scale, 
+                                                cluster_points = 5, 
+                                                xrange = owin_overall$xrange, 
+                                                yrange = owin_overall$yrange)
+      
+      pattern_a <- spatstat::ppp(x = pattern_a$census$x,
+                                 y = pattern_a$census$y,
+                                 window = owin_overall)
+      
+      pattern_b <- spatstat::runifpoint(n = floor(pattern_a$n * association_strength), win = owin_pattern)
+      
+      pattern <- spatstat::superimpose(pattern_a, pattern_b, W = owin_overall)
       
       marks_pattern <- data.frame(Species = rep(paste0("Thomas_positive_", habitat), pattern$n),
                                   Species_code = species_code,
@@ -72,18 +89,26 @@ create_simulation_species <- function(raster, type, process, habitat, number_poi
   
   else if (type=="negative"){
     
-    m_neg <- 1-association_strength
-    
     if(process=="Poisson"){
       
-      pattern_a <- spatstat::rpoispp(lambda = lambda, nsim = 1, drop = TRUE, win = owin_overall)
+      # owin_pattern <- habitats_poly %>% 
+      #   dplyr::filter(layer == habitat) %>%
+      #   sf::as_Spatial() %>%
+      #   maptools::as.owin.SpatialPolygons()
       
-      owin_pattern <- raster %>%
-        raster::rasterToPolygons(fun = function(x){x == habitat}, dissolve = TRUE) %>%
-        maptools::as.owin.SpatialPolygons()
+      owin_pattern <- maptools::as.owin.SpatialPolygons(habitats_poly[habitats_poly$layer == habitat,])
+      
+      pattern_a <- mobsim::sim_poisson_community(s_pool = 1, 
+                                                 n_sim = number_points, 
+                                                 xrange = owin_overall$xrange,
+                                                 yrange = owin_overall$yrange)
+      
+      pattern_a <- spatstat::ppp(x = pattern_a$census$x,
+                                 y = pattern_a$census$y,
+                                 window = owin_overall)
       
       pattern_b <- pattern_a[!spatstat::inside.owin(x = pattern_a, w = owin_pattern)]
-      pattern_c <- spatstat::rthin(pattern_a[spatstat::inside.owin(x = pattern_a, w = owin_pattern)], m_neg)
+      pattern_c <- spatstat::rthin(pattern_a[spatstat::inside.owin(x = pattern_a, w = owin_pattern)], 1 - association_strength)
       
       pattern <- spatstat::superimpose(pattern_b, pattern_c, W = owin_overall)
       
@@ -95,14 +120,26 @@ create_simulation_species <- function(raster, type, process, habitat, number_poi
     
     else if(process=="Thomas"){
       
-      pattern_a <- spatstat::rThomas(kappa = lambda/5, scale = scale, mu = 5, win = owin_overall)
+      # owin_pattern <- habitats_poly %>% 
+      #   dplyr::filter(layer == habitat) %>%
+      #   sf::as_Spatial() %>%
+      #   maptools::as.owin.SpatialPolygons()
       
-      owin_pattern <- raster %>%
-        raster::rasterToPolygons(fun = function(x){x == habitat}, dissolve = TRUE) %>%
-        maptools::as.owin.SpatialPolygons()
+      owin_pattern <- maptools::as.owin.SpatialPolygons(habitats_poly[habitats_poly$layer == habitat,])
+      
+      pattern_a <- mobsim::sim_thomas_community(s_pool = 1, 
+                                                n_sim = number_points, 
+                                                sigma = scale, 
+                                                cluster_points = 5, 
+                                                xrange = owin_overall$xrange, 
+                                                yrange = owin_overall$yrange)
+      
+      pattern_a <- spatstat::ppp(x = pattern_a$census$x,
+                                 y = pattern_a$census$y,
+                                 window = owin_overall)
       
       pattern_b <- pattern_a[!spatstat::inside.owin(x = pattern_a, w = owin_pattern)]
-      pattern_c <- spatstat::rthin(pattern_a[spatstat::inside.owin(x = pattern_a, w = owin_pattern)], m_neg)
+      pattern_c <- spatstat::rthin(pattern_a[spatstat::inside.owin(x = pattern_a, w = owin_pattern)], 1 - association_strength)
       
       pattern <- spatstat::superimpose(pattern_b, pattern_c, W = owin_overall)
       

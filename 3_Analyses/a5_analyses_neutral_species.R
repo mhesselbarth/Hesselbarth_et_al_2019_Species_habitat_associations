@@ -31,17 +31,21 @@ seed <- set.seed(42)
 # Number of coloumns and rows for neutral landscape
 number_coloumns <- 30 # 30
 number_rows <- 30 # 30
+
 # Resolution of neutral landscape
 resolution <- 20 # 20
+
 # Roughness of neutral landscape
 roughness <- 0.3 # 0.3
+
 # Approxmitated number of points for each species
 number_points <- 100 # 100 
-# Number of runs
-simulation_runs <- 50 # 50
+
 # Number of randomized habitat maps / point patterns
+
 number_maps <- 199 # 199
 number_pattern <- 199 # 199
+
 # Number of itertations pattern reconstruction
 max_runs <- 5000 # 2500
 
@@ -52,16 +56,15 @@ max_runs <- 5000 # 2500
 # 
 # login <- future::tweak(remote, workers = "gwdu101.gwdg.de", user = 'hesselbarth3')
 # bsub <- future::tweak(future.batchtools::batchtools_lsf, template = 'lsf.tmpl',
-#                       resources = list(job.name = 'neutral_species',
-#                                        log.file = 'neutral_species.log',
-#                                        queue = 'mpi',
-#                                        walltime = '48:00',
-#                                        processes = 24))
+#                       resources = list(job.name = 'association_strength',
+#                                        log.file = 'association_strength.log',
+#                                        queue = 'mpi-short',
+#                                        walltime = '02:00',
+#                                        processes = 1))
 # 
-# future::plan(list(login, bsub, future::multiprocess))
+# future::plan(list(login, bsub, future::sequential))
 # 
-# future::plan(list(future::multiprocess, future::multiprocess))
-# future::plan(future::multiprocess)
+# future::plan(future::sequential)
 # 
 #### 4. Simulation study of different methods to analyze species habitat assocations ####
 
@@ -71,16 +74,14 @@ habitat_randomization %<-% simulate_habitat_random_neutral(number_coloumns=numbe
                                                            roughness=roughness,
                                                            resolution=resolution,
                                                            number_maps=number_maps,
-                                                           number_points=number_points,
-                                                           simulation_runs=simulation_runs)
+                                                           number_points=number_points)
 
 # Torus translation (Harms et al. 2001) #
 torus_translation %<-% simulate_torus_trans_neutral(number_coloumns=number_coloumns,
                                                     number_rows=number_rows,
                                                     roughness=roughness,
                                                     resolution=resolution,
-                                                    number_points=number_points,
-                                                    simulation_runs=simulation_runs)
+                                                    number_points=number_points)
 
 # Gamma test (Plotkin et al. 2000) #
 point_process %<-% simulate_point_process_neutral(number_coloumns=number_coloumns, 
@@ -88,8 +89,7 @@ point_process %<-% simulate_point_process_neutral(number_coloumns=number_coloumn
                                                   roughness=roughness,
                                                   resolution=resolution,
                                                   number_pattern=number_pattern,
-                                                  number_points=number_points,
-                                                  simulation_runs=simulation_runs)
+                                                  number_points=number_points)
 
 # Pattern reconstruction #
 pattern_reconstruction %<-% simulate_pattern_recon_neutral(number_coloumns=number_coloumns, 
@@ -97,8 +97,7 @@ pattern_reconstruction %<-% simulate_pattern_recon_neutral(number_coloumns=numbe
                                                            roughness=roughness,
                                                            resolution=resolution,
                                                            number_pattern=number_pattern,
-                                                           number_points=number_points,
-                                                           simulation_runs=simulation_runs)
+                                                           number_points=number_points)
 
 #### 5. Save data ####
 
