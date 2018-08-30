@@ -52,14 +52,14 @@ results_df_long_reclassified <- results_df_long %>%
 
 pcf_observed <- results_df_long_reclassified %>%
   dplyr::filter(pattern == "Observed", 
-                species == "species_2")
+                species == "species_1")
 
 pcf_null_model <- results_df_long_reclassified %>%
   dplyr::filter(pattern == "Simulation") %>% 
   dplyr::group_by(species, method, r) %>% 
   dplyr::summarise(lo=stats::quantile(iso, probs = 0.025),
                    hi=stats::quantile(iso, probs = 0.975)) %>% 
-  dplyr::filter(species == "species_2")
+  dplyr::filter(species == "species_1")
 
 pcf_null_model$method <- factor(pcf_null_model$method, 
                                 levels = c("Gamma test",
@@ -77,7 +77,7 @@ plot_method_comparison <- ggplot(data = pcf_observed) +
   scale_fill_manual(name = "", values = c("Null model" = "grey")) +
   facet_wrap(~ method, ncol = 1) +
   labs(x = "r [m]", y = "g(r)") +
-  theme_classic(base_size = 40) +  
+  theme_classic(base_size = 30) +  
   guides(color = guide_legend(nrow = 2, byrow = TRUE)) +
   theme(legend.position="bottom")
 
@@ -85,5 +85,5 @@ plot_method_comparison <- ggplot(data = pcf_observed) +
 UtilityFunctions::save_ggplot(plot = plot_method_comparison, 
                               path = paste0(getwd(), "/6_Figures"),
                               filename = "a0_plot_method_comparison.png",
-                              width = 350, height = 300, units = "mm", 
+                              width = 325, height = 250, units = "mm", 
                               overwrite = TRUE)

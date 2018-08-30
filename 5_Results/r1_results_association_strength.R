@@ -17,16 +17,21 @@ results <- list.files(paste0(getwd(), '/4_Output'), pattern = 'a1_', full.names 
   purrr::map(function(files) readr::read_rds(files))
 
 names_result <- list.files(paste0(getwd(), '/4_Output'), pattern = 'a1_', full.names = FALSE)
-names_split <- stringr::str_split(names_result, pattern = "_", simplify = TRUE)
-names_combined <- paste0(names_split[, 2], "_", names_split[, 3])
+names_short <- stringr::str_sub(names_result, start = 1, end = -5)
+names_split <- stringr::str_split(names_short, pattern = "_", simplify = TRUE)
+names_combined <- paste0(names_split[, 2], "_", names_split[, 3], 
+                         "_", names_split[, 4], "_", names_split[, 5])
 
 names(results) <- names_combined
 
-# alpha_sequence <- readr::read_rds(paste0(getwd(), '/4_Output/alpha_sequence.rds'))
-
 #### 2. Preprocessing data ####
 
-results_summarised <- purrr::map_dfr(results, function(current_result) {
+pattern <- "_100_100"
+
+results_filter <- results[stringr::str_detect(names(results), pattern = pattern)]
+names(results_filter)
+
+results_summarised <- purrr::map_dfr(results_filter, function(current_result) {
 
   species_type_df <- dplyr::mutate(current_result,
                                    Species_type= dplyr::case_when(Species_code == 1 ~ "Complete spatial randomness (positive association)",
@@ -47,10 +52,10 @@ results_summarised <- purrr::map_dfr(results, function(current_result) {
                    )
 }, .id = "Method")
 
-results_summarised <- dplyr::mutate(results_summarised, Method = dplyr::case_when(Method == "point_process" ~ "(I) Gamma test", 
-                                                                                  Method == "torus_translation" ~ "(II) Torus-translation test", 
-                                                                                  Method == "habitat_randomization" ~ "(III) Patch randomization test", 
-                                                                                  Method == "pattern_reconstruction" ~ "(IV) Pattern reconstruction"))
+results_summarised <- dplyr::mutate(results_summarised, Method = dplyr::case_when(Method == paste0("point_process", pattern) ~ "(I) Gamma test", 
+                                                                                  Method == paste0("torus_translation", pattern) ~ "(II) Torus-translation test", 
+                                                                                  Method == paste0("habitat_randomization", pattern) ~ "(III) Patch randomization test", 
+                                                                                  Method == paste0("pattern_reconstruction", pattern) ~ "(IV) Pattern reconstruction"))
 
 results_summarised$Method <- factor(results_summarised$Method, 
                                     levels = c("(I) Gamma test",               

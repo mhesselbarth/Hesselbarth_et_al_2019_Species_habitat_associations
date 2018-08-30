@@ -39,7 +39,7 @@ plot_gamma_test <- ggplot(data = results$gamma_test) +
   theme(aspect.ratio = 1, 
         panel.spacing = unit(15, "mm"),
         legend.position = "none", 
-        text = element_text(size = 40),
+        text = element_text(size = 30),
         axis.title = element_blank(),
         axis.text = element_blank(),
         axis.ticks = element_blank())
@@ -56,7 +56,7 @@ plot_habitat_randomization_test <- ggplot(data = results$habitats_randomized) +
   theme(aspect.ratio = 1, 
         panel.spacing = unit(15, "mm"),
         legend.position = "none",
-        text = element_text(size = 40),
+        text = element_text(size = 30),
         axis.title = element_blank(),
         axis.text = element_blank(),
         axis.ticks = element_blank())
@@ -72,7 +72,7 @@ plot_torus_translation_test <- ggplot(data = results$habitats_torus) +
   theme(aspect.ratio = 1, 
         panel.spacing = unit(15, "mm"),
         legend.position = "none", 
-        text = element_text(size = 40),
+        text = element_text(size = 30),
         axis.title = element_blank(),
         axis.text = element_blank(),
         axis.ticks = element_blank())
