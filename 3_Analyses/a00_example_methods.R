@@ -26,7 +26,7 @@ simulation_landscape <- NLMR::nlm_fbm(ncol = 50, nrow = 50,
   SHAR::classify_habitats(classes = 5)
 
 simulation_pattern <- create_simulation_pattern(raster = simulation_landscape, 
-                                                number_points = 250, 
+                                                number_points = 100, 
                                                 association_strength = 0.35)
 
 example_species <- spatstat::subset.ppp(simulation_pattern, Species_code == 2)

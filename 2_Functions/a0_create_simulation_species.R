@@ -19,17 +19,11 @@ create_simulation_species <- function(habitats_poly, owin_overall,  type, proces
   
   scale <- mean(diff(owin_overall$yrange), diff(owin_overall$xrange)) / 25
   
-  if(type=="positive"){
+  if(type == "positive"){
     
-    if(process=="Poisson"){
+    if(process == "Poisson"){
       
       owin_pattern <- maptools::as.owin.SpatialPolygons(habitats_poly[habitats_poly$layer == habitat,])
-      
-      # owin_pattern <- habitats_poly %>% 
-      #   dplyr::filter(layer == habitat) %>%
-      #   # sf::as_Spatial() %>%
-      #   as("Spatial") %>%
-      #   maptools::as.owin.SpatialPolygons()
       
       pattern_a <- mobsim::sim_poisson_community(s_pool = 1, 
                                                  n_sim = number_points, 
@@ -50,12 +44,7 @@ create_simulation_species <- function(habitats_poly, owin_overall,  type, proces
       spatstat::marks(pattern) <- marks_pattern
     }
     
-    else if(process=="Thomas"){
-      
-      # owin_pattern <- habitats_poly %>% 
-      #   dplyr::filter(layer == habitat) %>%
-      #   sf::as_Spatial() %>%
-      #   maptools::as.owin.SpatialPolygons() 
+    else if(process == "Thomas"){
       
       owin_pattern <- maptools::as.owin.SpatialPolygons(habitats_poly[habitats_poly$layer == habitat,])
       
@@ -87,14 +76,12 @@ create_simulation_species <- function(habitats_poly, owin_overall,  type, proces
     }
   }
   
-  else if (type=="negative"){
+  else if (type == "negative"){
     
-    if(process=="Poisson"){
-      
-      # owin_pattern <- habitats_poly %>% 
-      #   dplyr::filter(layer == habitat) %>%
-      #   sf::as_Spatial() %>%
-      #   maptools::as.owin.SpatialPolygons()
+    spatstat.options(fastthin=FALSE)
+    p_retain <- 1 - association_strength
+    
+    if(process == "Poisson"){
       
       owin_pattern <- maptools::as.owin.SpatialPolygons(habitats_poly[habitats_poly$layer == habitat,])
       
@@ -108,7 +95,7 @@ create_simulation_species <- function(habitats_poly, owin_overall,  type, proces
                                  window = owin_overall)
       
       pattern_b <- pattern_a[!spatstat::inside.owin(x = pattern_a, w = owin_pattern)]
-      pattern_c <- spatstat::rthin(pattern_a[spatstat::inside.owin(x = pattern_a, w = owin_pattern)], 1 - association_strength)
+      pattern_c <- spatstat::rthin(X = pattern_a[spatstat::inside.owin(x = pattern_a, w = owin_pattern)], P = p_retain)
       
       pattern <- spatstat::superimpose(pattern_b, pattern_c, W = owin_overall)
       
@@ -119,11 +106,6 @@ create_simulation_species <- function(habitats_poly, owin_overall,  type, proces
     }
     
     else if(process=="Thomas"){
-      
-      # owin_pattern <- habitats_poly %>% 
-      #   dplyr::filter(layer == habitat) %>%
-      #   sf::as_Spatial() %>%
-      #   maptools::as.owin.SpatialPolygons()
       
       owin_pattern <- maptools::as.owin.SpatialPolygons(habitats_poly[habitats_poly$layer == habitat,])
       
@@ -139,7 +121,7 @@ create_simulation_species <- function(habitats_poly, owin_overall,  type, proces
                                  window = owin_overall)
       
       pattern_b <- pattern_a[!spatstat::inside.owin(x = pattern_a, w = owin_pattern)]
-      pattern_c <- spatstat::rthin(pattern_a[spatstat::inside.owin(x = pattern_a, w = owin_pattern)], 1 - association_strength)
+      pattern_c <- spatstat::rthin(X = pattern_a[spatstat::inside.owin(x = pattern_a, w = owin_pattern)], P = p_retain)
       
       pattern <- spatstat::superimpose(pattern_b, pattern_c, W = owin_overall)
       

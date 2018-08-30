@@ -62,7 +62,7 @@ alpha_sequence <- rep(seq(0, 1, 0.025), each = simulation_runs) # seq(0, 1, 0.02
 # 
 # future::plan(list(login, bsub, future::sequential))
 # 
-# future::plan(future::sequential)
+# future::plan(future::multiprocess)
 # 
 #### 4. Simulation study of different methods to analyze species habitat assocations ####
 

@@ -45,7 +45,7 @@ simulation_habitats <- NLMR::nlm_fbm(ncol = 30, nrow = 30,
   SHAR::classify_habitats(classes = 5)
 
 simulation_pattern <- create_simulation_pattern(raster = simulation_habitats, 
-                                                number_points = 250, 
+                                                number_points = 100, 
                                                 association_strength = 0.35)
     
 names_species <- simulation_pattern$marks$Species %>%
@@ -122,27 +122,29 @@ fitted_species_4 <- fit_point_process(species_4,
 
 #### 6. Save results ####
 
+overwrite <- TRUE
+
 # Species 1
 UtilityFunctions::save_rds(object = reconstruction_species_1,
                            filename = "a01_reconstruction_species_1.rds",
                            path = paste0(getwd(), "/4_Output"), 
-                           overwrite = FALSE)
+                           overwrite = overwrite)
 
 UtilityFunctions::save_rds(object = fitted_species_1,
                            filename = "a01_fitted_species_1.rds",
                            path = paste0(getwd(), "/4_Output"), 
-                           overwrite = FALSE)
+                           overwrite = overwrite)
 
 # Species 2
 UtilityFunctions::save_rds(object = reconstruction_species_2,
                            filename = "a01_reconstruction_species_2.rds",
                            path = paste0(getwd(), "/4_Output"), 
-                           overwrite = FALSE)
+                           overwrite = overwrite)
 
 UtilityFunctions::save_rds(object = fitted_species_2,
                            filename = "a01_fitted_species_2.rds",
                            path = paste0(getwd(), "/4_Output"), 
-                           overwrite = FALSE)
+                           overwrite = overwrite)
 
 # Species 3
 UtilityFunctions::save_rds(object = reconstruction_species_3,
