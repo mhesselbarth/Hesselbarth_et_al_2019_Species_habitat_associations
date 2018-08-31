@@ -13,7 +13,7 @@
 source(paste0(getwd(), '/2_Functions/setup_packages.R'))
 
 # Source all functions in R_functions folder
-list.files(paste0(getwd(), '/2_Functions'), pattern = 'a0_', full.names = TRUE) %>%
+list.files(paste0(getwd(), '/2_Functions'), pattern = 'f0_', full.names = TRUE) %>%
   purrr::walk(function(x) source(x))
 
 set.seed(42, kind = "L'Ecuyer-CMRG")
@@ -121,33 +121,33 @@ pattern_reconstruction_long$pattern <- factor(pattern_reconstruction_long$patter
 overwrite <- TRUE
 
 UtilityFunctions::save_rds(object = simulation_landscape,
-                           filename = "a00_simulation_landscape.rds",
+                           filename = "o00_simulation_landscape.rds",
                            path = paste0(getwd(), "/4_Output"), 
                            overwrite = overwrite)
 
 UtilityFunctions::save_rds(object = example_species,
-                           filename = "a00_example_species.rds",
+                           filename = "o00_example_species.rds",
                            path = paste0(getwd(), "/4_Output"), 
                            overwrite = overwrite)
 
 
 UtilityFunctions::save_rds(object = gamma_test_long,
-                           filename = "a00_gamma_test.rds",
+                           filename = "o00_gamma_test.rds",
                            path = paste0(getwd(), "/4_Output"), 
                            overwrite = overwrite)
 
 UtilityFunctions::save_rds(object = habitats_randomized_long,
-                           filename = "a00_habitats_randomized.rds",
+                           filename = "o00_habitats_randomized.rds",
                            path = paste0(getwd(), "/4_Output"), 
                            overwrite = overwrite)
 
 UtilityFunctions::save_rds(object = habitats_torus_long,
-                           filename = "a00_habitats_torus.rds",
+                           filename = "o00_habitats_torus.rds",
                            path = paste0(getwd(), "/4_Output"), 
                            overwrite = overwrite)
 
 UtilityFunctions::save_rds(object = pattern_reconstruction_long,
-                           filename = "a00_pattern_reconstruction.rds",
+                           filename = "o00_pattern_reconstruction.rds",
                            path = paste0(getwd(), "/4_Output"), 
                            overwrite = overwrite)
 

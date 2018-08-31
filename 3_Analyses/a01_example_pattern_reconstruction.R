@@ -13,7 +13,7 @@
 source(paste0(getwd(), '/2_Functions/setup_packages.R'))
 
 # Source all functions in R_functions folder
-list.files(paste0(getwd(), '/2_Functions'), pattern = '^[a0_ a1_]', full.names = TRUE) %>%
+list.files(paste0(getwd(), '/2_Functions'), pattern = '^[f0_ f1_]', full.names = TRUE) %>%
   purrr::walk(function(x) source(x))
 
 #### 2. Specify future topology ####
@@ -126,45 +126,45 @@ overwrite <- TRUE
 
 # Species 1
 UtilityFunctions::save_rds(object = reconstruction_species_1,
-                           filename = "a01_reconstruction_species_1.rds",
+                           filename = "o01_reconstruction_species_1.rds",
                            path = paste0(getwd(), "/4_Output"), 
                            overwrite = overwrite)
 
 UtilityFunctions::save_rds(object = fitted_species_1,
-                           filename = "a01_fitted_species_1.rds",
+                           filename = "o01_fitted_species_1.rds",
                            path = paste0(getwd(), "/4_Output"), 
                            overwrite = overwrite)
 
 # Species 2
 UtilityFunctions::save_rds(object = reconstruction_species_2,
-                           filename = "a01_reconstruction_species_2.rds",
+                           filename = "o01_reconstruction_species_2.rds",
                            path = paste0(getwd(), "/4_Output"), 
                            overwrite = overwrite)
 
 UtilityFunctions::save_rds(object = fitted_species_2,
-                           filename = "a01_fitted_species_2.rds",
+                           filename = "o01_fitted_species_2.rds",
                            path = paste0(getwd(), "/4_Output"), 
                            overwrite = overwrite)
 
 # Species 3
 UtilityFunctions::save_rds(object = reconstruction_species_3,
-                           filename = "a01_reconstruction_species_3.rds",
+                           filename = "o01_reconstruction_species_3.rds",
                            path = paste0(getwd(), "/4_Output"), 
                            overwrite = FALSE)
 
 UtilityFunctions::save_rds(object = fitted_species_3,
-                           filename = "a01_fitted_species_3.rds",
+                           filename = "o01_fitted_species_3.rds",
                            path = paste0(getwd(), "/4_Output"), 
                            overwrite = FALSE)
 
 # Species 4
 UtilityFunctions::save_rds(object = reconstruction_species_4,
-                           filename = "a01_reconstruction_species_4.rds",
+                           filename = "o01_reconstruction_species_4.rds",
                            path = paste0(getwd(), "/4_Output"), 
                            overwrite = FALSE)
 
 UtilityFunctions::save_rds(object = fitted_species_4,
-                           filename = "a01_fitted_species_4.rds",
+                           filename = "o01_fitted_species_4.rds",
                            path = paste0(getwd(), "/4_Output"), 
                            overwrite = FALSE)
 

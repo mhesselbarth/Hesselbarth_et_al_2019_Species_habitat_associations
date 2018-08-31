@@ -13,10 +13,10 @@
 source(paste0(getwd(), '/2_Functions/setup_packages.R'))
 
 # Data #
-results <- list.files(paste0(getwd(), '/4_Output'), pattern = 'a1_', full.names = TRUE) %>%
+results <- list.files(paste0(getwd(), '/4_Output'), pattern = 'o1_', full.names = TRUE) %>%
   purrr::map(function(files) readr::read_rds(files))
 
-names_result <- list.files(paste0(getwd(), '/4_Output'), pattern = 'a1_', full.names = FALSE)
+names_result <- list.files(paste0(getwd(), '/4_Output'), pattern = 'o1_', full.names = FALSE)
 names_short <- stringr::str_sub(names_result, start = 1, end = -5)
 names_split <- stringr::str_split(names_short, pattern = "_", simplify = TRUE)
 names_combined <- paste0(names_split[, 2], "_", names_split[, 3], 

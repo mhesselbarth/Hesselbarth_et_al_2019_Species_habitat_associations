@@ -13,7 +13,7 @@
 source(paste0(getwd(), '/2_Functions/setup_packages.R'))
 
 # Source all functions in R_functions folder
-list.files(paste0(getwd(), '/2_Functions'), pattern = '^[a0_ a2_]', full.names = TRUE) %>%
+list.files(paste0(getwd(), '/2_Functions'), pattern = '^[f0_ f2_]', full.names = TRUE) %>%
   purrr::walk(function(x) source(x))
 
 #### 2. Define parameters ####
@@ -129,21 +129,21 @@ future::resolved(future::futureOf(pattern_reconstruction))
 overwrite <- FALSE
 
 UtilityFunctions::save_rds(object = habitat_randomization,
-                           filename = paste0("r2_habitat_randomization_", simulation_runs, "_", number_pattern, ".rds"),
+                           filename = paste0("o2_habitat_randomization_", simulation_runs, "_", number_pattern, ".rds"),
                            path = paste0(getwd(), "/4_Output"),
                            overwrite = FALSE)
 
 UtilityFunctions::save_rds(object = torus_translation,
-                           filename = paste0("r2_torus_translation_", simulation_runs, "_", number_pattern, ".rds"),
+                           filename = paste0("o2_torus_translation_", simulation_runs, "_", number_pattern, ".rds"),
                            path = paste0(getwd(), "/4_Output"),
                            overwrite = FALSE)
 
 UtilityFunctions::save_rds(object = point_process,
-                           filename = paste0("r2_point_process_", simulation_runs, "_", number_pattern, ".rds"),
+                           filename = paste0("o2_point_process_", simulation_runs, "_", number_pattern, ".rds"),
                            path = paste0(getwd(), "/4_Output"),
                            overwrite = FALSE)
 
 UtilityFunctions::save_rds(object=pattern_reconstruction,
-                           filename = paste0("r2_pattern_reconstruction_", simulation_runs, "_", number_pattern, ".rds"),
+                           filename = paste0("o2_pattern_reconstruction_", simulation_runs, "_", number_pattern, ".rds"),
                            path = paste0(getwd(), "/4_Output"),
                            overwrite = FALSE)

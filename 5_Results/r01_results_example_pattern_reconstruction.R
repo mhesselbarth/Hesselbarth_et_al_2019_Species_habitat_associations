@@ -13,10 +13,10 @@
 source(paste0(getwd(), '/2_Functions/setup_packages.R'))
 
 #### 1. Input data ####
-results <- list.files(paste0(getwd(), '/4_Output'), pattern = 'a01_', full.names = TRUE) %>%
+results <- list.files(paste0(getwd(), '/4_Output'), pattern = 'o01_', full.names = TRUE) %>%
   purrr::map(function(files) readr::read_rds(files))
 
-results_names <- list.files(paste0(getwd(), '/4_Output'), pattern = 'a01_', full.names = FALSE) %>%
+results_names <- list.files(paste0(getwd(), '/4_Output'), pattern = 'o01_', full.names = FALSE) %>%
   purrr::map_chr(function(files) files)
 
 results_names <- stringr::str_sub(results_names, start = 1, end = -5)

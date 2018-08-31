@@ -13,7 +13,7 @@
 source(paste0(getwd(), '/2_Functions/setup_packages.R'))
 
 # Source all functions in R_functions folder
-list.files(paste0(getwd(), '/2_Functions'), pattern = '^[a0_ a1_]', full.names = TRUE) %>%
+list.files(paste0(getwd(), '/2_Functions'), pattern = '^[f0_ f1_]', full.names = TRUE) %>%
   purrr::walk(function(x) source(x))
 
 #### 2. Define parameters ####
@@ -190,22 +190,22 @@ pattern_reconstruction %<-% {simulate_pattern_recon_association_strength(
 overwrite <- FALSE
 
 UtilityFunctions::save_rds(object = habitat_randomization,
-                           filename = paste0("a1_habitat_randomization_", simulation_runs, "_", number_points, ".rds"),
+                           filename = paste0("o1_habitat_randomization_", simulation_runs, "_", number_points, ".rds"),
                            path = paste0(getwd(), "/4_Output"), 
                            overwrite = overwrite)
 
 UtilityFunctions::save_rds(object = torus_translation,
-                           filename = paste0("a1_torus_translation_", simulation_runs, "_", number_points, ".rds"),
+                           filename = paste0("o1_torus_translation_", simulation_runs, "_", number_points, ".rds"),
                            path = paste0(getwd(), "/4_Output"),
                            overwrite = overwrite)
 
 UtilityFunctions::save_rds(object = point_process,
-                           filename = paste0("a1_point_process_", simulation_runs, "_", number_points, ".rds"),
+                           filename = paste0("o1_point_process_", simulation_runs, "_", number_points, ".rds"),
                            path = paste0(getwd(), "/4_Output"),
                            overwrite = overwrite)
 
 UtilityFunctions::save_rds(object=pattern_reconstruction,
-                           filename = paste0("a1_pattern_reconstruction_", simulation_runs, "_", number_points, ".rds"),
+                           filename = paste0("o1_pattern_reconstruction_", simulation_runs, "_", number_points, ".rds"),
                            path = paste0(getwd(), "/4_Output"),
                            overwrite = overwrite)
 
