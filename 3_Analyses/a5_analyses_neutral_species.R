@@ -7,26 +7,19 @@
 ##    maximilian.hesselbarth@uni-goettingen.de   ##
 ###################################################
 
-#### 1. Import packages ####
+#### 1. Import packages & functions ####
 
-#### 1. Import packages & sunctions ####
-
-# Packages #
-library(furrr)
-library(future.batchtools)
-library(NLMR)
-library(SHAR)
-library(tidyverse)
-library(UtilityFunctions)
+# Packages
+source(paste0(getwd(), '/2_Functions/setup_packages.R'))
 
 # Source all functions in R_functions folder
-list.files(paste0(getwd(), '/2_Functions'), pattern = '^[a0_ a5_]', full.names = TRUE) %>%
+list.files(paste0(getwd(), '/2_Functions'), pattern = '^[f0_ f5_]', full.names = TRUE) %>%
   purrr::walk(function(x) source(x))
 
 #### 2. Define parameters ####
 
 # Set seed
-seed <- set.seed(42)
+set.seed(42, kind = "L'Ecuyer-CMRG")
 
 # Number of coloumns and rows for neutral landscape
 number_coloumns <- 30 # 30
@@ -36,18 +29,16 @@ number_rows <- 30 # 30
 resolution <- 20 # 20
 
 # Roughness of neutral landscape
-roughness <- 0.3 # 0.3
+fract_dim <- 1.5 # 0.3
 
 # Approxmitated number of points for each species
 number_points <- 100 # 100 
 
 # Number of randomized habitat maps / point patterns
-
-number_maps <- 199 # 199
-number_pattern <- 199 # 199
+number_null_model <- 199 # 199
 
 # Number of itertations pattern reconstruction
-max_runs <- 5000 # 2500
+max_runs <- 1000 # 2500
 
 #### 3. Specify future topology ####
 # 
@@ -64,32 +55,32 @@ max_runs <- 5000 # 2500
 # 
 # future::plan(list(login, bsub, future::sequential))
 # 
-# future::plan(future::sequential)
+# future::plan(future::multiprocess)
 # 
 #### 4. Simulation study of different methods to analyze species habitat assocations ####
 
 # Habitat randomization (Harms et al. 2001) #
-habitat_randomization %<-% simulate_habitat_random_neutral(number_coloumns=number_coloumns,
-                                                           number_rows=number_rows,
-                                                           roughness=roughness,
-                                                           resolution=resolution,
-                                                           number_maps=number_maps,
-                                                           number_points=number_points)
+habitat_randomization %<-% simulate_habitat_random_neutral(number_coloumns = number_coloumns,
+                                                           number_rows = number_rows,
+                                                           fract_dim = fract_dim,
+                                                           resolution = resolution,
+                                                           number_maps = number_maps,
+                                                           number_points = number_points)
 
 # Torus translation (Harms et al. 2001) #
-torus_translation %<-% simulate_torus_trans_neutral(number_coloumns=number_coloumns,
-                                                    number_rows=number_rows,
-                                                    roughness=roughness,
-                                                    resolution=resolution,
-                                                    number_points=number_points)
+torus_translation %<-% simulate_torus_trans_neutral(number_coloumns = number_coloumns,
+                                                    number_rows = number_rows,
+                                                    fract_dim = fract_dim,
+                                                    resolution = resolution,
+                                                    number_points = number_points)
 
 # Gamma test (Plotkin et al. 2000) #
-point_process %<-% simulate_point_process_neutral(number_coloumns=number_coloumns, 
-                                                  number_rows=number_rows,
-                                                  roughness=roughness,
-                                                  resolution=resolution,
-                                                  number_pattern=number_pattern,
-                                                  number_points=number_points)
+point_process %<-% simulate_point_process_neutral(number_coloumns = number_coloumns, 
+                                                  number_rows = number_rows,
+                                                  fract_dim =fract_dim,
+                                                  resolution = resolution,
+                                                  number_pattern = number_pattern,
+                                                  number_points = number_points)
 
 # Pattern reconstruction #
 pattern_reconstruction %<-% simulate_pattern_recon_neutral(number_coloumns=number_coloumns, 

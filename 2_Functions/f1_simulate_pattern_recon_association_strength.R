@@ -23,7 +23,7 @@ simulate_pattern_recon_association_strength <- function(number_coloumns, number_
     species_1 <- spatstat::subset.ppp(simulation_pattern, Species_code == 1) 
     
     random_species_1 <- SHAR::reconstruct_pattern(patter = species_1, 
-                                                  number_reconstructions = number_pattern,
+                                                  number_reconstructions = number_null_model,
                                                   max_runs = max_runs, fitting = FALSE)
         
     associations_species_1 <- SHAR::results_habitat_association(pattern = random_species_1, 
@@ -39,7 +39,7 @@ simulate_pattern_recon_association_strength <- function(number_coloumns, number_
     species_2 <- spatstat::subset.ppp(simulation_pattern, Species_code == 2)
     
     random_species_2 <- SHAR::reconstruct_pattern(pattern = species_2, 
-                                                  number_reconstructions = number_pattern,
+                                                  number_reconstructions = number_null_model,
                                                   max_runs = max_runs, fitting = TRUE)
         
     associations_species_2 <- SHAR::results_habitat_association(pattern = random_species_2, 
@@ -55,7 +55,7 @@ simulate_pattern_recon_association_strength <- function(number_coloumns, number_
     species_3 <- spatstat::subset.ppp(simulation_pattern, Species_code == 3)
     
     random_species_3 <- SHAR::reconstruct_pattern(pattern = species_3, 
-                                                  number_reconstructions = number_pattern,
+                                                  number_reconstructions = number_null_model,
                                                   max_runs = max_runs, fitting = FALSE)
         
     associations_species_3 <- SHAR::results_habitat_association(pattern = random_species_3, 
@@ -71,7 +71,7 @@ simulate_pattern_recon_association_strength <- function(number_coloumns, number_
     species_4 <- spatstat::subset.ppp(simulation_pattern, Species_code == 4)
     
     random_species_4 <- SHAR::reconstruct_pattern(pattern = species_4, 
-                                                  number_reconstructions = number_pattern,
+                                                  number_reconstructions = number_null_model,
                                                   max_runs = max_runs, fitting = TRUE)
         
     associations_species_4 <- SHAR::results_habitat_association(pattern = random_species_4,

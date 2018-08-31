@@ -1,28 +1,28 @@
 simulate_pattern_recon_number_habitats <- function(number_coloumns, number_rows,
-                                                   resolution, roughness, 
-                                                   number_pattern, max_runs, 
+                                                   resolution, fract_dim, 
+                                                   number_null_model, max_runs, 
                                                    number_points, alpha, 
                                                    number_habitats){
   
   furrr::future_map_dfr(number_habitats , function(habitats_current){
     
-    simulation_habitats <- SHAR::classify_habitats(NLMR::nlm_mpd(ncol = number_coloumns, 
+    simulation_habitats <- SHAR::classify_habitats(NLMR::nlm_fbm(ncol = number_coloumns, 
                                                                  nrow = number_rows,
                                                                  resolution = resolution, 
-                                                                 roughness = roughness, 
+                                                                 fract_dim = fract_dim, 
                                                                  verbose = FALSE), 
                                                    classes = habitats_current)
     
     simulation_pattern <- create_simulation_pattern(raster = simulation_habitats, 
                                                     number_points = number_points, 
-                                                    alpha = alpha)
+                                                    association_strength = alpha)
     
     names_species <- as.character(unique(simulation_pattern$marks$Species))
     
     species_1 <- spatstat::subset.ppp(simulation_pattern, Species_code == 1) 
     
     random_species_1 <- SHAR::reconstruct_pattern(pattern = species_1, 
-                                                  number_reconstructions = number_pattern,
+                                                  number_reconstructions = number_null_model,
                                                   max_runs = max_runs, fitting = FALSE)
     
     associations_species_1 <- SHAR::results_habitat_association(pattern = random_species_1, 
@@ -38,7 +38,7 @@ simulate_pattern_recon_number_habitats <- function(number_coloumns, number_rows,
     species_2 <- spatstat::subset.ppp(simulation_pattern, Species_code == 2)
     
     random_species_2 <- SHAR::reconstruct_pattern(pattern = species_2, 
-                                                  number_reconstructions = number_pattern,
+                                                  number_reconstructions = number_null_model,
                                                   max_runs = max_runs, fitting = TRUE)
     
     associations_species_2 <- SHAR::results_habitat_association(pattern = random_species_2, 
@@ -54,7 +54,7 @@ simulate_pattern_recon_number_habitats <- function(number_coloumns, number_rows,
     species_3 <- spatstat::subset.ppp(simulation_pattern, Species_code == 3)
     
     random_species_3 <- SHAR::reconstruct_pattern(pattern = species_3, 
-                                                  number_reconstructions = number_pattern,
+                                                  number_reconstructions = number_null_model,
                                                   max_runs = max_runs, fitting = FALSE)
     
     associations_species_3 <- SHAR::results_habitat_association(pattern = random_species_3, 
@@ -70,7 +70,7 @@ simulate_pattern_recon_number_habitats <- function(number_coloumns, number_rows,
     species_4 <- spatstat::subset.ppp(simulation_pattern, Species_code == 4)
     
     random_species_4 <- SHAR::reconstruct_pattern(pattern = species_4, 
-                                                  number_reconstructions = number_pattern,
+                                                  number_reconstructions = number_null_model,
                                                   max_runs = max_runs, fitting = TRUE)
     
     associations_species_4 <- SHAR::results_habitat_association(pattern = random_species_4,

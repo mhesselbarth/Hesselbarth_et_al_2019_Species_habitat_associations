@@ -7,55 +7,44 @@
 ##    maximilian.hesselbarth@uni-goettingen.de   ##
 ###################################################
 
-#### 1. Import packages & sunctions ####
+#### 1. Import packages & functions ####
 
-# Packages #
-library(furrr)
-library(future.batchtools)
-library(NLMR)
-library(SHAR)
-library(tidyverse)
-library(UtilityFunctions)
+# Packages
+source(paste0(getwd(), '/2_Functions/setup_packages.R'))
 
 # Source all functions in R_functions folder
-list.files(paste0(getwd(), '/2_Functions'), pattern = '^[a0_ a3_]', full.names = TRUE) %>%
+list.files(paste0(getwd(), '/2_Functions'), pattern = '^[f0_ f3_]', full.names = TRUE) %>%
   purrr::walk(function(x) source(x))
 
 #### 2. Define parameters ####
 
 # Set seed
-seed <- set.seed(42)
+set.seed(42, kind = "L'Ecuyer-CMRG")
 
 # Number of coloumns and rows for neutral landscape
-number_coloumns <- 30 # 30
-number_rows <- 30 # 30
+number_coloumns <- 50 # 30
+number_rows <- 50 # 30
 
 # Resolution of neutral landscape
 resolution <- 20 # 20
 
 # Roughness of neutral landscape
-roughness <- 0.3 # 0.3
+fract_dim <- 0.3 # 0.3
 
 # Approxmitated number of points for each species
 number_points <- 100 # 100 
 
 # Number of runs
-simulation_runs <- 50 # 50
+simulation_runs <- 100 # 50
 
 # Number of randomized habitat maps / point patterns
-number_maps <- c(19, 39, 99, 199, 499) # c(19, 39, 99, 199, 499)
-number_pattern <- c(19, 39, 99, 199, 499) # c(19, 39, 99, 199, 499)
+number_null_model <- rep(c(19, 39, 99, 199, 499), each = simulation_runs) # c(19, 39, 99, 199, 499)
 
 # Number of itertations pattern reconstruction
-max_runs <- 5000 # 2500
+max_runs <- 1000 # 2500
 
 # Different association strengths
 alpha <- 0.35 # seq(0.25, 0.75, 0.025)
-
-UtilityFunctions::save_rds(object = number_maps,
-                           filename = "number_null_models.rds",
-                           path = paste0(getwd(), "/4_Output"), 
-                           overwrite = FALSE)
 
 #### 3. Specify future topology ####
 # 
@@ -72,7 +61,6 @@ UtilityFunctions::save_rds(object = number_maps,
 # 
 # future::plan(list(login, bsub, future::multiprocess))
 # 
-# future::plan(list(future::multiprocess, future::multiprocess))
 # future::plan(future::multiprocess)
 # 
 #### 4. Simulation study of different methods to analyze species habitat assocations ####
@@ -81,13 +69,11 @@ UtilityFunctions::save_rds(object = number_maps,
 habitat_randomization %<-% {simulate_habitat_random_number_null_model(
   number_coloumns = number_coloumns,
   number_rows = number_rows,
-  roughness = roughness,
+  fract_dim = fract_dim,
   resolution = resolution,
-  number_maps = number_maps,
+  number_null_model = number_null_model,
   number_points = number_points,
-  alpha = alpha,
-  simulation_runs = simulation_runs)
-}
+  alpha = alpha)}
 
 # Torus translation (Harms et al. 2001) #
 # Doesn't make sense here
@@ -96,21 +82,20 @@ habitat_randomization %<-% {simulate_habitat_random_number_null_model(
 point_process %<-% {simulate_point_process_number_null_model(
   number_coloumns = number_coloumns,
   number_rows = number_rows,
-  roughness = roughness,
+  fract_dim = fract_dim,
   resolution = resolution,
-  number_pattern = number_pattern,
+  number_null_model = number_null_model,
   number_points = number_points,
-  alpha = alpha,
-  simulation_runs = simulation_runs)
+  alpha = alpha)
 }
 
 # Pattern reconstruction #
 pattern_reconstruction %<-% {simulate_pattern_recon_number_null_model(
   number_coloumns = number_coloumns,
   number_rows = number_rows,
-  roughness = roughness,
+  fract_dim = fract_dim,
   resolution = resolution,
-  number_pattern = number_pattern,
+  number_null_model = number_null_model,
   number_points = number_points,
   simulation_runs = simulation_runs,
   max_runs = max_runs,

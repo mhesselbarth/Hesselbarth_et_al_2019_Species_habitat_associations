@@ -28,8 +28,8 @@ number_rows <- 50 # 30
 # Resolution of neutral landscape
 resolution <- 20 # 20
 
-# Roughness of neutral landscape
-roughness <- 0.3 # 0.3
+# fract_dim of neutral landscape
+fract_dim <- 1.5 # 1.5
 
 # Approxmitated number of points for each species
 number_points <- 100 # 100 
@@ -38,8 +38,7 @@ number_points <- 100 # 100
 simulation_runs <- 100 # 50
 
 # Number of randomized habitat maps / point patterns
-number_maps <- 199 # 199
-number_pattern <- 199 # 199
+number_null_model <- 199 # 199
 
 # Number of itertations pattern reconstruction
 max_runs <- 1000 # 2500
@@ -74,8 +73,8 @@ habitat_randomization %<-% {simulate_habitat_random_number_habitats(
   number_coloumns = number_coloumns,
   number_rows = number_rows,
   resolution = resolution,
-  roughness = roughness,
-  number_maps = number_maps,
+  fract_dim = fract_dim,
+  number_null_model = number_null_model,
   number_points = number_points,
   alpha = alpha,
   number_habitats = number_habitats)
@@ -88,7 +87,7 @@ torus_translation %<-% {simulate_torus_trans_number_habitats(
   number_coloumns = number_coloumns,
   number_rows = number_rows,
   resolution = resolution,
-  roughness = roughness,
+  fract_dim = fract_dim,
   number_points = number_points,
   alpha = alpha,
   number_habitats = number_habitats)
@@ -101,8 +100,8 @@ point_process %<-% {simulate_point_process_number_habitats(
   number_coloumns = number_coloumns,
   number_rows = number_rows,
   resolution = resolution,
-  roughness = roughness,
-  number_pattern = number_pattern,
+  fract_dim = fract_dim,
+  number_null_model = number_null_model,
   number_points = number_points,
   alpha = alpha,
   number_habitats = number_habitats)
@@ -115,8 +114,8 @@ pattern_reconstruction %<-% {simulate_pattern_recon_number_habitats(
   number_coloumns = number_coloumns,
   number_rows = number_rows,
   resolution = resolution,
-  roughness = roughness,
-  number_pattern = number_pattern,
+  fract_dim = fract_dim,
+  number_null_model = number_null_model,
   number_points = number_points,
   alpha = alpha,
   number_habitats = number_habitats)

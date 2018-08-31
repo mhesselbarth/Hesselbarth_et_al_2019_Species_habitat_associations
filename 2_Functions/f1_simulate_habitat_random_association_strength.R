@@ -1,6 +1,6 @@
 simulate_habitat_random_association_strength <- function(number_coloumns, number_rows,
                                                          resolution, fract_dim,
-                                                         number_maps, 
+                                                         number_null_model, 
                                                          number_points, alpha_sequence){
   
   furrr::future_map_dfr(alpha_sequence, function(alpha_current){
@@ -21,7 +21,7 @@ simulate_habitat_random_association_strength <- function(number_coloumns, number
         
     random_habitats <- SHAR::randomize_habitats(raster = simulation_habitats,
                                                 method = 'randomization_algorithm', 
-                                                number_maps = number_maps)
+                                                number_maps = number_null_model)
          
     associations <- SHAR::results_habitat_association(pattern = simulation_pattern,
                                                       raster = random_habitats,

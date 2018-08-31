@@ -1,6 +1,6 @@
 simulate_point_process_association_strength <- function(number_coloumns, number_rows,
                                                         resolution, fract_dim,
-                                                        number_pattern, number_points,
+                                                        number_null_model, number_points,
                                                         alpha_sequence) {
     
   furrr::future_map_dfr(alpha_sequence, function(alpha_current) {
@@ -23,7 +23,7 @@ simulate_point_process_association_strength <- function(number_coloumns, number_
     random_species_1 <- simulation_pattern %>%
       spatstat::subset.ppp(Species_code == 1) %>%
       SHAR::fit_point_process(process = 'poisson',
-                              number_pattern = number_pattern)
+                              number_pattern = number_null_model)
       
     associations_species_1 <- SHAR::results_habitat_association(pattern = random_species_1,
                                                                 raster = simulation_habitats,
@@ -38,7 +38,7 @@ simulate_point_process_association_strength <- function(number_coloumns, number_
     random_species_2 <- simulation_pattern %>%
       spatstat::subset.ppp(Species_code == 2) %>%
       SHAR::fit_point_process(process = 'cluster',
-                              number_pattern = number_pattern)
+                              number_pattern = number_null_model)
       
     associations_species_2 <-
       SHAR::results_habitat_association(pattern = random_species_2,
@@ -54,7 +54,7 @@ simulate_point_process_association_strength <- function(number_coloumns, number_
     random_species_3 <- simulation_pattern %>%
       spatstat::subset.ppp(Species_code == 3) %>%
       SHAR::fit_point_process(process = 'poisson',
-                              number_pattern = number_pattern)
+                              number_pattern = number_null_model)
       
     associations_species_3 <- SHAR::results_habitat_association(pattern = random_species_3,
                                                                 raster = simulation_habitats,
@@ -69,7 +69,7 @@ simulate_point_process_association_strength <- function(number_coloumns, number_
     random_species_4 <- simulation_pattern %>%
       spatstat::subset.ppp(Species_code == 4) %>%
       SHAR::fit_point_process(process = 'cluster',
-                              number_pattern = number_pattern)
+                              number_pattern = number_null_model)
       
     associations_species_4 <-
       SHAR::results_habitat_association(pattern = random_species_4,

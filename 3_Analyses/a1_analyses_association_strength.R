@@ -35,8 +35,7 @@ fract_dim <- 1.5 # 1.5
 number_points <- 100 # 250 - 250 - 500???
 
 # Number of randomized habitat maps / point patterns
-number_maps <- 199 # 199
-number_pattern <- 199 # 199
+number_null_model <- 199 # 199
 
 # Number of itertations pattern reconstruction
 max_runs <- 1000 # 5000
@@ -72,7 +71,7 @@ habitat_randomization %<-% {simulate_habitat_random_association_strength(
   number_rows = number_rows,
   fract_dim = fract_dim,
   resolution = resolution,
-  number_maps = number_maps,
+  number_null_model = number_null_model,
   number_points = number_points,
   alpha_sequence = alpha_sequence)}
 
@@ -130,7 +129,7 @@ point_process %<-% {simulate_point_process_association_strength(
   number_rows = number_rows,
   fract_dim = fract_dim,
   resolution = resolution,
-  number_pattern = number_pattern,
+  number_null_model = number_null_model,
   number_points = number_points,
   alpha_sequence = alpha_sequence)
 }
@@ -160,7 +159,7 @@ pattern_reconstruction %<-% {simulate_pattern_recon_association_strength(
   number_rows = number_rows,
   fract_dim = fract_dim,
   resolution = resolution,
-  number_pattern = number_pattern,
+  number_null_model = number_null_model,
   number_points = number_points,
   max_runs = max_runs,
   alpha_sequence = alpha_sequence)

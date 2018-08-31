@@ -1,21 +1,21 @@
 simulate_point_process_number_habitats <- function(number_coloumns, number_rows,
-                                                   resolution, roughness, 
-                                                   number_pattern, 
+                                                   resolution, fract_dim, 
+                                                   number_null_model, 
                                                    number_points, alpha, 
                                                    number_habitats){
   
   furrr::future_map_dfr(number_habitats, function(habitats_current){
   
-    simulation_habitats <- SHAR::classify_habitats(NLMR::nlm_mpd(ncol = number_coloumns, 
+    simulation_habitats <- SHAR::classify_habitats(NLMR::nlm_fbm(ncol = number_coloumns, 
                                                                  nrow = number_rows,
                                                                  resolution = resolution, 
-                                                                 roughness = roughness, 
+                                                                 fract_dim = fract_dim, 
                                                                  verbose = FALSE), 
                                                    classes = habitats_current)
   
     simulation_pattern <- create_simulation_pattern(raster = simulation_habitats,
                                                     number_points = number_points,
-                                                    alpha = alpha)
+                                                    association_strength = alpha)
     
     names_species <- unique(as.character(simulation_pattern$marks$Species))
       
@@ -37,7 +37,7 @@ simulate_point_process_number_habitats <- function(number_coloumns, number_rows,
     random_species_2 <- simulation_pattern %>%
       spatstat::subset.ppp(Species_code == 2) %>%
       SHAR::fit_point_process(process = 'cluster',
-                              number_pattern = number_pattern)
+                              number_pattern = number_null_model)
     
     associations_species_2 <- SHAR::results_habitat_association(pattern = random_species_2,
                                                                 raster = simulation_habitats,
@@ -52,7 +52,7 @@ simulate_point_process_number_habitats <- function(number_coloumns, number_rows,
     random_species_3 <- simulation_pattern %>%
       spatstat::subset.ppp(Species_code == 3) %>%
       SHAR::fit_point_process(process = 'poisson',
-                              number_pattern = number_pattern)
+                              number_pattern = number_null_model)
     
     associations_species_3 <- SHAR::results_habitat_association(pattern = random_species_3,
                                                                 raster = simulation_habitats,
@@ -67,7 +67,7 @@ simulate_point_process_number_habitats <- function(number_coloumns, number_rows,
     random_species_4 <- simulation_pattern %>%
       spatstat::subset.ppp(Species_code == 4) %>%
       SHAR::fit_point_process(process = 'cluster',
-                              number_pattern = number_pattern)
+                              number_pattern = number_null_model)
     
     associations_species_4 <- SHAR::results_habitat_association(pattern = random_species_4,
                                                                 raster = simulation_habitats,

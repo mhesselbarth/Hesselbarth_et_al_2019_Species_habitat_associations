@@ -142,17 +142,37 @@ create_simulation_species <- function(habitats_poly, owin_overall,  type, proces
     
     if(process == "Poisson"){
       
-      pattern <- spatstat::runifpoint(n = number_points, win = owin_overall)
+      pattern <- mobsim::sim_poisson_community(s_pool = 1, 
+                                               n_sim = number_points, 
+                                               xrange = owin_overall$xrange,
+                                               yrange = owin_overall$yrange)
+      
+      pattern <- spatstat::ppp(x = pattern$census$x,
+                               y = pattern$census$y,
+                               window = owin_overall)
+      
       marks_pattern <- data.frame(Species = rep("Poisson_neutral", pattern$n),
                                   Species_code = species_code)
+      
       spatstat::marks(pattern) <- marks_pattern
     }
     
     else if(process == "Thomas"){
       
-      pattern <- spatstat::rThomas(kappa = lambda/5, scale = scale, mu = 5, win = owin_overall)
+      pattern <- mobsim::sim_thomas_community(s_pool = 1, 
+                                              n_sim = number_points, 
+                                              sigma = scale, 
+                                              cluster_points = 5,
+                                              xrange = owin_overall$xrange, 
+                                              yrange = owin_overall$yrange)
+      
+      pattern <- spatstat::ppp(x = pattern$census$x,
+                               y = pattern$census$y,
+                               window = owin_overall)
+      
       marks_pattern <- data.frame(Species = rep("Thomas_neutral", pattern$n),
                                   Species_code = species_code)
+      
       spatstat::marks(pattern) <- marks_pattern
     }
     

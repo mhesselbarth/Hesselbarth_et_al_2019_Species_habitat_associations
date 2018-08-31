@@ -1,15 +1,15 @@
 simulate_habitat_random_number_habitats <- function(number_coloumns, number_rows,
-                                                    resolution, roughness, 
-                                                    number_maps, 
+                                                    resolution, fract_dim, 
+                                                    number_null_model, 
                                                     number_points, alpha, 
                                                     number_habitats){
   
   furrr::future_map_dfr(number_habitats, function(habitats_current){
     
-    simulation_habitats <- SHAR::classify_habitats(NLMR::nlm_mpd(ncol = number_coloumns, 
+    simulation_habitats <- SHAR::classify_habitats(NLMR::nlm_fbm(ncol = number_coloumns, 
                                                                  nrow = number_rows,
                                                                  resolution = resolution, 
-                                                                 roughness = roughness, 
+                                                                 fract_dim = fract_dim, 
                                                                  verbose = FALSE), 
                                                    classes = habitats_current)
       
@@ -21,7 +21,7 @@ simulate_habitat_random_number_habitats <- function(number_coloumns, number_rows
     
     random_habitats <- SHAR::randomize_habitats(raster = simulation_habitats,
                                                 method = 'randomization_algorithm', 
-                                                number_maps = number_maps)
+                                                number_maps = number_null_model)
     
     associations <- SHAR::results_habitat_association(pattern = simulation_pattern,
                                                       raster = random_habitats,

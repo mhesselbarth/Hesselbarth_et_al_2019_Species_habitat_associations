@@ -1,21 +1,21 @@
 simulate_torus_trans_number_habitats <- function(number_coloumns, number_rows,
-                                                 resolution, roughness, 
+                                                 resolution, fract_dim, 
                                                  number_points, alpha, 
                                                  number_habitats, 
                                                  simulation_runs){
   
   furrr::future_map_dfr(number_habitats, function(habitats_current){
     
-    simulation_habitats <- SHAR::classify_habitats(NLMR::nlm_mpd(ncol = number_coloumns, 
+    simulation_habitats <- SHAR::classify_habitats(NLMR::nlm_fbm(ncol = number_coloumns, 
                                                                  nrow = number_rows,
                                                                  resolution = resolution, 
-                                                                 roughness = roughness, 
+                                                                 fract_dim = fract_dim, 
                                                                  verbose = FALSE), 
                                                    classes = habitats_current)
     
     simulation_pattern <- create_simulation_pattern(raster = simulation_habitats, 
                                                     number_points = number_points, 
-                                                    alpha = alpha)
+                                                    association_strength = alpha)
 
     names_species <- unique(as.character(simulation_pattern$marks$Species))
 
