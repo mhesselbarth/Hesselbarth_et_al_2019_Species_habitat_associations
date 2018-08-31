@@ -38,5 +38,3 @@ library(sf)
 library(sp)
 library(spatstat)
 library(spex)
-
-spatstat::spatstat.options(fastthin = FALSE)

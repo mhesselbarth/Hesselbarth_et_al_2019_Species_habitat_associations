@@ -44,6 +44,21 @@ plot_gamma_test <- ggplot(data = results$gamma_test) +
         axis.text = element_blank(),
         axis.ticks = element_blank())
 
+# Gamma test #
+plot_pattern_reconstruction <- ggplot(data = results$pattern_reconstruction) + 
+  geom_raster(data = as.data.frame(results$simulation_landscape, xy = T),
+              aes(x = x, y = y, fill = factor(layer))) +
+  geom_point(aes(x = x, y = y), size = 2) +
+  facet_wrap(~ pattern, ncol = 4, nrow = 1) +
+  scale_fill_manual(values = colors_spec) + 
+  theme_classic() + 
+  theme(aspect.ratio = 1, 
+        panel.spacing = unit(15, "mm"),
+        legend.position = "none", 
+        text = element_text(size = 30),
+        axis.title = element_blank(),
+        axis.text = element_blank(),
+        axis.ticks = element_blank())
 
 # Patch randomization test #
 plot_habitat_randomization_test <- ggplot(data = results$habitats_randomized) + 
@@ -86,6 +101,14 @@ overwrite <- TRUE
 
 UtilityFunctions::save_ggplot(plot = plot_gamma_test, 
                               filename = "p00_plot_gamma_test.png", 
+                              path = "6_Figures", 
+                              overwrite = overwrite, 
+                              width = width, 
+                              height = heigth, 
+                              units = "mm")
+
+UtilityFunctions::save_ggplot(plot = plot_pattern_reconstruction, 
+                              filename = "p00_plot_pattern_reconstruction.png", 
                               path = "6_Figures", 
                               overwrite = overwrite, 
                               width = width, 

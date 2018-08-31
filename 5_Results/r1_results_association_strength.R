@@ -43,8 +43,8 @@ results_summarised <- purrr::map_dfr(results_filter, function(current_result) {
   
   dplyr::summarise(species_type_df_grouped,
                    Correct_mean = mean(Correct),
-                   Correct_hi = mean(Correct) + (stats::sd(Correct, na.rm=T)/sqrt(length(Correct))),
-                   Correct_lo = mean(Correct) - (stats::sd(Correct, na.rm=T)/sqrt(length(Correct))),
+                   Correct_hi = mean(Correct) + (stats::sd(Correct, na.rm=T)/sqrt(length(Correct)) * 1.96),
+                   Correct_lo = mean(Correct) - (stats::sd(Correct, na.rm=T)/sqrt(length(Correct)) * 1.96),
                    
                    False_mean = mean(False),
                    False_hi = mean(False) + (stats::sd(False, na.rm=T)/sqrt(length(False))),
@@ -75,7 +75,7 @@ results_summarised$Species_type <- factor(results_summarised$Species_type,
 colors_spec <- rev(RColorBrewer::brewer.pal(n = 4, name = "Spectral"))
 
 strength_association_correct_ggplot <- ggplot(data = results_summarised) +
-  geom_line(aes(x = Variable, y = Correct_mean, col = Method, group = Method), size = 0.75) +
+  geom_line(aes(x = Variable, y = Correct_mean, col = Method, group = Method), size = 1.5) +
   geom_ribbon(aes(x = Variable, ymin = Correct_lo, ymax = Correct_hi, fill = Method, group = Method), alpha = 0.3) +
   facet_wrap(~ Species_type, nrow = 2, ncol = 2) + 
   scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.25)) +
@@ -109,13 +109,13 @@ overwrite <- TRUE
 
 UtilityFunctions::save_ggplot(plot = strength_association_correct_ggplot, 
                               path = paste0(getwd(), "/6_Figures"),
-                              filename = "a1_association_strength_correct.png",
+                              filename = "p1_association_strength_correct.png",
                               width = width, height = height, units = "mm", 
                               overwrite = overwrite)
 
 UtilityFunctions::save_ggplot(plot = strength_association_false_ggplot, 
                               path = paste0(getwd(), "/6_Figures"),
-                              filename = "a1_association_strength_false.png",
+                              filename = "p1_association_strength_false.png",
                               width = width, height = height, units = "mm",
                               overwrite = overwrite)
 
