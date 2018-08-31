@@ -7,15 +7,10 @@
 ##    maximilian.hesselbarth@uni-goettingen.de   ##
 ###################################################
 
-#### 1. Import packages & sunctions ####
+#### 1. Import packages & functions ####
 
-# Packages #
-library(furrr)
-library(future.batchtools)
-library(NLMR)
-library(SHAR)
-library(tidyverse)
-library(UtilityFunctions)
+# Packages
+source(paste0(getwd(), '/2_Functions/setup_packages.R'))
 
 # Source all functions in R_functions folder
 list.files(paste0(getwd(), '/2_Functions'), pattern = '^[a0_ a2_]', full.names = TRUE) %>%
@@ -24,11 +19,11 @@ list.files(paste0(getwd(), '/2_Functions'), pattern = '^[a0_ a2_]', full.names =
 #### 2. Define parameters ####
 
 # Set seed
-seed <- set.seed(42)
+set.seed(42, kind = "L'Ecuyer-CMRG")
 
 # Number of coloumns and rows for neutral landscape
-number_coloumns <- 30 # 30
-number_rows <- 30 # 30
+number_coloumns <- 50 # 30
+number_rows <- 50 # 30
 
 # Resolution of neutral landscape
 resolution <- 20 # 20
@@ -40,25 +35,20 @@ roughness <- 0.3 # 0.3
 number_points <- 100 # 100 
 
 # Number of runs
-simulation_runs <- 50 # 50
+simulation_runs <- 100 # 50
 
 # Number of randomized habitat maps / point patterns
 number_maps <- 199 # 199
 number_pattern <- 199 # 199
 
 # Number of itertations pattern reconstruction
-max_runs <- 5000 # 2500
+max_runs <- 1000 # 2500
 
 # Association strengths
-alpha <- 0.350 # seq(0.25, 0.75, 0.025)
+alpha <- 0.350 # seq(0.25, 0.75, 0.025) ???
 
 # Number of habitats
-number_habitats <- c(2,5,10)
-
-UtilityFunctions::save_rds(object = number_habitats,
-                           filename = "number_habitats.rds",
-                           path = paste0(getwd(), "/4_Output"), 
-                           overwrite = FALSE)
+number_habitats <- rep(c(2,5,10), each = simulation_runs)
 
 #### 3. Specify future topology ####
 # 
@@ -75,7 +65,6 @@ UtilityFunctions::save_rds(object = number_habitats,
 # 
 # future::plan(list(login, bsub, future::multiprocess))
 # 
-# future::plan(list(future::multiprocess, future::multiprocess))
 # future::plan(future::multiprocess)
 # 
 #### 4. Simulation study of different methods to analyze species habitat assocations ####
@@ -89,9 +78,10 @@ habitat_randomization %<-% {simulate_habitat_random_number_habitats(
   number_maps = number_maps,
   number_points = number_points,
   alpha = alpha,
-  number_habitats = number_habitats,
-  simulation_runs = simulation_runs)
+  number_habitats = number_habitats)
 }
+
+future::resolved(future::futureOf(habitat_randomization))
 
 # Torus translation (Harms et al. 2001) #
 torus_translation %<-% {simulate_torus_trans_number_habitats(
@@ -101,9 +91,10 @@ torus_translation %<-% {simulate_torus_trans_number_habitats(
   roughness = roughness,
   number_points = number_points,
   alpha = alpha,
-  number_habitats = number_habitats,
-  simulation_runs = simulation_runs)
+  number_habitats = number_habitats)
 }
+
+future::resolved(future::futureOf(torus_translation))
 
 # Fitting point process (Plotkin et al. 2000) #
 point_process %<-% {simulate_point_process_number_habitats(
@@ -114,9 +105,10 @@ point_process %<-% {simulate_point_process_number_habitats(
   number_pattern = number_pattern,
   number_points = number_points,
   alpha = alpha,
-  number_habitats = number_habitats,
-  simulation_runs = simulation_runs)
+  number_habitats = number_habitats)
 }
+
+future::resolved(future::futureOf(point_process))
 
 # Pattern reconstruction #
 pattern_reconstruction %<-% {simulate_pattern_recon_number_habitats(
@@ -127,9 +119,10 @@ pattern_reconstruction %<-% {simulate_pattern_recon_number_habitats(
   number_pattern = number_pattern,
   number_points = number_points,
   alpha = alpha,
-  number_habitats = number_habitats,
-  simulation_runs = simulation_runs)
+  number_habitats = number_habitats)
 }
+
+future::resolved(future::futureOf(pattern_reconstruction))
 
 #### 5. Save data ####
 
