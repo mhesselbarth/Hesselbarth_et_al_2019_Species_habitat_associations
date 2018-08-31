@@ -1,6 +1,6 @@
 simulate_pattern_recon_neutral <- function(number_coloumns, number_rows, 
-                                           resolution, roughness, number_points, 
-                                           simulation_runs, number_pattern, alpha_sequence) {
+                                           resolution, fract_dim, number_points, 
+                                           simulation_runs, number_null_model) {
   
   furrr::future_map_dfr(1:simulation_runs, function(simulation_run_current) {
     

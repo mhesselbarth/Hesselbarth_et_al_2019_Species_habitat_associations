@@ -64,7 +64,7 @@ habitat_randomization %<-% simulate_habitat_random_neutral(number_coloumns = num
                                                            number_rows = number_rows,
                                                            fract_dim = fract_dim,
                                                            resolution = resolution,
-                                                           number_maps = number_maps,
+                                                           number_null_model = number_null_model,
                                                            number_points = number_points)
 
 # Torus translation (Harms et al. 2001) #
@@ -79,16 +79,16 @@ point_process %<-% simulate_point_process_neutral(number_coloumns = number_colou
                                                   number_rows = number_rows,
                                                   fract_dim =fract_dim,
                                                   resolution = resolution,
-                                                  number_pattern = number_pattern,
+                                                  number_null_model = number_null_model,
                                                   number_points = number_points)
 
 # Pattern reconstruction #
-pattern_reconstruction %<-% simulate_pattern_recon_neutral(number_coloumns=number_coloumns, 
-                                                           number_rows=number_rows,
-                                                           roughness=roughness,
-                                                           resolution=resolution,
-                                                           number_pattern=number_pattern,
-                                                           number_points=number_points)
+pattern_reconstruction %<-% simulate_pattern_recon_neutral(number_coloumns = number_coloumns, 
+                                                           number_rows = number_rows,
+                                                           roughness = roughness,
+                                                           resolution = resolution,
+                                                           number_null_model = number_null_model,
+                                                           number_points = number_points)
 
 #### 5. Save data ####
 
