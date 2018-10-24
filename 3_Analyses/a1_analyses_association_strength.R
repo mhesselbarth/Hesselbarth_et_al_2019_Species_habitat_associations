@@ -10,7 +10,17 @@
 #### 1. Import packages & functions ####
 
 # Packages
-source(paste0(getwd(), '/2_Functions/setup_packages.R'))
+library(clustermq)
+library(NLMR)
+library(maptools)
+library(mobsim)
+library(SHAR)
+library(tidyverse)
+library(UtilityFunctions)
+library(raster)
+library(sf)
+library(spatstat)
+library(spex)
 
 # Source all functions in R_functions folder
 list.files(paste0(getwd(), '/2_Functions'), pattern = '^[f0_ f1_]', full.names = TRUE) %>%
@@ -19,7 +29,7 @@ list.files(paste0(getwd(), '/2_Functions'), pattern = '^[f0_ f1_]', full.names =
 #### 2. Define parameters ####
 
 # Set seed
-set.seed(42, kind = "L'Ecuyer-CMRG")
+# set.seed(42, kind = "L'Ecuyer-CMRG")
 
 # Number of coloumns and rows for neutral landscape
 number_coloumns <- 50 # 30
@@ -64,6 +74,8 @@ alpha_sequence <- rep(seq(0, 1, 0.025), each = simulation_runs) # seq(0, 1, 0.02
 # future::plan(future::multiprocess)
 # 
 #### 4. Simulation study of different methods to analyze species habitat assocations ####
+
+habitat_randomization <- clustermq::Q()
 
 # Habitat randomization (Harms et al. 2001) #
 habitat_randomization %<-% {simulate_habitat_random_association_strength(

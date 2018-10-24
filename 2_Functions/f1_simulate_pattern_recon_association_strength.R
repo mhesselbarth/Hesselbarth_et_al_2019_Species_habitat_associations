@@ -1,6 +1,6 @@
 simulate_pattern_recon_association_strength <- function(number_coloumns, number_rows,
                                                         resolution, fract_dim,
-                                                        number_pattern, max_runs,
+                                                        number_null_model, max_runs,
                                                         number_points, alpha_sequence){
   
   furrr::future_map_dfr(alpha_sequence , function(alpha_current){

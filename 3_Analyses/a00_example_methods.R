@@ -33,52 +33,53 @@ example_species <- spatstat::subset.ppp(simulation_pattern, Species_code == 2)
 
 colors_spec <- rev(RColorBrewer::brewer.pal(n = 5, name = "Spectral"))
 
-ggplot() + 
-  geom_raster(data = as.data.frame(simulation_landscape, xy = T), 
-              aes(x = x, y = y, fill = factor(layer))) + 
-  geom_point(data = as.data.frame(example_species),
-             aes(x = x, y = y), size = 1.5) +
-  scale_fill_manual(values = colors_spec) + 
-  theme_void() + 
-  theme(aspect.ratio = 1, 
-        legend.position = "none", 
-        axis.title = element_blank(),
-        axis.text = element_blank(),
-        axis.ticks = element_blank())
+# ggplot() + 
+#   geom_raster(data = as.data.frame(simulation_landscape, xy = T), 
+#               aes(x = x, y = y, fill = factor(layer))) + 
+#   geom_point(data = as.data.frame(example_species),
+#              aes(x = x, y = y), size = 1.5) +
+#   scale_fill_manual(values = colors_spec) + 
+#   theme_void() + 
+#   theme(aspect.ratio = 1, 
+#         legend.position = "none", 
+#         axis.title = element_blank(),
+#         axis.text = element_blank(),
+#         axis.ticks = element_blank())
 
 
 #### 3. Point process method ####
 
 gamma_test <- fit_point_process(unmark(example_species), 
                                 process = "cluster", 
-                                number_pattern = 3)
+                                number_pattern = 1)
 
 gamma_test_long <- purrr::map_dfr(gamma_test, function(current_pattern) {
   tibble::as.tibble(spatstat::as.data.frame.ppp(current_pattern))
 }, .id = "pattern")
 
 gamma_test_long$pattern <- factor(gamma_test_long$pattern, 
-                                  levels = c("Observed", "Simulation_1", 
-                                             "Simulation_2", "Simulation_3"),
-                                  labels = c("Observed", "Randomized 1", 
-                                             "Randomized 2", "Randomized 3"))
+                                  levels = c("Observed", "Simulation_1"),
+                                  labels = c("Observed", "(I) Gamma test"))
+
+names(gamma_test_long) <- c("Method", "x", "y")
 
 
 #### 4. Habitat randomization ####
 
 habitats_randomized <- SHAR::randomize_habitats(raster = simulation_landscape, 
                                                 method = "randomization_algorithm",
-                                                number_maps = 3)
+                                                number_maps = 1)
 
 habitats_randomized_long <- purrr::map_dfr(habitats_randomized, function(current_raster) {
   tibble::as.tibble(raster::as.data.frame(current_raster, xy = TRUE))
 }, .id = "raster")
 
 habitats_randomized_long$raster <- factor(habitats_randomized_long$raster, 
-                                          levels = c("Observed", "Randomized_1", 
-                                                     "Randomized_2", "Randomized_3"),
-                                          labels = c("Observed", "Randomized 1", 
-                                                     "Randomized 2", "Randomized 3"))
+                                          levels = c("Observed", "Randomized_1"),
+                                          labels = c("Observed", "(III) Patch randomization"))
+
+names(habitats_randomized_long) <- c("Method", "x", "y", "layer")
+
 
 #### 5. Torus translation ####
 
@@ -87,20 +88,20 @@ habitats_torus <- SHAR::randomize_habitats(raster = simulation_landscape,
 
 habitats_torus$Observed <- simulation_landscape
 
-habitats_torus_long <- purrr::map_dfr(habitats_torus[c(25, 750, 1750, 2598)], function(current_raster) {
+habitats_torus_long <- purrr::map_dfr(habitats_torus[c(1750, 2598)], function(current_raster) {
   tibble::as.tibble(raster::as.data.frame(current_raster, xy = TRUE))
 }, .id = "raster")
 
 habitats_torus_long$raster <- factor(habitats_torus_long$raster,
-                                     levels = c("Observed", "Randomized_25", 
-                                                "Randomized_750", "Randomized_1750"),
-                                     labels = c("Observed", "Randomized 1", 
-                                                "Randomized 2", "Randomized 3"))
+                                     levels = c("Observed", "Randomized_1750"),
+                                     labels = c("Observed", "(II) Torus translation"))
+
+names(habitats_torus_long) <- c("Method", "x", "y", "layer")
 
 #### 6. Pattern reconstruction ####
 
 pattern_reconstruction <- SHAR::reconstruct_pattern(pattern = example_species, 
-                                                    number_reconstructions = 3, 
+                                                    number_reconstructions = 1, 
                                                     max_runs = 1000, 
                                                     verbose = TRUE)
 
@@ -110,11 +111,11 @@ pattern_reconstruction_long <- purrr::map_dfr(pattern_reconstruction, function(c
 }, .id = "pattern")
 
 pattern_reconstruction_long$pattern <- factor(pattern_reconstruction_long$pattern,
-                                              levels = c("Observed", "Randomized_1", 
-                                                         "Randomized_2", "Randomized_3"),
-                                              labels = c("Observed", "Randomized 1", 
-                                                         "Randomized 2", "Randomized 3"))
+                                              levels = c("Observed", "Randomized_1"),
+                                              labels = c("Observed", "(IV) Pattern reconstruction"))
 
+
+names(pattern_reconstruction_long) <- c("Method", "x", "y")
 
 #### 7. Save results ####
 
@@ -122,14 +123,13 @@ overwrite <- TRUE
 
 UtilityFunctions::save_rds(object = simulation_landscape,
                            filename = "o00_simulation_landscape.rds",
-                           path = paste0(getwd(), "/4_Output"), 
+                           path = paste0(getwd(), "/4_Output"),
                            overwrite = overwrite)
 
 UtilityFunctions::save_rds(object = example_species,
                            filename = "o00_example_species.rds",
-                           path = paste0(getwd(), "/4_Output"), 
+                           path = paste0(getwd(), "/4_Output"),
                            overwrite = overwrite)
-
 
 UtilityFunctions::save_rds(object = gamma_test_long,
                            filename = "o00_gamma_test.rds",
@@ -137,12 +137,12 @@ UtilityFunctions::save_rds(object = gamma_test_long,
                            overwrite = overwrite)
 
 UtilityFunctions::save_rds(object = habitats_randomized_long,
-                           filename = "o00_habitats_randomized.rds",
+                           filename = "o00_patch_randomization.rds",
                            path = paste0(getwd(), "/4_Output"), 
                            overwrite = overwrite)
 
 UtilityFunctions::save_rds(object = habitats_torus_long,
-                           filename = "o00_habitats_torus.rds",
+                           filename = "o00_torus_translation.rds",
                            path = paste0(getwd(), "/4_Output"), 
                            overwrite = overwrite)
 

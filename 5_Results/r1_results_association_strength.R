@@ -26,7 +26,7 @@ names(results) <- names_combined
 
 #### 2. Preprocessing data ####
 
-pattern <- "_100_100"
+pattern <- "_50_100"
 
 results_filter <- results[stringr::str_detect(names(results), pattern = pattern)]
 names(results_filter)
@@ -43,8 +43,8 @@ results_summarised <- purrr::map_dfr(results_filter, function(current_result) {
   
   dplyr::summarise(species_type_df_grouped,
                    Correct_mean = mean(Correct),
-                   Correct_hi = mean(Correct) + (stats::sd(Correct, na.rm=T)/sqrt(length(Correct)) * 1.96),
-                   Correct_lo = mean(Correct) - (stats::sd(Correct, na.rm=T)/sqrt(length(Correct)) * 1.96),
+                   Correct_hi = mean(Correct) + (stats::sd(Correct, na.rm=T)/sqrt(length(Correct))),
+                   Correct_lo = mean(Correct) - (stats::sd(Correct, na.rm=T)/sqrt(length(Correct))),
                    
                    False_mean = mean(False),
                    False_hi = mean(False) + (stats::sd(False, na.rm=T)/sqrt(length(False))),
@@ -83,8 +83,11 @@ strength_association_correct_ggplot <- ggplot(data = results_summarised) +
   scale_fill_manual(values = colors_spec, name = '') +
   scale_colour_manual(values = colors_spec, name = '') +
   labs(x = expression(paste("Association strength ", alpha)), y = "Mean correct detections") +
-  theme_classic(base_size = 40) + 
-  theme(legend.position = "bottom")
+  theme_classic(base_size = 25) + 
+  theme(legend.position = "bottom", 
+        panel.spacing.x = unit(25, "mm"), 
+        panel.spacing.y = unit(15, "mm"), 
+        legend.key.size = unit(15, "mm"))
 
 strength_association_false_ggplot <- ggplot(data = results_summarised) +
   geom_line(aes(x = Variable, y = False_mean, 
@@ -98,13 +101,16 @@ strength_association_false_ggplot <- ggplot(data = results_summarised) +
   scale_colour_manual(values = colors_spec, name = '') +
   labs(x = expression(paste("Association strength ", alpha)), y = "Mean false detections") +
   theme_classic(base_size = 40) + 
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom", 
+        panel.spacing.x = unit(50, "mm"), 
+        panel.spacing.y = unit(25, "mm"), 
+        legend.key.size = unit(25, "mm"))
 
 
 #### 4. Save plots ####
 
-width <- 700
-height <- 400
+width <- 1250
+height <- 650
 overwrite <- TRUE
 
 UtilityFunctions::save_ggplot(plot = strength_association_correct_ggplot, 
