@@ -6,7 +6,7 @@
 #' @return Tibble with correct and false detections
 
 #' @export
-Detection.Habitat.Association <- function(input){
+detect_habitat_associations <- function(input){
 
   habitats <- input %>%
     names() %>%
@@ -18,8 +18,10 @@ Detection.Habitat.Association <- function(input){
     stringr::str_extract( "(?<=_).+?(?=_)")
 
   result <- purrr::pmap_dfr(list(input, habitats, associations), function(x, y, z){
+    
     tibble::as.tibble(cbind(Correct=sum(x$Significance[x$Habitat==y] == z, na.rm=T),
                             False=sum(x$Significance[x$Habitat!=y] == z, na.rm=T)))
   }, .id = 'Species')
+  
   return(result)
 }
