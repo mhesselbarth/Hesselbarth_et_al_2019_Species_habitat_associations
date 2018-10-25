@@ -12,6 +12,7 @@
 # Packages #
 # library(clustermq)
 library(NLMR)
+library(UtilityFunctions)
 library(SHAR)
 library(spatstat)
 library(tidyverse)
