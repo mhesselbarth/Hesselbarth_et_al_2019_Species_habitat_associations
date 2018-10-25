@@ -10,7 +10,10 @@
 #### 1. Import packages and data ####
 
 # Packages #
-source(paste0(getwd(), '/2_Functions/setup_packages.R'))
+library(patchwork)
+library(RColorBrewer)
+library(spatstat)
+library(tidyverse)
 
 #### 1. Input data ####
 results <- list.files(paste0(getwd(), '/4_Output'), pattern = 'o00_', full.names = TRUE) %>%
@@ -32,7 +35,7 @@ point_size = 3.5
 
 # Observed
 
-simulation_landscape <- as.data.frame(results$simulation_landscape, xy = T)
+simulation_landscape <- as.data.frame(results$simulation_landscape, xy = TRUE)
 simulation_landscape$Method <- "Observed"
 
 plot_observed <- ggplot() +
@@ -52,13 +55,13 @@ plot_observed <- ggplot() +
 
 # Gamma test #
 gamma_test <- dplyr::filter(results$gamma_test,
-                            Method == "(I) Gamma test")
+                            method == "(I) Gamma test")
 
 plot_gamma_test <- ggplot(data = gamma_test) + 
-  geom_raster(data = as.data.frame(results$simulation_landscape, xy = T),
+  geom_raster(data = as.data.frame(results$simulation_landscape, xy = TRUE),
               aes(x = x, y = y, fill = factor(layer))) +
   geom_point(aes(x = x, y = y), size = point_size) +
-  facet_wrap(~ Method, ncol = 1, nrow = 1) +
+  facet_wrap(~ method, ncol = 1, nrow = 1) +
   scale_fill_manual(values = colors_spec) + 
   theme_classic() + 
   theme(aspect.ratio = 1, 
@@ -71,13 +74,13 @@ plot_gamma_test <- ggplot(data = gamma_test) +
 
 # Torus translation test
 torus_translation <- dplyr::filter(results$torus_translation,
-                                   Method == "(II) Torus translation")
+                                   method == "(II) Torus translation")
 
 plot_torus_translation_test <- ggplot(data = torus_translation) + 
   geom_raster(aes(x = x, y = y, fill = factor(layer))) +
   geom_point(data = as.data.frame(results$example_species), 
              aes(x = x, y = y), size = point_size) +
-  facet_wrap(~ Method, ncol = 1, nrow = 1) +
+  facet_wrap(~ method, ncol = 1, nrow = 1) +
   scale_fill_manual(values = colors_spec) + 
   theme_classic() + 
   theme(aspect.ratio = 1, 
@@ -91,13 +94,13 @@ plot_torus_translation_test <- ggplot(data = torus_translation) +
 
 # Patch randomization test #
 patch_randomization <- dplyr::filter(results$patch_randomization,
-                                   Method == "(III) Patch randomization")
+                                     method == "(III) Patch randomization")
 
 plot_patch_randomization_algorithm <- ggplot(data = patch_randomization) + 
   geom_raster(aes(x = x, y = y, fill = factor(layer))) +
   geom_point(data = as.data.frame(results$example_species), 
              aes(x = x, y = y), size = point_size) +
-  facet_wrap(~ Method, ncol = 1, nrow = 1) +
+  facet_wrap(~ method, ncol = 1, nrow = 1) +
   scale_fill_manual(values = colors_spec) + 
   theme_classic() + 
   theme(aspect.ratio = 1, 
@@ -111,13 +114,13 @@ plot_patch_randomization_algorithm <- ggplot(data = patch_randomization) +
 
 # Pattern reconstruction test #
 pattern_reconstruction <- dplyr::filter(results$pattern_reconstruction,
-                                        Method == "(IV) Pattern reconstruction")
+                                        method == "(IV) Pattern reconstruction")
 
 plot_pattern_reconstruction <- ggplot(data = pattern_reconstruction) + 
-  geom_raster(data = as.data.frame(results$simulation_landscape, xy = T),
+  geom_raster(data = as.data.frame(results$simulation_landscape, xy = TRUE),
               aes(x = x, y = y, fill = factor(layer))) +
   geom_point(aes(x = x, y = y), size = point_size) +
-  facet_wrap(~ Method, ncol = 1, nrow = 1) +
+  facet_wrap(~ method, ncol = 1, nrow = 1) +
   scale_fill_manual(values = colors_spec) + 
   theme_classic() + 
   theme(aspect.ratio = 1, 
@@ -134,24 +137,23 @@ plot_pattern_reconstruction <- ggplot(data = pattern_reconstruction) +
 width_plot <- 1
 width_spacer <- 0.25
 
-plot_overall <- 
-  plot_observed + plot_spacer() + 
+plot_overall <- plot_observed + plot_spacer() + 
   plot_gamma_test + plot_spacer() +
   plot_torus_translation_test + plot_spacer() +
   plot_patch_randomization_algorithm + plot_spacer() +
   plot_pattern_reconstruction +
   plot_layout(nrow = 1, 
-              widths  = c(width_plot, width_spacer,
-                          width_plot, width_spacer,
-                          width_plot, width_spacer,
-                          width_plot, width_spacer,
-                          width_plot))
+              widths = c(width_plot, width_spacer,
+                         width_plot, width_spacer,
+                         width_plot, width_spacer,
+                         width_plot, width_spacer,
+                         width_plot)) 
 
 #### 6. Save plot ####
 
 width <- 700
 heigth <- 180 
-overwrite <- TRUE
+overwrite <- FALSE
 
 UtilityFunctions::save_ggplot(plot = plot_overall,
                               filename = "p00_plot_methods.png",

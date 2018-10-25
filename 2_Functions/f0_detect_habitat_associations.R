@@ -1,8 +1,10 @@
 #' Detection of habitat association
 #'
 #' Correct and false detections of the results of habitat associations
-#' @param input [\code{list(1)}]\cr List created with Results.Habitat.Associations
-#' @param species_code [\code{numeric(1)}]\cr Species_id
+#' @param input List created with results_habitat_associations
+#' @param species_type Species name
+#' @param species_code Species id
+#' @param variable Level of analysed variable
 
 #'
 #' @return Tibble with correct and false detections
@@ -16,9 +18,9 @@ detect_habitat_associations <- function(input,
   
   association <- stringr::str_extract(species_type, "(?<=_).+?(?=_)")
   
-  result_summarised <- c(Species_code = species_code, Variable = variable,
-                         Correct = sum(input$Significance[input$Habitat == habitat] == association, na.rm=T),
-                         False = sum(input$Significance[input$Habitat != habitat] == association, na.rm=T))
+  result_summarised <- c(species_code = species_code, variable = variable,
+                         correct = sum(input$significance[input$habitat == habitat] == association, na.rm = TRUE),
+                         false = sum(input$significance[input$habitat != habitat] == association, na.rm = TRUE))
 
   return(result_summarised)
 }

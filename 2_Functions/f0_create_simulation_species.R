@@ -1,21 +1,25 @@
-#' Create simulation species
+#' create_simulation_species
 #'
+#' @details 
 #' Algorithm to create simulation species with choosen characteristics
 #' 
-#' @param habitats_poly [\code{sf(1)}]\cr sf object with habitats
-#' @param type [\code{string(1)}]\cr 'positive' or 'negative' associations
-#' @param process [\code{string(1)}]\cr Process type to chose. Either 'Poisson' or 'Thomas'
-#' @param habitat [\code{numeric(1)}]\cr Habitat to which species is associated
-#' @param number_points [\code{numeric(1)}]\cr Number of points for each species (association_strength = 0)
-#' @param association_strength [\code{numeric(1)}]\cr Strength of species-habitat association
-#' @param species_code [\code{numeric{1}}]\cr Species code to number species
-#' @param verbose [\code{logical(1)}]\cr Print advanced error message
+#' @param habitats_poly sf object with habitats
+#' @param habitat Habitat to which species is associated
+#' @param owin_overall owin object with whole observation window
+#' @param type 'positive' or 'negative' associations
+#' @param process Process type to chose. Either 'Poisson' or 'Thomas'
+#' @param association_strength Strength of species-habitat association
+#' @param number_points Number of points for each species (association_strength = 0)
+#' @param species_code Species code to number species
+#' @param verbose Print advanced error message
 #'
 #' @return ppp object of the spatstat package with simulated species
 
 #' @export
-create_simulation_species <- function(habitats_poly, owin_overall,  type, process, habitat, number_points = 100, association_strength = 0.3,
-                                      species_code = 0, verbose = TRUE){
+create_simulation_species <- function(habitats_poly, habitat,  owin_overall, 
+                                      type, process, association_strength = 0.3,
+                                      number_points = 100, species_code = 0, 
+                                      verbose = TRUE){
   
   scale <- mean(diff(owin_overall$yrange), diff(owin_overall$xrange)) / 25
   
@@ -38,9 +42,10 @@ create_simulation_species <- function(habitats_poly, owin_overall,  type, proces
       
       pattern <- spatstat::superimpose.ppp(pattern_a, pattern_b, W = owin_overall)
       
-      marks_pattern <- data.frame(Species = rep(paste0("Poisson_positive_", habitat), pattern$n),
-                                  Species_code = species_code,
-                                  Habitat = rep(habitat, pattern$n))
+      marks_pattern <- data.frame(species = rep(paste0("poisson_positive_", habitat), pattern$n),
+                                  species_code = species_code,
+                                  habitat = rep(habitat, pattern$n))
+      
       spatstat::marks(pattern) <- marks_pattern
     }
     
@@ -63,9 +68,10 @@ create_simulation_species <- function(habitats_poly, owin_overall,  type, proces
       
       pattern <- spatstat::superimpose(pattern_a, pattern_b, W = owin_overall)
       
-      marks_pattern <- data.frame(Species = rep(paste0("Thomas_positive_", habitat), pattern$n),
-                                  Species_code = species_code,
-                                  Habitat = rep(habitat, pattern$n))
+      marks_pattern <- data.frame(species = rep(paste0("thomas_positive_", habitat), pattern$n),
+                                  species_code = species_code,
+                                  habitat = rep(habitat, pattern$n))
+      
       spatstat::marks(pattern) <- marks_pattern
     }
     
@@ -99,9 +105,10 @@ create_simulation_species <- function(habitats_poly, owin_overall,  type, proces
       
       pattern <- spatstat::superimpose(pattern_b, pattern_c, W = owin_overall)
       
-      marks_pattern <- data.frame(Species = rep(paste0("Poisson_negative_", habitat), pattern$n),
-                                  Species_code = species_code,
-                                  Habitat = rep(habitat, pattern$n))
+      marks_pattern <- data.frame(species = rep(paste0("poisson_negative_", habitat), pattern$n),
+                                  species_code = species_code,
+                                  habitat = rep(habitat, pattern$n))
+      
       spatstat::marks(pattern) <- marks_pattern
     }
     
@@ -125,9 +132,10 @@ create_simulation_species <- function(habitats_poly, owin_overall,  type, proces
       
       pattern <- spatstat::superimpose(pattern_b, pattern_c, W = owin_overall)
       
-      marks_pattern <- data.frame(Species = rep(paste0("Thomas_negative_", habitat), pattern$n),
-                                  Species_code = species_code,
-                                  Habitat = rep(habitat, pattern$n))
+      marks_pattern <- data.frame(species = rep(paste0("thomas_negative_", habitat), pattern$n),
+                                  species_code = species_code,
+                                  habitat = rep(habitat, pattern$n))
+      
       spatstat::marks(pattern) <- marks_pattern
     }
     
@@ -151,8 +159,8 @@ create_simulation_species <- function(habitats_poly, owin_overall,  type, proces
                                y = pattern$census$y,
                                window = owin_overall)
       
-      marks_pattern <- data.frame(Species = rep("Poisson_neutral", pattern$n),
-                                  Species_code = species_code)
+      marks_pattern <- data.frame(species = rep("poisson_neutral", pattern$n),
+                                  species_code = species_code)
       
       spatstat::marks(pattern) <- marks_pattern
     }
@@ -170,8 +178,8 @@ create_simulation_species <- function(habitats_poly, owin_overall,  type, proces
                                y = pattern$census$y,
                                window = owin_overall)
       
-      marks_pattern <- data.frame(Species = rep("Thomas_neutral", pattern$n),
-                                  Species_code = species_code)
+      marks_pattern <- data.frame(species = rep("thomas_neutral", pattern$n),
+                                  species_code = species_code)
       
       spatstat::marks(pattern) <- marks_pattern
     }

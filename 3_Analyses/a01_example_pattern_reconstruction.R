@@ -10,7 +10,11 @@
 #### 1. Import packages & functions ####
 
 # Packages #
-source(paste0(getwd(), '/2_Functions/setup_packages.R'))
+# library(clustermq)
+library(NLMR)
+library(SHAR)
+library(spatstat)
+library(tidyverse)
 
 # Source all functions in R_functions folder
 list.files(paste0(getwd(), '/2_Functions'), pattern = '^[f0_ f1_]', full.names = TRUE) %>%
@@ -39,7 +43,7 @@ list.files(paste0(getwd(), '/2_Functions'), pattern = '^[f0_ f1_]', full.names =
 
 set.seed(42, kind = "L'Ecuyer-CMRG")
 
-simulation_habitats <- NLMR::nlm_fbm(ncol = 30, nrow = 30,
+simulation_habitats <- NLMR::nlm_fbm(ncol = 50, nrow = 50,
                                      resolution = 20, fract_dim = 1.5, 
                                      verbose = FALSE) %>%
   SHAR::classify_habitats(classes = 5)
@@ -54,75 +58,114 @@ names_species <- simulation_pattern$marks$Species %>%
 
 #### 4. Pattern reconstruction ####
 
-number_reconstructions <- 199
-max_runs <- 1000
+n_random <- 199
+# n_random <- rep(1, 199)
+max_runs <- 2500
 
 # Species 1
-species_1 <- spatstat::subset.ppp(simulation_pattern, Species_code == 1)
+species_1 <- spatstat::subset.ppp(simulation_pattern, species_code == 1)
 
 reconstruction_species_1 <- SHAR::reconstruct_pattern(pattern = species_1, 
-                                                      number_reconstructions = number_reconstructions, 
+                                                      n_random = n_random, 
                                                       max_runs = max_runs, 
-                                                      fitting = FALSE, 
+                                                      fitting = FALSE,
                                                       verbose = TRUE)
 
-# SHAR::plot_randomized_pattern(reconstruction_species_1)
+# reconstruction_species_1 <- clustermq::Q(fun = reconstruct_pattern,
+#                                          n_random = n_random,
+#                                          const = list(pattern = species_1, 
+#                                                       max_runs = max_runs, 
+#                                                       fitting = FALSE), 
+#                                          n_jobs = n_random, 
+#                                          template = list(queue = "mpi", 
+#                                                          walltime = "06:00", 
+#                                                          processes = 1))
+
+SHAR::plot_randomized_pattern(reconstruction_species_1)
 
 # Species 2
-species_2 <- spatstat::subset.ppp(simulation_pattern, Species_code == 2)
+species_2 <- spatstat::subset.ppp(simulation_pattern, species_code == 2)
 
 reconstruction_species_2 <- SHAR::reconstruct_pattern(pattern = species_2, 
-                                                      number_reconstructions = number_reconstructions, 
+                                                      n_random = n_random, 
                                                       max_runs = max_runs, 
-                                                      fitting = TRUE, 
+                                                      fitting = TRUE,
                                                       verbose = TRUE)
 
-# SHAR::plot_randomized_pattern(reconstruction_species_2)
+# reconstruction_species_2 <- clustermq::Q(fun = reconstruct_pattern,
+#                                          n_random = n_random,
+#                                          const = list(pattern = species_2, 
+#                                                       max_runs = max_runs, 
+#                                                       fitting = FALSE), 
+#                                          n_jobs = n_random, 
+#                                          template = list(queue = "mpi", 
+#                                                          walltime = "06:00", 
+#                                                          processes = 1))
 
+SHAR::plot_randomized_pattern(reconstruction_species_2)
 
 # Species 3
-species_3 <- spatstat::subset.ppp(simulation_pattern, Species_code == 3)
+species_3 <- spatstat::subset.ppp(simulation_pattern, species_code == 3)
 
 reconstruction_species_3 <- SHAR::reconstruct_pattern(pattern = species_3, 
-                                                      number_reconstructions = number_reconstructions, 
+                                                      n_random = n_random, 
                                                       max_runs = max_runs, 
-                                                      fitting = FALSE, 
+                                                      fitting = FALSE,
                                                       verbose = TRUE)
 
-# SHAR::plot_randomized_pattern(reconstruction_species_3)
+# reconstruction_species_3 <- clustermq::Q(fun = reconstruct_pattern,
+#                                          n_random = n_random,
+#                                          const = list(pattern = species_3, 
+#                                                       max_runs = max_runs, 
+#                                                       fitting = FALSE), 
+#                                          n_jobs = n_random, 
+#                                          template = list(queue = "mpi", 
+#                                                          walltime = "06:00", 
+#                                                          processes = 1))
 
+SHAR::plot_randomized_pattern(reconstruction_species_3)
 
 # Species 4
-species_4 <- spatstat::subset.ppp(simulation_pattern, Species_code == 4)
+species_4 <- spatstat::subset.ppp(simulation_pattern, species_code == 4)
 
 reconstruction_species_4 <- SHAR::reconstruct_pattern(pattern = species_4, 
-                                                      number_reconstructions = number_reconstructions, 
+                                                      n_random = n_random, 
                                                       max_runs = max_runs, 
-                                                      fitting = TRUE, 
+                                                      fitting = TRUE,
                                                       verbose = TRUE)
+
+# reconstruction_species_4 <- clustermq::Q(fun = reconstruct_pattern,
+#                                          n_random = n_random,
+#                                          const = list(pattern = species_4, 
+#                                                       max_runs = max_runs, 
+#                                                       fitting = FALSE), 
+#                                          n_jobs = n_random, 
+#                                          template = list(queue = "mpi", 
+#                                                          walltime = "06:00", 
+#                                                          processes = 1))
 
 # SHAR::plot_randomized_pattern(reconstruction_species_4)
 
 #### 5. Point process ####
-fitted_species_1 <- fit_point_process(species_1, 
-                                      process = "poisson", 
-                                      number_pattern = number_reconstructions)
+fitted_species_1 <- SHAR::fit_point_process(species_1, 
+                                            n_random = n_random,
+                                            process = "poisson")
 
-fitted_species_2 <- fit_point_process(species_2, 
-                                      process = "cluster", 
-                                      number_pattern = number_reconstructions)
+fitted_species_2 <- SHAR::fit_point_process(species_2, 
+                                            n_random = n_random,
+                                            process = "cluster")
 
-fitted_species_3 <- fit_point_process(species_3, 
-                                      process = "poisson", 
-                                      number_pattern = number_reconstructions)
+fitted_species_3 <- SHAR::fit_point_process(species_3, 
+                                            n_random = n_random,
+                                            process = "poisson")
 
-fitted_species_4 <- fit_point_process(species_4, 
-                                      process = "cluster", 
-                                      number_pattern = number_reconstructions)
+fitted_species_4 <- SHAR::fit_point_process(species_4, 
+                                            n_random = n_random,
+                                            process = "cluster")
 
 #### 6. Save results ####
 
-overwrite <- TRUE
+overwrite <- FALSE
 
 # Species 1
 UtilityFunctions::save_rds(object = reconstruction_species_1,
@@ -150,22 +193,22 @@ UtilityFunctions::save_rds(object = fitted_species_2,
 UtilityFunctions::save_rds(object = reconstruction_species_3,
                            filename = "o01_reconstruction_species_3.rds",
                            path = paste0(getwd(), "/4_Output"), 
-                           overwrite = FALSE)
+                           overwrite = overwrite)
 
 UtilityFunctions::save_rds(object = fitted_species_3,
                            filename = "o01_fitted_species_3.rds",
                            path = paste0(getwd(), "/4_Output"), 
-                           overwrite = FALSE)
+                           overwrite = overwrite)
 
 # Species 4
 UtilityFunctions::save_rds(object = reconstruction_species_4,
                            filename = "o01_reconstruction_species_4.rds",
                            path = paste0(getwd(), "/4_Output"), 
-                           overwrite = FALSE)
+                           overwrite = overwrite)
 
 UtilityFunctions::save_rds(object = fitted_species_4,
                            filename = "o01_fitted_species_4.rds",
                            path = paste0(getwd(), "/4_Output"), 
-                           overwrite = FALSE)
+                           overwrite = overwrite)
 
 

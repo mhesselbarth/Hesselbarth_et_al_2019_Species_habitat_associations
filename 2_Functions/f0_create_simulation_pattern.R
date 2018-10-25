@@ -1,14 +1,17 @@
-#' Create simulation pattern
-#'
-#' Algorithm to create simulation pattern with 6 species with different species-habitat associations.
+#' create_simulation_pattern
+#' 
+#' @details 
+#' Algorithm to create simulation pattern with 4 species with different species-habitat associations.
 #' 
 #' \cr Species 1: Positive associations (Poisson process)
 #' \cr Species 2: Positive associations (Thomas process)
 #' \cr Species 3: Negative associations (Poisson process)
 #' \cr Species 4: Negative associations (Thomas process)
-#' @param raster [\code{raster(1)}]\cr Raster object of the raster package with habitats
-#' @param number_points [\code{numeric(1)}]\cr Number of points for each species (association_strength=0)
-#' @param association_strength [\code{numeric(1)}]\cr Strength of species-habitat association
+#' 
+#' @param raster Raster object of the raster package with habitats
+#' @param number_points Number of points for each species (association_strength=0)
+#' @param association_strength Strength of species-habitat association
+#' 
 #' @return ppp object of the spatstat package with simulated species
 
 #' @export
@@ -31,7 +34,7 @@ create_simulation_pattern <- function(raster, number_points = 100, association_s
                                          species_code = 1, verbose = FALSE)
   
   # Species 2: Positive associations (Thomas process)
-  habitat_2 <- sample(x=seq(min(raster::values(raster)):max(raster::values(raster))), size=1)
+  habitat_2 <- sample(x = seq(min(raster::values(raster)):max(raster::values(raster))), size = 1)
   species_2 <- create_simulation_species(habitats_poly = habitats_poly,
                                          owin_overall = owin_overall,
                                          type = "positive", process = "Thomas",
@@ -55,7 +58,9 @@ create_simulation_pattern <- function(raster, number_points = 100, association_s
   species_4 <- create_simulation_species(habitats_poly = habitats_poly, 
                                          owin_overall = owin_overall,
                                          type = "negative", process = "Thomas",
-                                         habitat = habitat_4, number_points = number_points, association_strength = association_strength,
+                                         habitat = habitat_4,
+                                         number_points = number_points, 
+                                         association_strength = association_strength,
                                          species_code = 4, verbose = FALSE)
   
   simulation_pattern <- spatstat::superimpose(species_1, species_2,

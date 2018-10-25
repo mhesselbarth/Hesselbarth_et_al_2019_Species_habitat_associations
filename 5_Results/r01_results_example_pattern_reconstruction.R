@@ -10,7 +10,8 @@
 #### 1. Import packages and data ####
 
 # Packages #
-source(paste0(getwd(), '/2_Functions/setup_packages.R'))
+library(RColorBrewer)
+library(tidyverse)
 
 #### 1. Input data ####
 results <- list.files(paste0(getwd(), '/4_Output'), pattern = 'o01_', full.names = TRUE) %>%
@@ -41,8 +42,8 @@ results_df_long <- purrr::map_dfr(results, function(current_species) {
 }, .id = "species")
 
 results_df_long_reclassified <- results_df_long %>%
-  dplyr::mutate(pattern = dplyr::case_when(pattern == "Observed" ~ "Observed", 
-                                           pattern != "Observed" ~ "Simulation"), 
+  dplyr::mutate(pattern = dplyr::case_when(pattern == "observed" ~ "observed", 
+                                           pattern != "observed" ~ "simulation"), 
                 method = dplyr::case_when(str_detect(species, "^reconstruction") ~ "Pattern reconstruction",
                                           str_detect(species, "^fitted") ~ "Gamma test"), 
                 species = dplyr::case_when(str_detect(species, "species_1") ~ "species_1",
@@ -51,15 +52,23 @@ results_df_long_reclassified <- results_df_long %>%
                                            str_detect(species, "species_4") ~ "species_4"))
 
 pcf_observed <- results_df_long_reclassified %>%
-  dplyr::filter(pattern == "Observed", 
-                species == "species_1")
+  dplyr::filter(pattern == "observed" & 
+                species == "species_1" | 
+                species == "species_2")
+
+pcf_observed$species <- factor(pcf_observed$species, 
+                                levels = c("species_1",
+                                           "species_2"), 
+                               labels = c("Species 1", 
+                                          "Species 2"))
 
 pcf_null_model <- results_df_long_reclassified %>%
-  dplyr::filter(pattern == "Simulation") %>% 
+  dplyr::filter(pattern == "simulation" & 
+                species == "species_1" | 
+                species == "species_2") %>% 
   dplyr::group_by(species, method, r) %>% 
-  dplyr::summarise(lo=stats::quantile(iso, probs = 0.025),
-                   hi=stats::quantile(iso, probs = 0.975)) %>% 
-  dplyr::filter(species == "species_1")
+  dplyr::summarise(lo = quantile(iso, probs = 0.025),
+                   hi = quantile(iso, probs = 0.975))
 
 pcf_null_model$method <- factor(pcf_null_model$method, 
                                 levels = c("Gamma test",
@@ -70,12 +79,12 @@ pcf_null_model$method <- factor(pcf_null_model$method,
 colors_spec <- rev(RColorBrewer::brewer.pal(n = 3, name = "Spectral"))
 
 plot_method_comparison <- ggplot(data = pcf_observed) + 
-  geom_ribbon(data = pcf_null_model, aes(x= r, ymin = lo, ymax = hi, fill = "Null model")) +
+  geom_ribbon(data = pcf_null_model, aes(x = r, ymin = lo, ymax = hi, fill = "Null model")) +
   geom_line(aes(x = r, y = theo, color = "Complete spatial randomness"), linetype = 2, size = 1.25) +
   geom_line(aes(x = r, y = iso, color = "Observed"), size = 1.25) +
   scale_color_manual(name = "", values = c("Complete spatial randomness" = colors_spec[1], "Observed" = colors_spec[3])) +
   scale_fill_manual(name = "", values = c("Null model" = "grey")) +
-  facet_wrap(~ method, ncol = 1) +
+  facet_wrap(~ method + species, nrow = 2, ncol = 2) +
   labs(x = "r [m]", y = "g(r)") +
   theme_classic(base_size = 30) +  
   guides(color = guide_legend(nrow = 2, byrow = TRUE)) +
