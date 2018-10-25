@@ -12,6 +12,7 @@
 # Packages
 library(NLMR)
 library(RColorBrewer)
+library(UtilityFunctions)
 library(SHAR)
 library(spatstat)
 library(tidyverse)
