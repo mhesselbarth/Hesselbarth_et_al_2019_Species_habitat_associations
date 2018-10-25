@@ -10,7 +10,7 @@
 #### 1. Import packages & functions ####
 
 # Packages #
-# library(clustermq)
+library(clustermq)
 library(NLMR)
 library(SHAR)
 library(spatstat)
@@ -20,26 +20,7 @@ library(tidyverse)
 list.files(paste0(getwd(), '/2_Functions'), pattern = '^[f0_ f1_]', full.names = TRUE) %>%
   purrr::walk(function(x) source(x))
 
-#### 2. Specify future topology ####
-# 
-# future_map for 1) alpha (x) 2) simulation runs (y) 3) within null model function
-# login node -> { cluster nodes } -> { multiple cores }
-# 
-# login <- future::tweak(remote, workers = "gwdu101.gwdg.de", user = 'hesselbarth3')
-# bsub <- future::tweak(future.batchtools::batchtools_lsf, template = 'lsf.tmpl',
-#                       resources = list(job.name = 'pattern_recon_example',
-#                                        log.file = 'pattern_recon_example.log',
-#                                        queue = 'mpi-short',
-#                                        walltime = '02:00',
-#                                        processes = 1))
-# 
-# future::plan(list(login, bsub, future::sequential))
-# 
-# future::plan(list(future::multiprocess, future::multiprocess))
-# future::plan(future::multiprocess)
-# 
-# 
-#### 3. Create data ####
+#### 2. Create data ####
 
 set.seed(42, kind = "L'Ecuyer-CMRG")
 
@@ -58,93 +39,109 @@ names_species <- simulation_pattern$marks$Species %>%
 
 #### 4. Pattern reconstruction ####
 
-n_random <- 199
-# n_random <- rep(1, 199)
+# n_random <- 199
+n_random <- rep(1, 199)
 max_runs <- 2500
 
 # Species 1
 species_1 <- spatstat::subset.ppp(simulation_pattern, species_code == 1)
 
-reconstruction_species_1 <- SHAR::reconstruct_pattern(pattern = species_1, 
-                                                      n_random = n_random, 
-                                                      max_runs = max_runs, 
-                                                      fitting = FALSE,
-                                                      verbose = TRUE)
-
-# reconstruction_species_1 <- clustermq::Q(fun = reconstruct_pattern,
-#                                          n_random = n_random,
-#                                          const = list(pattern = species_1, 
+# reconstruction_species_1 <- SHAR::reconstruct_pattern(pattern = species_1, 
+#                                                       n_random = n_random, 
 #                                                       max_runs = max_runs, 
-#                                                       fitting = FALSE), 
-#                                          n_jobs = n_random, 
-#                                          template = list(queue = "mpi", 
-#                                                          walltime = "06:00", 
-#                                                          processes = 1))
+#                                                       fitting = FALSE,
+#                                                       verbose = TRUE)
+
+reconstruction_species_1 <- clustermq::Q(fun = reconstruct_pattern,
+                                         n_random = n_random,
+                                         const = list(pattern = species_1,
+                                                      e_threshold = 0.01,
+                                                      max_runs = max_runs,
+                                                      fitting = FALSE, 
+                                                      comp_fast = FALSE,
+                                                      verbose = FALSE),
+                                         seed = 42,
+                                         n_jobs = length(n_random),
+                                         template = list(queue = "mpi",
+                                                         walltime = "48:00",
+                                                         processes = 1))
 
 SHAR::plot_randomized_pattern(reconstruction_species_1)
 
 # Species 2
 species_2 <- spatstat::subset.ppp(simulation_pattern, species_code == 2)
 
-reconstruction_species_2 <- SHAR::reconstruct_pattern(pattern = species_2, 
-                                                      n_random = n_random, 
-                                                      max_runs = max_runs, 
-                                                      fitting = TRUE,
-                                                      verbose = TRUE)
-
-# reconstruction_species_2 <- clustermq::Q(fun = reconstruct_pattern,
-#                                          n_random = n_random,
-#                                          const = list(pattern = species_2, 
+# reconstruction_species_2 <- SHAR::reconstruct_pattern(pattern = species_2, 
+#                                                       n_random = n_random, 
 #                                                       max_runs = max_runs, 
-#                                                       fitting = FALSE), 
-#                                          n_jobs = n_random, 
-#                                          template = list(queue = "mpi", 
-#                                                          walltime = "06:00", 
-#                                                          processes = 1))
+#                                                       fitting = TRUE,
+#                                                       verbose = TRUE)
+
+reconstruction_species_2 <- clustermq::Q(fun = reconstruct_pattern,
+                                         n_random = n_random,
+                                         const = list(pattern = species_2,
+                                                      e_threshold = 0.01,
+                                                      max_runs = max_runs,
+                                                      fitting = FALSE, 
+                                                      comp_fast = FALSE,
+                                                      verbose = FALSE),
+                                         seed = 42,
+                                         n_jobs = length(n_random),
+                                         template = list(queue = "mpi",
+                                                         walltime = "48:00",
+                                                         processes = 1))
 
 SHAR::plot_randomized_pattern(reconstruction_species_2)
 
 # Species 3
 species_3 <- spatstat::subset.ppp(simulation_pattern, species_code == 3)
 
-reconstruction_species_3 <- SHAR::reconstruct_pattern(pattern = species_3, 
-                                                      n_random = n_random, 
-                                                      max_runs = max_runs, 
-                                                      fitting = FALSE,
-                                                      verbose = TRUE)
-
-# reconstruction_species_3 <- clustermq::Q(fun = reconstruct_pattern,
-#                                          n_random = n_random,
-#                                          const = list(pattern = species_3, 
+# reconstruction_species_3 <- SHAR::reconstruct_pattern(pattern = species_3, 
+#                                                       n_random = n_random, 
 #                                                       max_runs = max_runs, 
-#                                                       fitting = FALSE), 
-#                                          n_jobs = n_random, 
-#                                          template = list(queue = "mpi", 
-#                                                          walltime = "06:00", 
-#                                                          processes = 1))
+#                                                       fitting = FALSE,
+#                                                       verbose = TRUE)
+
+reconstruction_species_3 <- clustermq::Q(fun = reconstruct_pattern,
+                                         n_random = n_random,
+                                         const = list(pattern = species_3,
+                                                      e_threshold = 0.01,
+                                                      max_runs = max_runs,
+                                                      fitting = FALSE, 
+                                                      comp_fast = FALSE,
+                                                      verbose = FALSE),
+                                         seed = 42,
+                                         n_jobs = length(n_random),
+                                         template = list(queue = "mpi",
+                                                         walltime = "48:00",
+                                                         processes = 1))
 
 SHAR::plot_randomized_pattern(reconstruction_species_3)
 
 # Species 4
 species_4 <- spatstat::subset.ppp(simulation_pattern, species_code == 4)
 
-reconstruction_species_4 <- SHAR::reconstruct_pattern(pattern = species_4, 
-                                                      n_random = n_random, 
-                                                      max_runs = max_runs, 
-                                                      fitting = TRUE,
-                                                      verbose = TRUE)
-
-# reconstruction_species_4 <- clustermq::Q(fun = reconstruct_pattern,
-#                                          n_random = n_random,
-#                                          const = list(pattern = species_4, 
+# reconstruction_species_4 <- SHAR::reconstruct_pattern(pattern = species_4, 
+#                                                       n_random = n_random, 
 #                                                       max_runs = max_runs, 
-#                                                       fitting = FALSE), 
-#                                          n_jobs = n_random, 
-#                                          template = list(queue = "mpi", 
-#                                                          walltime = "06:00", 
-#                                                          processes = 1))
+#                                                       fitting = TRUE,
+#                                                       verbose = TRUE)
 
-# SHAR::plot_randomized_pattern(reconstruction_species_4)
+reconstruction_species_4 <- clustermq::Q(fun = reconstruct_pattern,
+                                         n_random = n_random,
+                                         const = list(pattern = species_4,
+                                                      e_threshold = 0.01,
+                                                      max_runs = max_runs,
+                                                      fitting = FALSE, 
+                                                      comp_fast = FALSE,
+                                                      verbose = FALSE),
+                                         seed = 42,
+                                         n_jobs = length(n_random),
+                                         template = list(queue = "mpi",
+                                                         walltime = "48:00",
+                                                         processes = 1))
+
+SHAR::plot_randomized_pattern(reconstruction_species_4)
 
 #### 5. Point process ####
 fitted_species_1 <- SHAR::fit_point_process(species_1, 
