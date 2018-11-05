@@ -23,7 +23,7 @@ list.files(paste0(getwd(), '/2_Functions'), pattern = '^[f0_ f1_]', full.names =
 
 #### 2. Create data ####
 
-set.seed(42, kind = "L'Ecuyer-CMRG")
+# set.seed(42, kind = "L'Ecuyer-CMRG")
 
 simulation_habitats <- NLMR::nlm_fbm(ncol = 50, nrow = 50,
                                      resolution = 20, fract_dim = 1.5, 
@@ -41,8 +41,8 @@ names_species <- simulation_pattern$marks$Species %>%
 #### 4. Pattern reconstruction ####
 
 # n_random <- 199
-n_random <- rep(1, 199)
-max_runs <- 2500
+n_random <- rep(1, 199) # rep(1, 199)
+max_runs <- 5000  # 2500
 
 # Species 1
 species_1 <- spatstat::subset.ppp(simulation_pattern, species_code == 1)
@@ -68,7 +68,11 @@ reconstruction_species_1 <- clustermq::Q(fun = reconstruct_pattern,
                                                          walltime = "48:00",
                                                          processes = 1))
 
-SHAR::plot_randomized_pattern(reconstruction_species_1)
+reconstruction_species_1 <- purrr::flatten(reconstruction_species_1)
+
+reconstruction_species_1[[length(n_random) + 1]] <- species_1
+names(reconstruction_species_1) <- c(rep(paste0("randomized_", 1:length(n_random))), 
+                   "observed")
 
 # Species 2
 species_2 <- spatstat::subset.ppp(simulation_pattern, species_code == 2)
@@ -94,7 +98,11 @@ reconstruction_species_2 <- clustermq::Q(fun = reconstruct_pattern,
                                                          walltime = "48:00",
                                                          processes = 1))
 
-SHAR::plot_randomized_pattern(reconstruction_species_2)
+reconstruction_species_2 <- purrr::flatten(reconstruction_species_2)
+
+reconstruction_species_2[[length(n_random) + 1]] <- species_2
+names(reconstruction_species_2) <- c(rep(paste0("randomized_", 1:length(n_random))), 
+                                     "observed")
 
 # Species 3
 species_3 <- spatstat::subset.ppp(simulation_pattern, species_code == 3)
@@ -120,7 +128,11 @@ reconstruction_species_3 <- clustermq::Q(fun = reconstruct_pattern,
                                                          walltime = "48:00",
                                                          processes = 1))
 
-SHAR::plot_randomized_pattern(reconstruction_species_3)
+reconstruction_species_3 <- purrr::flatten(reconstruction_species_3)
+
+reconstruction_species_3[[length(n_random) + 1]] <- species_3
+names(reconstruction_species_3) <- c(rep(paste0("randomized_", 1:length(n_random))), 
+                                     "observed")
 
 # Species 4
 species_4 <- spatstat::subset.ppp(simulation_pattern, species_code == 4)
@@ -146,9 +158,15 @@ reconstruction_species_4 <- clustermq::Q(fun = reconstruct_pattern,
                                                          walltime = "48:00",
                                                          processes = 1))
 
-SHAR::plot_randomized_pattern(reconstruction_species_4)
+reconstruction_species_4 <- purrr::flatten(reconstruction_species_4)
+
+reconstruction_species_4[[length(n_random) + 1]] <- species_4
+names(reconstruction_species_4) <- c(rep(paste0("randomized_", 1:length(n_random))), 
+                                     "observed")
 
 #### 5. Point process ####
+n_random <- 199
+
 fitted_species_1 <- SHAR::fit_point_process(species_1, 
                                             n_random = n_random,
                                             process = "poisson")
