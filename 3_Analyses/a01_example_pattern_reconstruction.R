@@ -42,7 +42,7 @@ names_species <- simulation_pattern$marks$Species %>%
 
 # n_random <- 199
 n_random <- rep(1, 199) # rep(1, 199)
-max_runs <- 5000  # 2500
+max_runs <- 10000  # 2500
 
 # Species 1
 species_1 <- spatstat::subset.ppp(simulation_pattern, species_code == 1)
