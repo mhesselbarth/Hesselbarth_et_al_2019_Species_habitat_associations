@@ -4,19 +4,17 @@ simulate_habitat_random_association_strength <- function(number_coloumns, number
                                                          number_points, 
                                                          association_strength){
   
-  simulation_habitats <- NLMR::nlm_fbm(ncol = number_coloumns, nrow = number_rows,
-                                       resolution = resolution, 
-                                       fract_dim = fract_dim, 
-                                       verbose = FALSE) %>%
-      SHAR::classify_habitats(classes = 5)
+  simulation_habitats <- SHAR::classify_habitats(NLMR::nlm_fbm(ncol = number_coloumns, nrow = number_rows,
+                                                               resolution = resolution, 
+                                                               fract_dim = fract_dim, 
+                                                               verbose = FALSE), 
+                                                 classes = 5)
     
   simulation_pattern <- create_simulation_pattern(raster = simulation_habitats,
                                                   number_points = number_points,
                                                   association_strength = association_strength)
   
-  names_species <- simulation_pattern$marks$species %>%
-    unique() %>%
-    as.character()
+  names_species <- as.character(unique(simulation_pattern$marks$species))
       
   random_habitats <- SHAR::randomize_raster(raster = simulation_habitats,
                                             n_random = n_random)

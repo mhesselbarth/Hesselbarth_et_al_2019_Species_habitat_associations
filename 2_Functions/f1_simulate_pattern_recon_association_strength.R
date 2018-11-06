@@ -3,12 +3,11 @@ simulate_pattern_recon_association_strength <- function(number_coloumns, number_
                                                         n_random, max_runs,
                                                         number_points, association_strength){
   
-  simulation_habitats <- NLMR::nlm_fbm(ncol = number_coloumns, nrow = number_rows,
-                                       resolution = resolution, 
-                                       fract_dim = fract_dim, 
-                                       verbose = FALSE) %>% 
-    SHAR::classify_habitats(raster = simulation_habitats, 
-                            classes = 5)
+  simulation_habitats <- SHAR::classify_habitats(NLMR::nlm_fbm(ncol = number_coloumns, nrow = number_rows,
+                                                               resolution = resolution, 
+                                                               fract_dim = fract_dim, 
+                                                               verbose = FALSE), 
+                                                 classes = 5)
         
   simulation_pattern <- create_simulation_pattern(raster = simulation_habitats,
                                                   number_points = number_points,
