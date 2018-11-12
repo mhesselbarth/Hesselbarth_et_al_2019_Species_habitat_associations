@@ -49,7 +49,7 @@ number_points <- 100 # 250 - 250 - 500???
 n_random <- 199 # 199
 
 # Number of itertations pattern reconstruction
-max_runs <- 2500 # 5000
+max_runs <- 10000 # 5000
 
 # Number of simulation runs
 simulation_runs <- 100 # 50
