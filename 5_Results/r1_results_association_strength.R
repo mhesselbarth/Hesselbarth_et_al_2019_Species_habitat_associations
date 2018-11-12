@@ -26,7 +26,7 @@ names(results) <- names_combined
 
 #### 2. Preprocessing data ####
 
-pattern <- "_50_100"
+pattern <- "_100_100"
 
 results_filter <- results[stringr::str_detect(names(results), pattern = pattern)]
 names(results_filter)
