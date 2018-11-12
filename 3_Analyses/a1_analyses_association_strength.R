@@ -29,6 +29,8 @@ list.files(paste0(getwd(), '/2_Functions'), pattern = '^[f0_ f1_]', full.names =
 
 #### 2. Define parameters ####
 
+overwrite <- FALSE
+
 # Set seed
 # set.seed(42, kind = "L'Ecuyer-CMRG")
 
@@ -49,7 +51,7 @@ number_points <- 100 # 250 - 250 - 500???
 n_random <- 199 # 199
 
 # Number of itertations pattern reconstruction
-max_runs <- 2500 # 5000
+max_runs <- 20000 # 5000
 
 # Number of simulation runs
 simulation_runs <- 100 # 50
@@ -73,10 +75,17 @@ habitat_randomization <- clustermq::Q(fun = simulate_habitat_random_association_
                                                     create_simulation_pattern = create_simulation_pattern,
                                                     detect_habitat_associations = detect_habitat_associations), 
                                       seed = 42, 
-                                      n_jobs = 2500, 
+                                      n_jobs = 1250, 
                                       template = list(queue = "mpi", 
-                                                      walltime = "06:00", 
+                                                      walltime = "48:00", 
                                                       processes = 1))
+
+habitat_randomization <- dplyr::bind_rows(habitat_randomization)
+
+UtilityFunctions::save_rds(object = habitat_randomization,
+                           filename = paste0("o1_habitat_randomization_", simulation_runs, "_", number_points, ".rds"),
+                           path = paste0(getwd(), "/4_Output"), 
+                           overwrite = overwrite)
 
 # Torus translation
 torus_translation <- clustermq::Q(fun = simulate_torus_trans_association_strength, 
@@ -90,29 +99,43 @@ torus_translation <- clustermq::Q(fun = simulate_torus_trans_association_strengt
                                                 create_simulation_pattern = create_simulation_pattern,
                                                 detect_habitat_associations = detect_habitat_associations), 
                                   seed = 42, 
-                                  n_jobs = 2500, 
+                                  n_jobs = 1250, 
                                   template = list(queue = "mpi", 
-                                                  walltime = "06:00", 
+                                                  walltime = "48:00", 
                                                   processes = 1))
 
-# Gamma test
-point_process <- clustermq::Q(fun = simulate_point_process_association_strength, 
-                              association_strength = association_strength, 
-                              const = list(number_coloumns = number_coloumns, 
-                                           number_rows = number_rows, 
-                                           resolution = resolution,
-                                           fract_dim = fract_dim, 
-                                           number_points = number_points, 
-                                           n_random = n_random),
-                              export = list(create_simulation_species = create_simulation_species, 
-                                            create_simulation_pattern = create_simulation_pattern,
-                                            detect_habitat_associations = detect_habitat_associations), 
-                              seed = 42, 
-                              n_jobs = 2500, 
-                              template = list(queue = "mpi", 
-                                              walltime = "06:00", 
-                                              processes = 1))
+torus_translation <- dplyr::bind_rows(torus_translation)
 
+UtilityFunctions::save_rds(object = torus_translation,
+                           filename = paste0("o1_torus_translation_", simulation_runs, "_", number_points, ".rds"),
+                           path = paste0(getwd(), "/4_Output"),
+                           overwrite = overwrite)
+
+# Gamma test
+gamma_test <- clustermq::Q(fun = simulate_point_process_association_strength, 
+                           association_strength = association_strength, 
+                           const = list(number_coloumns = number_coloumns, 
+                                        number_rows = number_rows, 
+                                        resolution = resolution,
+                                        fract_dim = fract_dim, 
+                                        number_points = number_points, 
+                                        n_random = n_random),
+                           export = list(create_simulation_species = create_simulation_species, 
+                                         create_simulation_pattern = create_simulation_pattern,
+                                         detect_habitat_associations = detect_habitat_associations), 
+                           seed = 42, 
+                           n_jobs = 1250, 
+                           template = list(queue = "mpi", 
+                                           walltime = "48:00", 
+                                           processes = 1)) 
+
+gamma_test <- dplyr::bind_rows(gamma_test)
+
+UtilityFunctions::save_rds(object = gamma_test,
+                           filename = paste0("o1_gamma_test_", simulation_runs, "_", number_points, ".rds"),
+                           path = paste0(getwd(), "/4_Output"),
+                           overwrite = overwrite)
+                           
 # Pattern reconstruction
 pattern_reconstruction <- clustermq::Q(fun = simulate_pattern_recon_association_strength, 
                                        association_strength = association_strength, 
@@ -127,37 +150,19 @@ pattern_reconstruction <- clustermq::Q(fun = simulate_pattern_recon_association_
                                                      create_simulation_pattern = create_simulation_pattern,
                                                      detect_habitat_associations = detect_habitat_associations), 
                                        seed = 42, 
-                                       n_jobs = 2500, 
+                                       n_jobs = 1250, 
                                        template = list(queue = "mpi", 
-                                                       walltime = "06:00", 
+                                                       walltime = "48:00", 
                                                        processes = 1))
 
-
-#### 4. Save data ####
-
-overwrite <- FALSE
-
-UtilityFunctions::save_rds(object = habitat_randomization,
-                           filename = paste0("o1_habitat_randomization_", simulation_runs, "_", number_points, ".rds"),
-                           path = paste0(getwd(), "/4_Output"), 
-                           overwrite = overwrite)
-
-UtilityFunctions::save_rds(object = torus_translation,
-                           filename = paste0("o1_torus_translation_", simulation_runs, "_", number_points, ".rds"),
-                           path = paste0(getwd(), "/4_Output"),
-                           overwrite = overwrite)
-
-UtilityFunctions::save_rds(object = point_process,
-                           filename = paste0("o1_point_process_", simulation_runs, "_", number_points, ".rds"),
-                           path = paste0(getwd(), "/4_Output"),
-                           overwrite = overwrite)
+pattern_reconstruction <- dplyr::bind_rows(pattern_reconstruction)
 
 UtilityFunctions::save_rds(object=pattern_reconstruction,
                            filename = paste0("o1_pattern_reconstruction_", simulation_runs, "_", number_points, ".rds"),
                            path = paste0(getwd(), "/4_Output"),
                            overwrite = overwrite)
 
-#### 5. Specify future topology ####
+#### 4. Specify future topology ####
 # 
 # future_map for 1) alpha (x) 2) simulation runs (y) 3) within null model function
 # login node -> { cluster nodes } -> { multiple cores }
@@ -174,7 +179,7 @@ UtilityFunctions::save_rds(object=pattern_reconstruction,
 # 
 # future::plan(future::multiprocess)
 # 
-#### 6. Simulation study of different methods to analyze species habitat assocations ####
+#### 5. Simulation study of different methods to analyze species habitat assocations ####
 # 
 # # Habitat randomization (Harms et al. 2001) #
 # habitat_randomization %<-% {simulate_habitat_random_association_strength(

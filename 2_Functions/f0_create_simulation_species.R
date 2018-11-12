@@ -84,7 +84,7 @@ create_simulation_species <- function(habitats_poly, habitat,  owin_overall,
   
   else if (type == "negative"){
     
-    spatstat.options(fastthin=FALSE)
+    # spatstat.options(fastthin = FALSE)
     p_retain <- 1 - association_strength
     
     if(process == "Poisson"){
