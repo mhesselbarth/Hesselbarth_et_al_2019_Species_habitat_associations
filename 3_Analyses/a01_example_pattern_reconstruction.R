@@ -17,7 +17,7 @@ library(SHAR)
 library(spatstat)
 library(tidyverse)
 
-overwrite <- TRUE
+overwrite <- FALSE
 
 # Source all functions in R_functions folder
 list.files(paste0(getwd(), '/2_Functions'), pattern = '^[f0_ f1_]', full.names = TRUE) %>%
@@ -72,7 +72,7 @@ reconstruction_species_1 <- clustermq::Q(fun = reconstruct_pattern,
 
 reconstruction_species_1 <- purrr::flatten(reconstruction_species_1)
 
-reconstruction_species_1[[length(n_random) + 1]] <- species_1
+reconstruction_species_1[[length(n_random) + 1]] <- spatstat::unmark(species_1)
 names(reconstruction_species_1) <- c(rep(paste0("randomized_", 1:length(n_random))), 
                    "observed")
 
@@ -107,7 +107,7 @@ reconstruction_species_2 <- clustermq::Q(fun = reconstruct_pattern,
 
 reconstruction_species_2 <- purrr::flatten(reconstruction_species_2)
 
-reconstruction_species_2[[length(n_random) + 1]] <- species_2
+reconstruction_species_2[[length(n_random) + 1]] <- spatstat::unmark(species_2)
 names(reconstruction_species_2) <- c(rep(paste0("randomized_", 1:length(n_random))), 
                                      "observed")
 
@@ -142,7 +142,7 @@ reconstruction_species_3 <- clustermq::Q(fun = reconstruct_pattern,
 
 reconstruction_species_3 <- purrr::flatten(reconstruction_species_3)
 
-reconstruction_species_3[[length(n_random) + 1]] <- species_3
+reconstruction_species_3[[length(n_random) + 1]] <- spatstat::unmark(species_3)
 names(reconstruction_species_3) <- c(rep(paste0("randomized_", 1:length(n_random))), 
                                      "observed")
 
@@ -177,7 +177,7 @@ reconstruction_species_4 <- clustermq::Q(fun = reconstruct_pattern,
 
 reconstruction_species_4 <- purrr::flatten(reconstruction_species_4)
 
-reconstruction_species_4[[length(n_random) + 1]] <- species_4
+reconstruction_species_4[[length(n_random) + 1]] <- spatstat::unmark(species_4)
 names(reconstruction_species_4) <- c(rep(paste0("randomized_", 1:length(n_random))), 
                                      "observed")
 
