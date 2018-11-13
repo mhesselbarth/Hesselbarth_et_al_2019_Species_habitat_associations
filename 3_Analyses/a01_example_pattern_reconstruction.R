@@ -17,7 +17,7 @@ library(SHAR)
 library(spatstat)
 library(tidyverse)
 
-overwrite <- TRUE
+overwrite <- FALSE
 
 # Source all functions in R_functions folder
 list.files(paste0(getwd(), '/2_Functions'), pattern = '^[f0_ f1_]', full.names = TRUE) %>%

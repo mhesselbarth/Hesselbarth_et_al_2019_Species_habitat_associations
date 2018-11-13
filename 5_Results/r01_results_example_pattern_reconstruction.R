@@ -104,4 +104,4 @@ UtilityFunctions::save_ggplot(plot = plot_method_comparison,
                               path = paste0(getwd(), "/6_Figures"),
                               filename = "a0_plot_method_comparison.png",
                               width = 325, height = 250, units = "mm", 
-                              overwrite = TRUE)
+                              overwrite = FALSE)
