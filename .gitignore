@@ -4,6 +4,6 @@
 .Ruserdata
 .DS_Store
 .httr-oauth
-1_Data/
-4_Output/real_world
-1_Data.zip
+.zip
+2_Real_world_data/1_Data
+2_Real_world_data/3_Results
