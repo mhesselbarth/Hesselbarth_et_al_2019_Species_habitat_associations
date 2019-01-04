@@ -3,4 +3,9 @@
 .RData
 .Ruserdata
 .DS_Store
-1_Data/
+.httr-oauth
+.zip
+2_Real_world_data/1_Data
+2_Real_world_data/3_Results
+999_*
+
