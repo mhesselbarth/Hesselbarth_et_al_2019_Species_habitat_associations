@@ -64,7 +64,7 @@ gamma_test_long <- purrr::map_dfr(gamma_test, function(current_pattern) {
 
 gamma_test_long$pattern <- factor(gamma_test_long$pattern, 
                                   levels = c("observed", "randomized_1"),
-                                  labels = c("Observed", "(I) Gamma test"))
+                                  labels = c("Observed", "(b) Gamma test"))
 
 names(gamma_test_long) <- c("method", "x", "y")
 
@@ -80,7 +80,7 @@ habitats_randomized_long <- purrr::map_dfr(habitats_randomized, function(current
 
 habitats_randomized_long$raster <- factor(habitats_randomized_long$raster, 
                                           levels = c("observed", "randomized_1"),
-                                          labels = c("Observed", "(III) Patch randomization"))
+                                          labels = c("Observed", "(d) Patch randomization"))
 
 names(habitats_randomized_long) <- c("method", "x", "y", "layer")
 
@@ -97,7 +97,7 @@ habitats_torus_long <- purrr::map_dfr(habitats_torus[c(1750, 2598)], function(cu
 
 habitats_torus_long$raster <- factor(habitats_torus_long$raster,
                                      levels = c("observed", "randomized_1750"),
-                                     labels = c("Observed", "(II) Torus translation"))
+                                     labels = c("Observed", "(c) Torus translation"))
 
 names(habitats_torus_long) <- c("method", "x", "y", "layer")
 
@@ -105,9 +105,7 @@ names(habitats_torus_long) <- c("method", "x", "y", "layer")
 
 pattern_reconstruction <- SHAR::reconstruct_pattern(pattern = example_species, 
                                                     n_random = 1, 
-                                                    max_runs = 2500, 
-                                                    verbose = TRUE, 
-                                                    comp_fast = FALSE)
+                                                    max_runs = 2500)
 
 
 pattern_reconstruction_long <- purrr::map_dfr(pattern_reconstruction, function(current_pattern) {
@@ -116,7 +114,7 @@ pattern_reconstruction_long <- purrr::map_dfr(pattern_reconstruction, function(c
 
 pattern_reconstruction_long$pattern <- factor(pattern_reconstruction_long$pattern,
                                               levels = c("observed", "randomized_1"),
-                                              labels = c("Observed", "(IV) Pattern reconstruction"))
+                                              labels = c("Observed", "(e) Pattern reconstruction"))
 
 
 names(pattern_reconstruction_long) <- c("method", "x", "y")

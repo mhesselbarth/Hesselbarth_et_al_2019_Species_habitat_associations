@@ -11,6 +11,7 @@
 
 # Packages #
 library(patchwork)
+library(raster)
 library(RColorBrewer)
 library(spatstat)
 library(tidyverse)
@@ -35,8 +36,8 @@ point_size = 3.5
 
 # Observed
 
-simulation_landscape <- as.data.frame(results$simulation_landscape, xy = TRUE)
-simulation_landscape$Method <- "Observed"
+simulation_landscape <- raster::as.data.frame(results$simulation_landscape, xy = TRUE)
+simulation_landscape$Method <- "(a) Observed"
 
 plot_observed <- ggplot() +
   geom_raster(data = simulation_landscape, aes(x = x, y = y, fill = factor(layer))) +
@@ -55,7 +56,7 @@ plot_observed <- ggplot() +
 
 # Gamma test #
 gamma_test <- dplyr::filter(results$gamma_test,
-                            method == "(I) Gamma test")
+                            method == "(b) Gamma test")
 
 plot_gamma_test <- ggplot(data = gamma_test) + 
   geom_raster(data = as.data.frame(results$simulation_landscape, xy = TRUE),
@@ -74,7 +75,7 @@ plot_gamma_test <- ggplot(data = gamma_test) +
 
 # Torus translation test
 torus_translation <- dplyr::filter(results$torus_translation,
-                                   method == "(II) Torus translation")
+                                   method == "(c) Torus translation")
 
 plot_torus_translation_test <- ggplot(data = torus_translation) + 
   geom_raster(aes(x = x, y = y, fill = factor(layer))) +
@@ -94,7 +95,7 @@ plot_torus_translation_test <- ggplot(data = torus_translation) +
 
 # Patch randomization test #
 patch_randomization <- dplyr::filter(results$patch_randomization,
-                                     method == "(III) Patch randomization")
+                                     method == "(d) Patch randomization")
 
 plot_patch_randomization_algorithm <- ggplot(data = patch_randomization) + 
   geom_raster(aes(x = x, y = y, fill = factor(layer))) +
@@ -114,7 +115,7 @@ plot_patch_randomization_algorithm <- ggplot(data = patch_randomization) +
 
 # Pattern reconstruction test #
 pattern_reconstruction <- dplyr::filter(results$pattern_reconstruction,
-                                        method == "(IV) Pattern reconstruction")
+                                        method == "(e) Pattern reconstruction")
 
 plot_pattern_reconstruction <- ggplot(data = pattern_reconstruction) + 
   geom_raster(data = as.data.frame(results$simulation_landscape, xy = TRUE),
