@@ -1,19 +1,18 @@
-#### Results simulation study #### 
-
 ###################################################
-##    Author: Maximilian Hesselbarth             ##
+##    Author: Maximilian H.K. Hesselbarth        ##
 ##    Department of Ecosystem Modelling          ##
 ##    University of Goettingen                   ##
 ##    maximilian.hesselbarth@uni-goettingen.de   ##
+##    www.github.com/mhesselbarth                ##
 ###################################################
 
-#### 1. Import packages and data ####
+#### Simulation study - Results ####
 
 # Packages #
-source(paste0(getwd(), '/2_Functions/setup_packages.R'))
+library(tidyverse)
 
 # Data #
-results <- list.files(paste0(getwd(), '/4_Output'), pattern = 'o1_', full.names = TRUE) %>%
+results <- list.files(paste0(getwd(), '1_Simulation_study/3_Results'), full.names = TRUE) %>%
   purrr::map(function(files) readr::read_rds(files))
 
 names_result <- list.files(paste0(getwd(), '/4_Output'), pattern = 'o1_', full.names = FALSE)

@@ -18,6 +18,7 @@
 create_simulation_pattern <- function(raster, number_points = 100, association_strength = 0.3){
   
   extent_raster <- raster::extent(raster)
+  
   owin_overall <- spatstat::owin(xrange = c(extent_raster[1], extent_raster[2]), 
                                  yrange = c(extent_raster[3], extent_raster[4]))
   

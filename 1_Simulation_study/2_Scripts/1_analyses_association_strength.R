@@ -1,11 +1,12 @@
-#### Simulation study - Strength associations ####
-
 ###################################################
-##    Author: Maximilian Hesselbarth             ##
+##    Author: Maximilian H.K. Hesselbarth        ##
 ##    Department of Ecosystem Modelling          ##
 ##    University of Goettingen                   ##
 ##    maximilian.hesselbarth@uni-goettingen.de   ##
+##    www.github.com/mhesselbarth                ##
 ###################################################
+
+#### Simulation study ####
 
 #### 1. Import packages & functions ####
 
@@ -24,7 +25,7 @@ library(spatstat)
 library(spex)
 
 # Source all functions in R_functions folder
-list.files(paste0(getwd(), '/2_Functions'), pattern = '^[f0_ f1_]', full.names = TRUE) %>%
+list.files(paste0(getwd(), "/1_Simulation_study/1_Functions"), full.names = TRUE) %>%
   purrr::walk(function(x) source(x))
 
 #### 2. Define parameters ####
@@ -56,11 +57,12 @@ max_runs <- 10000 # 5000
 # Number of simulation runs
 simulation_runs <- 100 # 50
 
-# Different association strengths
+# Different association strengths / repeat each strength simulation_runs times
 association_strength <- rep(seq(0, 1, 0.025), each = simulation_runs) # seq(0, 1, 0.025)
 
+#### 3. Run simulations using HPC (clustermq)
 
-#### 3. Run anlyses (clustermq)
+# parallelize each association strength and repetition
 
 # Randomization algorithm
 habitat_randomization <- clustermq::Q(fun = simulate_habitat_random_association_strength, 
@@ -80,11 +82,12 @@ habitat_randomization <- clustermq::Q(fun = simulate_habitat_random_association_
                                                       walltime = "48:00", 
                                                       processes = 1))
 
+# combine results to one data frame
 habitat_randomization <- dplyr::bind_rows(habitat_randomization)
 
 UtilityFunctions::save_rds(object = habitat_randomization,
-                           filename = paste0("o1_habitat_randomization_", simulation_runs, "_", number_points, ".rds"),
-                           path = paste0(getwd(), "/4_Output"), 
+                           filename = paste0("habitat_randomization_", simulation_runs, "_runs.rds"),
+                           path = paste0(getwd(), "/1_Simulation_study/3_Results/"), 
                            overwrite = overwrite)
 
 # Torus translation
@@ -104,11 +107,12 @@ torus_translation <- clustermq::Q(fun = simulate_torus_trans_association_strengt
                                                   walltime = "48:00", 
                                                   processes = 1))
 
+# combine results to one data frame
 torus_translation <- dplyr::bind_rows(torus_translation)
 
 UtilityFunctions::save_rds(object = torus_translation,
-                           filename = paste0("o1_torus_translation_", simulation_runs, "_", number_points, ".rds"),
-                           path = paste0(getwd(), "/4_Output"),
+                           filename = paste0("torus_translation_", simulation_runs, "_runs.rds"),
+                           path = paste0(getwd(), "/1_Simulation_study/3_Results/"),
                            overwrite = overwrite)
 
 # Gamma test
@@ -129,11 +133,12 @@ gamma_test <- clustermq::Q(fun = simulate_point_process_association_strength,
                                            walltime = "48:00", 
                                            processes = 1)) 
 
+# combine results to one data frame
 gamma_test <- dplyr::bind_rows(gamma_test)
 
 UtilityFunctions::save_rds(object = gamma_test,
-                           filename = paste0("o1_gamma_test_", simulation_runs, "_", number_points, ".rds"),
-                           path = paste0(getwd(), "/4_Output"),
+                           filename = paste0("gamma_test_", simulation_runs, "_runs.rds"),
+                           path = paste0(getwd(), "/1_Simulation_study/3_Results/"),
                            overwrite = overwrite)
                            
 # Pattern reconstruction
@@ -155,11 +160,12 @@ pattern_reconstruction <- clustermq::Q(fun = simulate_pattern_recon_association_
                                                        walltime = "48:00", 
                                                        processes = 1))
 
+# combine results to one data frame
 pattern_reconstruction <- dplyr::bind_rows(pattern_reconstruction)
 
 UtilityFunctions::save_rds(object=pattern_reconstruction,
-                           filename = paste0("o1_pattern_reconstruction_", simulation_runs, "_", number_points, ".rds"),
-                           path = paste0(getwd(), "/4_Output"),
+                           filename = paste0("pattern_reconstruction_", simulation_runs, "_runs.rds"),
+                           path = paste0(getwd(), "/1_Simulation_study/3_Results/"),
                            overwrite = overwrite)
 
 #### 4. Specify future topology ####
