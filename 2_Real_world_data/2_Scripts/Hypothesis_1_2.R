@@ -6,7 +6,7 @@
 ##    www.github.com/mhesselbarth                ##
 ###################################################
 
-#### Real-world data - Hypothesis 1 & 2 ####
+#### Real-world data - Hypothesis 1 ####
 
 # Load packages #
 
