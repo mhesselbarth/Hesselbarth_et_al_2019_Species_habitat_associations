@@ -6,7 +6,7 @@
 ##    www.github.com/mhesselbarth                ##
 ###################################################
 
-#### Real-world data - Hypothesis 1 ####
+#### Real-world data - Hypothesis 1 & 2 ####
 
 # Load packages #
 
@@ -53,8 +53,7 @@ ash <- subset.ppp(pattern_2007_living, Species == "Ash")
 reconstructed_ash <- SHAR::reconstruct_pattern(pattern = ash, 
                                                n_random = n_random, 
                                                max_runs = max_runs, 
-                                               fitting = fitting, 
-                                               comp_fast = TRUE)
+                                               fitting = fitting)
 
 # save reconstructed pattern
 UtilityFunctions::save_rds(object = reconstructed_ash, 
@@ -68,8 +67,7 @@ hornbeam <- subset.ppp(pattern_2007_living, Species == "Hornbeam")
 reconstructed_hornbeam <- SHAR::reconstruct_pattern(pattern = hornbeam, 
                                                     n_random = n_random, 
                                                     max_runs = max_runs, 
-                                                    fitting = fitting, 
-                                                    comp_fast = TRUE)
+                                                    fitting = fitting)
 
 # save reconstructed pattern
 UtilityFunctions::save_rds(object = reconstructed_hornbeam, 
@@ -83,8 +81,7 @@ sycamore <- subset.ppp(pattern_2007_living, Species == "Sycamore")
 reconstructed_sycamore <- SHAR::reconstruct_pattern(pattern = sycamore, 
                                                     n_random = n_random, 
                                                     max_runs = max_runs, 
-                                                    fitting = fitting, 
-                                                    comp_fast = TRUE)
+                                                    fitting = fitting)
 
 # save reconstructed pattern
 UtilityFunctions::save_rds(object = reconstructed_sycamore, 
@@ -98,8 +95,7 @@ others <- subset.ppp(pattern_2007_living, Species == "others")
 reconstructed_others <- SHAR::reconstruct_pattern(pattern = others, 
                                                   n_random = n_random, 
                                                   max_runs = max_runs, 
-                                                  fitting = fitting, 
-                                                  comp_fast = TRUE)
+                                                  fitting = fitting)
 
 # save reconstructed pattern
 UtilityFunctions::save_rds(object = reconstructed_others, 
