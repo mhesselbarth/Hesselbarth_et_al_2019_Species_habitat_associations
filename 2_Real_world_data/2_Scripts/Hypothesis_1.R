@@ -35,75 +35,75 @@ fitting <- TRUE
 beech <- spatstat::subset.ppp(pattern_2007_living, Species == "Beech")
 
 # reconstruct pattern
-beech_reconstructed <- SHAR::reconstruct_pattern(pattern = beech, 
+reconstructed_beech <- SHAR::reconstruct_pattern(pattern = beech, 
                                                  n_random = n_random, 
                                                  max_runs = max_runs, 
                                                  fitting = fitting, 
                                                  comp_fast = TRUE)
 
 # save reconstructed pattern
-UtilityFunctions::save_rds(object = beech_reconstructed, 
-                           filename = "beech_reconstructed.rds", 
+UtilityFunctions::save_rds(object = reconstructed_beech, 
+                           filename = "reconstructed_beech.rds", 
                            path = paste0(getwd(), "/2_Real_world_data/3_Results"))
 
 # Ash
 ash <- subset.ppp(pattern_2007_living, Species == "Ash")
 
 # reconstruct pattern
-ash_reconstructed <- SHAR::reconstruct_pattern(pattern = ash, 
+reconstructed_ash <- SHAR::reconstruct_pattern(pattern = ash, 
                                                n_random = n_random, 
                                                max_runs = max_runs, 
                                                fitting = fitting, 
                                                comp_fast = TRUE)
 
 # save reconstructed pattern
-UtilityFunctions::save_rds(object = ash_reconstructed, 
-                           filename = "ash_reconstructed.rds", 
+UtilityFunctions::save_rds(object = reconstructed_ash, 
+                           filename = "reconstructed_ash.rds", 
                            path = paste0(getwd(), "/2_Real_world_data/3_Results"))
 
 # Hornbeam
 hornbeam <- subset.ppp(pattern_2007_living, Species == "Hornbeam")
 
 # reconstruct pattern
-hornbeam_reconstructed <- SHAR::reconstruct_pattern(pattern = hornbeam, 
+reconstructed_hornbeam <- SHAR::reconstruct_pattern(pattern = hornbeam, 
                                                     n_random = n_random, 
                                                     max_runs = max_runs, 
                                                     fitting = fitting, 
                                                     comp_fast = TRUE)
 
 # save reconstructed pattern
-UtilityFunctions::save_rds(object = hornbeam_reconstructed, 
-                           filename = "hornbeam_reconstructed.rds", 
+UtilityFunctions::save_rds(object = reconstructed_hornbeam, 
+                           filename = "reconstructed_hornbeam.rds", 
                            path = paste0(getwd(), "/2_Real_world_data/3_Results"))
 
 # Sycamore
 sycamore <- subset.ppp(pattern_2007_living, Species == "Sycamore")
 
 # reconstruct pattern
-sycamore_reconstructed <- SHAR::reconstruct_pattern(pattern = sycamore, 
+reconstructed_sycamore <- SHAR::reconstruct_pattern(pattern = sycamore, 
                                                     n_random = n_random, 
                                                     max_runs = max_runs, 
                                                     fitting = fitting, 
                                                     comp_fast = TRUE)
 
 # save reconstructed pattern
-UtilityFunctions::save_rds(object = sycamore_reconstructed, 
-                           filename = "sycamore_reconstructed.rds", 
+UtilityFunctions::save_rds(object = reconstructed_sycamore, 
+                           filename = "reconstructed_sycamore.rds", 
                            path = paste0(getwd(), "/2_Real_world_data/3_Results"))
 
 # others
 others <- subset.ppp(pattern_2007_living, Species == "others")
 
 # reconstruct pattern
-others_reconstructed <- SHAR::reconstruct_pattern(pattern = others, 
+reconstructed_others <- SHAR::reconstruct_pattern(pattern = others, 
                                                   n_random = n_random, 
                                                   max_runs = max_runs, 
                                                   fitting = fitting, 
                                                   comp_fast = TRUE)
 
 # save reconstructed pattern
-UtilityFunctions::save_rds(object = others_reconstructed, 
-                           filename = "others_reconstructed.rds", 
+UtilityFunctions::save_rds(object = reconstructed_others, 
+                           filename = "reconstructed_others.rds", 
                            path = paste0(getwd(), "/2_Real_world_data/3_Results"))
 
 #### Environmental data ####
@@ -120,17 +120,17 @@ environmental_data <- list.files(paste0(getwd(), "/2_Real_world_data/1_Data"), p
 
 #### Habitat associations ####
 
-# beech_reconstructed <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/beech_reconstructed.rds"))
-# ash_reconstructed <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/ash_reconstructed.rds"))
-# hornbeam_reconstructed <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/hornbeam_reconstructed.rds"))
-# sycamore_reconstructed <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/sycamore_reconstructed.rds"))
-# others_reconstructed <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/others_reconstructed.rds"))
+# reconstructed_beech <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/reconstructed_beech.rds"))
+# reconstructed_ash <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/reconstructed_ash.rds"))
+# reconstructed_hornbeam <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/reconstructed_hornbeam.rds"))
+# reconstructed_sycamore <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/reconstructed_sycamore.rds"))
+# reconstructed_others <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/reconstructed_others.rds"))
 
 names_environment <- list.files(paste0(getwd(), "/2_Real_world_data/1_Data"), pattern = '3_')
 
 # Beech
 associations_beech <- purrr::map(environmental_data, function(x) {
-  SHAR::results_habitat_association(pattern = beech_reconstructed,
+  SHAR::results_habitat_association(pattern = reconstructed_beech,
                                     raster = x, 
                                     verbose = FALSE)
 })
@@ -139,7 +139,7 @@ names(associations_beech) <- names_environment
 
 # Ash
 associations_ash <- purrr::map(environmental_data, function(x) {
-  SHAR::results_habitat_association(pattern = ash_reconstructed,
+  SHAR::results_habitat_association(pattern = reconstructed_ash,
                                     raster = x, 
                                     verbose = FALSE)
 })
@@ -148,7 +148,7 @@ names(associations_ash) <- names_environment
 
 # Hornbeam
 associations_hornbeam <- purrr::map(environmental_data, function(x) {
-  SHAR::results_habitat_association(pattern = hornbeam_reconstructed,
+  SHAR::results_habitat_association(pattern = reconstructed_hornbeam,
                                     raster = x, 
                                     verbose = FALSE)
 })
@@ -157,7 +157,7 @@ names(associations_hornbeam) <- names_environment
 
 # Sycamore
 associations_sycamore <- purrr::map(environmental_data, function(x) {
-  SHAR::results_habitat_association(pattern = sycamore_reconstructed,
+  SHAR::results_habitat_association(pattern = reconstructed_sycamore,
                                     raster = x, 
                                     verbose = FALSE)
 })
@@ -166,7 +166,7 @@ names(associations_sycamore) <- names_environment
 
 # others
 associations_others <- purrr::map(environmental_data, function(x) {
-  SHAR::results_habitat_association(pattern = others_reconstructed,
+  SHAR::results_habitat_association(pattern = reconstructed_others,
                                     raster = x, 
                                     verbose = FALSE)
 })
