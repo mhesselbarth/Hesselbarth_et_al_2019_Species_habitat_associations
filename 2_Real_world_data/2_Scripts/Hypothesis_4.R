@@ -44,6 +44,20 @@ reconstructed_beech_living <- SHAR::reconstruct_pattern(pattern = beech_living,
                                                         fitting = fitting, 
                                                         comp_fast = TRUE)
 
+# beech_living <- rep(beech_living, n_random)
+# reconstructed_beech_living <- clustermq::Q(fun = reconstruct_pattern, 
+#                                            pattern = beech_living,
+#                                            const = list(n_random = 1, 
+#                                                         max_runs = max_runs, 
+#                                                         fitting = fitting, 
+#                                                         comp_fast = TRUE, 
+#                                                         verbose = FALSE),
+#                                            seed = 42, 
+#                                            n_jobs = n_random, 
+#                                            template = list(queue = "mpi", 
+#                                                            walltime = "48:00", 
+#                                                            processes = 1))
+
 # save reconstructed pattern
 UtilityFunctions::save_rds(object = reconstructed_beech_living, 
                            filename = "reconstructed_beech_living.rds", 
@@ -54,6 +68,20 @@ reconstructed_beech_dead <- SHAR::reconstruct_pattern(pattern = beech_dead,
                                                       n_random = n_random, 
                                                       max_runs = max_runs, 
                                                       fitting = fitting)
+
+# beech_dead <- rep(beech_dead, n_random)
+# reconstructed_beech_dead <- clustermq::Q(fun = reconstruct_pattern, 
+#                                          pattern = beech_dead,
+#                                          const = list(n_random = 1, 
+#                                                       max_runs = max_runs, 
+#                                                       fitting = fitting, 
+#                                                       comp_fast = TRUE, 
+#                                                       verbose = FALSE),
+#                                          seed = 42, 
+#                                          n_jobs = n_random, 
+#                                          template = list(queue = "mpi", 
+#                                                          walltime = "48:00", 
+#                                                          processes = 1))
 
 # save reconstructed pattern
 UtilityFunctions::save_rds(object = reconstructed_beech_dead, 

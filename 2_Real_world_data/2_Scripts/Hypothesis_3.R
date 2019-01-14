@@ -9,8 +9,8 @@
 #### Real-world data - Hypothesis 3 ####
 
 # Load packages #
+library(clustermq)
 
-# library(clustermq)
 library(UtilityFunctions) # devtools::install_github("mhesselbarth/UtilityFunctions)
 library(raster)
 library(SHAR) # devtools::install_github("r-spatialecology/SHAR")
@@ -49,6 +49,19 @@ reconstructed_beech_small <- SHAR::reconstruct_pattern(pattern = beech_small,
                                                        max_runs = max_runs, 
                                                        fitting = fitting)
 
+# beech_small <- rep(beech_small, n_random)
+# reconstructed_beech_small <- clustermq::Q(fun = reconstruct_pattern, 
+#                                           pattern = beech_small,
+#                                           const = list(n_random = 1, 
+#                                                        max_runs = max_runs, 
+#                                                        fitting = fitting,
+#                                                        verbose = FALSE),
+#                                           seed = 42, 
+#                                           n_jobs = n_random, 
+#                                           template = list(queue = "mpi", 
+#                                                           walltime = "48:00", 
+#                                                           processes = 1))
+
 # save reconstructed pattern
 UtilityFunctions::save_rds(object = reconstructed_beech_small, 
                            filename = "reconstructed_beech_small.rds", 
@@ -60,6 +73,19 @@ reconstructed_beech_medium <- SHAR::reconstruct_pattern(pattern = beech_medium,
                                                         max_runs = max_runs, 
                                                         fitting = fitting)
 
+# beech_medium <- rep(beech_medium, n_random)
+# reconstructed_beech_medium <- clustermq::Q(fun = reconstruct_pattern, 
+#                                            pattern = beech_medium,
+#                                            const = list(n_random = 1, 
+#                                                         max_runs = max_runs, 
+#                                                         fitting = fitting, 
+#                                                         verbose = FALSE),
+#                                            seed = 42, 
+#                                            n_jobs = n_random, 
+#                                            template = list(queue = "mpi", 
+#                                                            walltime = "48:00", 
+#                                                            processes = 1))
+
 # save reconstructed pattern
 UtilityFunctions::save_rds(object = reconstructed_beech_medium, 
                            filename = "reconstructed_beech_medium.rds", 
@@ -70,6 +96,18 @@ reconstructed_beech_large <- SHAR::reconstruct_pattern(pattern = beech_large,
                                                         n_random = n_random, 
                                                         max_runs = max_runs, 
                                                         fitting = fitting)
+
+# beech_large <- rep(beech_large, n_random)
+# reconstructed_beech_large <- clustermq::Q(fun = reconstruct_pattern, 
+#                                           pattern = beech_large,
+#                                           const = list(n_random = 1, 
+#                                                        max_runs = max_runs, 
+#                                                        fitting = fitting),
+#                                           seed = 42, 
+#                                           n_jobs = n_random, 
+#                                           template = list(queue = "mpi", 
+#                                                           walltime = "48:00", 
+#                                                           processes = 1))
 
 # save reconstructed pattern
 UtilityFunctions::save_rds(object = reconstructed_beech_large, 

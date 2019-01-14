@@ -11,6 +11,8 @@
 # Load packages #
 
 # library(clustermq)
+library(clustermq)
+
 library(UtilityFunctions) # devtools::install_github("mhesselbarth/UtilityFunctions)
 library(raster)
 library(SHAR) # devtools::install_github("r-spatialecology/SHAR")
@@ -27,9 +29,9 @@ pattern_2007_living <- spatstat::subset.ppp(pattern_2007, Type != "dead")
 pattern_2007_dead <- spatstat::subset.ppp(pattern_2007, Type == "dead")
 
 # set parameters
-n_random <- 199
-max_runs <- 10000
-fitting <- TRUE
+n_random <- 199 # 199
+max_runs <- 10000 # 10000
+fitting <- TRUE # TRUE
 
 # Beech
 beech <- spatstat::subset.ppp(pattern_2007_living, Species == "Beech")
@@ -40,6 +42,20 @@ reconstructed_beech <- SHAR::reconstruct_pattern(pattern = beech,
                                                  max_runs = max_runs, 
                                                  fitting = fitting, 
                                                  comp_fast = TRUE)
+
+# beech <- rep(beech, n_random)
+# reconstructed_beech <- clustermq::Q(fun = reconstruct_pattern, 
+#                                     pattern = beech,
+#                                     const = list(n_random = 1, 
+#                                                  max_runs = max_runs, 
+#                                                  fitting = fitting, 
+#                                                  comp_fast = TRUE,
+#                                                  verbose = FALSE),
+#                                     seed = 42, 
+#                                     n_jobs = n_random, 
+#                                     template = list(queue = "mpi", 
+#                                                     walltime = "48:00", 
+#                                                     processes = 1))
 
 # save reconstructed pattern
 UtilityFunctions::save_rds(object = reconstructed_beech, 
@@ -55,6 +71,19 @@ reconstructed_ash <- SHAR::reconstruct_pattern(pattern = ash,
                                                max_runs = max_runs, 
                                                fitting = fitting)
 
+# ash <- rep(ash, n_random)
+# reconstructed_ash <- clustermq::Q(fun = reconstruct_pattern, 
+#                                   pattern = ash,
+#                                   const = list(n_random = 1, 
+#                                                max_runs = max_runs, 
+#                                                fitting = fitting,
+#                                                verbose = FALSE),
+#                                   seed = 42, 
+#                                   n_jobs = n_random, 
+#                                   template = list(queue = "mpi", 
+#                                                   walltime = "48:00", 
+#                                                   processes = 1))
+
 # save reconstructed pattern
 UtilityFunctions::save_rds(object = reconstructed_ash, 
                            filename = "reconstructed_ash.rds", 
@@ -68,6 +97,19 @@ reconstructed_hornbeam <- SHAR::reconstruct_pattern(pattern = hornbeam,
                                                     n_random = n_random, 
                                                     max_runs = max_runs, 
                                                     fitting = fitting)
+
+# hornbeam <- rep(hornbeam, n_random)
+# reconstructed_honrbeam <- clustermq::Q(fun = reconstruct_pattern, 
+#                                        pattern = hornbeam,
+#                                        const = list(n_random = 1, 
+#                                                     max_runs = max_runs, 
+#                                                     fitting = fitting,
+#                                                     verbose = FALSE),
+#                                        seed = 42, 
+#                                        n_jobs = n_random, 
+#                                        template = list(queue = "mpi", 
+#                                                        walltime = "48:00", 
+#                                                        processes = 1))
 
 # save reconstructed pattern
 UtilityFunctions::save_rds(object = reconstructed_hornbeam, 
@@ -83,6 +125,19 @@ reconstructed_sycamore <- SHAR::reconstruct_pattern(pattern = sycamore,
                                                     max_runs = max_runs, 
                                                     fitting = fitting)
 
+# sycamore <- rep(sycamore, n_random)
+# reconstructed_sycamore <- clustermq::Q(fun = reconstruct_pattern, 
+#                                        pattern = sycamore,
+#                                        const = list(n_random = 1, 
+#                                                     max_runs = max_runs, 
+#                                                     fitting = fitting, 
+#                                                     verbose = FALSE),
+#                                        seed = 42, 
+#                                        n_jobs = n_random, 
+#                                        template = list(queue = "mpi", 
+#                                                        walltime = "48:00", 
+#                                                        processes = 1))
+
 # save reconstructed pattern
 UtilityFunctions::save_rds(object = reconstructed_sycamore, 
                            filename = "reconstructed_sycamore.rds", 
@@ -96,6 +151,19 @@ reconstructed_others <- SHAR::reconstruct_pattern(pattern = others,
                                                   n_random = n_random, 
                                                   max_runs = max_runs, 
                                                   fitting = fitting)
+
+# others <- rep(others, n_random)
+# reconstructed_others <- clustermq::Q(fun = reconstruct_pattern,
+#                                      pattern = others,
+#                                      const = list(n_random = 1,
+#                                                   max_runs = max_runs,
+#                                                   fitting = fitting, 
+#                                                   verbose = FALSE),
+#                                      seed = 42,
+#                                      n_jobs = n_random,
+#                                      template = list(queue = "mpi",
+#                                                      walltime = "48:00",
+#                                                      processes = 1))
 
 # save reconstructed pattern
 UtilityFunctions::save_rds(object = reconstructed_others, 
