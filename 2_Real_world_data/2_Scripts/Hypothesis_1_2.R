@@ -29,9 +29,9 @@ pattern_2007_living <- spatstat::subset.ppp(pattern_2007, Type != "dead")
 pattern_2007_dead <- spatstat::subset.ppp(pattern_2007, Type == "dead")
 
 # set parameters
-# n_random <- 19 # 199
+# n_random <- 199 # 199
 n_random <- rep(1, 199) # if HPC is used
-max_runs <- 10 # 10000
+max_runs <- 10000 # 10000
 fitting <- FALSE # TRUE
 
 # Beech
