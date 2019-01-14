@@ -29,33 +29,39 @@ pattern_2007_living <- spatstat::subset.ppp(pattern_2007, Type != "dead")
 pattern_2007_dead <- spatstat::subset.ppp(pattern_2007, Type == "dead")
 
 # set parameters
-n_random <- 199 # 199
-max_runs <- 10000 # 10000
-fitting <- TRUE # TRUE
+# n_random <- 19 # 199
+n_random <- rep(1, 199) # if HPC is used
+max_runs <- 10 # 10000
+fitting <- FALSE # TRUE
 
 # Beech
 beech <- spatstat::subset.ppp(pattern_2007_living, Species == "Beech")
 
 # reconstruct pattern
-reconstructed_beech <- SHAR::reconstruct_pattern(pattern = beech, 
-                                                 n_random = n_random, 
-                                                 max_runs = max_runs, 
-                                                 fitting = fitting, 
-                                                 comp_fast = TRUE)
-
-# beech <- rep(beech, n_random)
-# reconstructed_beech <- clustermq::Q(fun = reconstruct_pattern, 
-#                                     pattern = beech,
-#                                     const = list(n_random = 1, 
+# reconstructed_beech <- SHAR::reconstruct_pattern(pattern = beech, 
+#                                                  n_random = n_random, 
 #                                                  max_runs = max_runs, 
 #                                                  fitting = fitting, 
-#                                                  comp_fast = TRUE,
-#                                                  verbose = FALSE),
-#                                     seed = 42, 
-#                                     n_jobs = n_random, 
-#                                     template = list(queue = "mpi", 
-#                                                     walltime = "48:00", 
-#                                                     processes = 1))
+#                                                  comp_fast = TRUE)
+
+reconstructed_beech <- clustermq::Q(fun = reconstruct_pattern,
+                                    n_random = n_random,
+                                    const = list(pattern = beech,
+                                                 max_runs = max_runs,
+                                                 fitting = fitting,
+                                                 comp_fast = TRUE,
+                                                 verbose = FALSE,
+                                                 return_input = FALSE,
+                                                 simplify = TRUE),
+                                    seed = 42,
+                                    n_jobs = length(n_random),
+                                    template = list(queue = "mpi",
+                                                    walltime = "48:00",
+                                                    processes = 1))
+
+reconstructed_beech[[length(n_random) + 1]] <- spatstat::unmark(beech)
+names(reconstructed_beech) <- c(paste0("randomized_", seq_along(n_random)),
+                                "observed")
 
 # save reconstructed pattern
 UtilityFunctions::save_rds(object = reconstructed_beech, 
@@ -66,23 +72,28 @@ UtilityFunctions::save_rds(object = reconstructed_beech,
 ash <- subset.ppp(pattern_2007_living, Species == "Ash")
 
 # reconstruct pattern
-reconstructed_ash <- SHAR::reconstruct_pattern(pattern = ash, 
-                                               n_random = n_random, 
-                                               max_runs = max_runs, 
-                                               fitting = fitting)
-
-# ash <- rep(ash, n_random)
-# reconstructed_ash <- clustermq::Q(fun = reconstruct_pattern, 
-#                                   pattern = ash,
-#                                   const = list(n_random = 1, 
+# reconstructed_ash <- SHAR::reconstruct_pattern(pattern = ash, 
+#                                                n_random = n_random, 
 #                                                max_runs = max_runs, 
-#                                                fitting = fitting,
-#                                                verbose = FALSE),
-#                                   seed = 42, 
-#                                   n_jobs = n_random, 
-#                                   template = list(queue = "mpi", 
-#                                                   walltime = "48:00", 
-#                                                   processes = 1))
+#                                                fitting = fitting)
+
+reconstructed_ash <- clustermq::Q(fun = reconstruct_pattern,
+                                  n_random = n_random,
+                                  const = list(pattern = ash,
+                                               max_runs = max_runs,
+                                               fitting = fitting,
+                                               return_input = FALSE,
+                                               simplify = TRUE,
+                                               verbose = FALSE),
+                                  seed = 42,
+                                  n_jobs = length(n_random),
+                                  template = list(queue = "mpi",
+                                                  walltime = "48:00",
+                                                  processes = 1))
+
+reconstructed_ash[[length(n_random) + 1]] <- spatstat::unmark(ash)
+names(reconstructed_ash) <- c(paste0("randomized_", seq_along(n_random)),
+                              "observed")
 
 # save reconstructed pattern
 UtilityFunctions::save_rds(object = reconstructed_ash, 
@@ -93,23 +104,28 @@ UtilityFunctions::save_rds(object = reconstructed_ash,
 hornbeam <- subset.ppp(pattern_2007_living, Species == "Hornbeam")
 
 # reconstruct pattern
-reconstructed_hornbeam <- SHAR::reconstruct_pattern(pattern = hornbeam, 
-                                                    n_random = n_random, 
-                                                    max_runs = max_runs, 
-                                                    fitting = fitting)
-
-# hornbeam <- rep(hornbeam, n_random)
-# reconstructed_honrbeam <- clustermq::Q(fun = reconstruct_pattern, 
-#                                        pattern = hornbeam,
-#                                        const = list(n_random = 1, 
+# reconstructed_hornbeam <- SHAR::reconstruct_pattern(pattern = hornbeam, 
+#                                                     n_random = n_random, 
 #                                                     max_runs = max_runs, 
-#                                                     fitting = fitting,
-#                                                     verbose = FALSE),
-#                                        seed = 42, 
-#                                        n_jobs = n_random, 
-#                                        template = list(queue = "mpi", 
-#                                                        walltime = "48:00", 
-#                                                        processes = 1))
+#                                                     fitting = fitting)
+
+reconstructed_hornbeam <- clustermq::Q(fun = reconstruct_pattern,
+                                       n_random = n_random,
+                                       const = list(pattern = hornbeam,
+                                                    max_runs = max_runs,
+                                                    fitting = fitting,
+                                                    return_input = FALSE,
+                                                    simplify = TRUE,
+                                                    verbose = FALSE),
+                                       seed = 42,
+                                       n_jobs = length(n_random),
+                                       template = list(queue = "mpi",
+                                                       walltime = "48:00",
+                                                       processes = 1))
+
+reconstructed_hornbeam[[length(n_random) + 1]] <- spatstat::unmark(hornbeam)
+names(reconstructed_hornbeam) <- c(paste0("randomized_", seq_along(n_random)),
+                                   "observed")
 
 # save reconstructed pattern
 UtilityFunctions::save_rds(object = reconstructed_hornbeam, 
@@ -120,23 +136,28 @@ UtilityFunctions::save_rds(object = reconstructed_hornbeam,
 sycamore <- subset.ppp(pattern_2007_living, Species == "Sycamore")
 
 # reconstruct pattern
-reconstructed_sycamore <- SHAR::reconstruct_pattern(pattern = sycamore, 
-                                                    n_random = n_random, 
-                                                    max_runs = max_runs, 
-                                                    fitting = fitting)
-
-# sycamore <- rep(sycamore, n_random)
-# reconstructed_sycamore <- clustermq::Q(fun = reconstruct_pattern, 
-#                                        pattern = sycamore,
-#                                        const = list(n_random = 1, 
+# reconstructed_sycamore <- SHAR::reconstruct_pattern(pattern = sycamore, 
+#                                                     n_random = n_random, 
 #                                                     max_runs = max_runs, 
-#                                                     fitting = fitting, 
-#                                                     verbose = FALSE),
-#                                        seed = 42, 
-#                                        n_jobs = n_random, 
-#                                        template = list(queue = "mpi", 
-#                                                        walltime = "48:00", 
-#                                                        processes = 1))
+#                                                     fitting = fitting)
+
+reconstructed_sycamore <- clustermq::Q(fun = reconstruct_pattern,
+                                       n_random = n_random,
+                                       const = list(pattern = sycamore,
+                                                    max_runs = max_runs,
+                                                    fitting = fitting,
+                                                    return_input = FALSE,
+                                                    simplify = TRUE,
+                                                    verbose = FALSE),
+                                       seed = 42,
+                                       n_jobs = length(n_random),
+                                       template = list(queue = "mpi",
+                                                       walltime = "48:00",
+                                                       processes = 1))
+
+reconstructed_sycamore[[length(n_random) + 1]] <- spatstat::unmark(sycamore)
+names(reconstructed_sycamore) <- c(paste0("randomized_", seq_along(n_random)),
+                                   "observed")
 
 # save reconstructed pattern
 UtilityFunctions::save_rds(object = reconstructed_sycamore, 
@@ -147,23 +168,27 @@ UtilityFunctions::save_rds(object = reconstructed_sycamore,
 others <- subset.ppp(pattern_2007_living, Species == "others")
 
 # reconstruct pattern
-reconstructed_others <- SHAR::reconstruct_pattern(pattern = others, 
-                                                  n_random = n_random, 
-                                                  max_runs = max_runs, 
-                                                  fitting = fitting)
+# reconstructed_others <- SHAR::reconstruct_pattern(pattern = others, 
+#                                                   n_random = n_random, 
+#                                                   max_runs = max_runs, 
+#                                                   fitting = fitting)
 
-# others <- rep(others, n_random)
-# reconstructed_others <- clustermq::Q(fun = reconstruct_pattern,
-#                                      pattern = others,
-#                                      const = list(n_random = 1,
-#                                                   max_runs = max_runs,
-#                                                   fitting = fitting, 
-#                                                   verbose = FALSE),
-#                                      seed = 42,
-#                                      n_jobs = n_random,
-#                                      template = list(queue = "mpi",
-#                                                      walltime = "48:00",
-#                                                      processes = 1))
+reconstructed_others <- clustermq::Q(fun = reconstruct_pattern,
+                                     n_random = n_random,
+                                     const = list(pattern = others,
+                                                  max_runs = max_runs,
+                                                  fitting = fitting,
+                                                  return_input = FALSE,
+                                                  simplify = TRUE,
+                                                  verbose = FALSE),
+                                     seed = 42,
+                                     n_jobs = n_random,
+                                     template = list(queue = "mpi",
+                                                     walltime = "48:00",
+                                                     processes = 1))
+reconstructed_others[[length(n_random) + 1]] <- spatstat::unmark(others)
+names(reconstructed_others) <- c(paste0("randomized_", seq_along(n_random)),
+                                 "observed")
 
 # save reconstructed pattern
 UtilityFunctions::save_rds(object = reconstructed_others, 
