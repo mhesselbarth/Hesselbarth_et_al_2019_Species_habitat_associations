@@ -37,30 +37,36 @@ beech_medium <- spatstat::subset.ppp(beech, DBH_group == "medium")
 beech_large <- spatstat::subset.ppp(beech, DBH_group == "large")
 
 # set parameters
-n_random <- 199
-max_runs <- 10000
-fitting <- TRUE
+# n_random <- 199 # 199
+n_random <- rep(1, 199) # if HPC is used
+max_runs <- 10000 # 10000
+fitting <- TRUE # TRUE
 
 # reconstruct pattern
 
 # small
-reconstructed_beech_small <- SHAR::reconstruct_pattern(pattern = beech_small, 
-                                                       n_random = n_random, 
-                                                       max_runs = max_runs, 
-                                                       fitting = fitting)
-
-# beech_small <- rep(beech_small, n_random)
-# reconstructed_beech_small <- clustermq::Q(fun = reconstruct_pattern, 
-#                                           pattern = beech_small,
-#                                           const = list(n_random = 1, 
+# reconstructed_beech_small <- SHAR::reconstruct_pattern(pattern = beech_small, 
+#                                                        n_random = n_random, 
 #                                                        max_runs = max_runs, 
-#                                                        fitting = fitting,
-#                                                        verbose = FALSE),
-#                                           seed = 42, 
-#                                           n_jobs = n_random, 
-#                                           template = list(queue = "mpi", 
-#                                                           walltime = "48:00", 
-#                                                           processes = 1))
+#                                                        fitting = fitting)
+
+reconstructed_beech_small <- clustermq::Q(fun = reconstruct_pattern,
+                                          n_random = n_random,
+                                          const = list(pattern = beech_small,
+                                                       max_runs = max_runs,
+                                                       fitting = fitting,
+                                                       return_input = FALSE,
+                                                       simplify = TRUE,
+                                                       verbose = FALSE),
+                                          seed = 42,
+                                          n_jobs = length(n_random),
+                                          template = list(queue = "mpi",
+                                                          walltime = "48:00",
+                                                          processes = 1))
+
+reconstructed_beech_small[[length(n_random) + 1]] <- spatstat::unmark(beech_small)
+names(reconstructed_beech_small) <- c(paste0("randomized_", seq_along(n_random)),
+                                      "observed")
 
 # save reconstructed pattern
 UtilityFunctions::save_rds(object = reconstructed_beech_small, 
@@ -68,23 +74,29 @@ UtilityFunctions::save_rds(object = reconstructed_beech_small,
                            path = paste0(getwd(), "/2_Real_world_data/3_Results"))
 
 # medium
-reconstructed_beech_medium <- SHAR::reconstruct_pattern(pattern = beech_medium, 
-                                                        n_random = n_random, 
-                                                        max_runs = max_runs, 
-                                                        fitting = fitting)
-
-# beech_medium <- rep(beech_medium, n_random)
-# reconstructed_beech_medium <- clustermq::Q(fun = reconstruct_pattern, 
-#                                            pattern = beech_medium,
-#                                            const = list(n_random = 1, 
+# reconstructed_beech_medium <- SHAR::reconstruct_pattern(pattern = beech_medium, 
+#                                                         n_random = n_random, 
 #                                                         max_runs = max_runs, 
-#                                                         fitting = fitting, 
-#                                                         verbose = FALSE),
-#                                            seed = 42, 
-#                                            n_jobs = n_random, 
-#                                            template = list(queue = "mpi", 
-#                                                            walltime = "48:00", 
-#                                                            processes = 1))
+#                                                         fitting = fitting)
+
+reconstructed_beech_medium <- clustermq::Q(fun = reconstruct_pattern,
+                                           n_random = n_random,
+                                           const = list(pattern = beech_medium,
+                                                        max_runs = max_runs,
+                                                        fitting = fitting,
+                                                        comp_fast = TRUE,
+                                                        return_input = FALSE,
+                                                        simplify = TRUE,
+                                                        verbose = FALSE),
+                                           seed = 42,
+                                           n_jobs = length(n_random),
+                                           template = list(queue = "mpi",
+                                                           walltime = "48:00",
+                                                           processes = 1))
+
+reconstructed_beech_medium[[length(n_random) + 1]] <- spatstat::unmark(beech_medium)
+names(reconstructed_beech_medium) <- c(paste0("randomized_", seq_along(n_random)),
+                                       "observed")
 
 # save reconstructed pattern
 UtilityFunctions::save_rds(object = reconstructed_beech_medium, 
@@ -92,22 +104,29 @@ UtilityFunctions::save_rds(object = reconstructed_beech_medium,
                            path = paste0(getwd(), "/2_Real_world_data/3_Results"))
 
 # large
-reconstructed_beech_large <- SHAR::reconstruct_pattern(pattern = beech_large, 
-                                                        n_random = n_random, 
-                                                        max_runs = max_runs, 
-                                                        fitting = fitting)
+# reconstructed_beech_large <- SHAR::reconstruct_pattern(pattern = beech_large, 
+#                                                         n_random = n_random, 
+#                                                         max_runs = max_runs, 
+#                                                         fitting = fitting)
 
-# beech_large <- rep(beech_large, n_random)
-# reconstructed_beech_large <- clustermq::Q(fun = reconstruct_pattern, 
-#                                           pattern = beech_large,
-#                                           const = list(n_random = 1, 
-#                                                        max_runs = max_runs, 
-#                                                        fitting = fitting),
-#                                           seed = 42, 
-#                                           n_jobs = n_random, 
-#                                           template = list(queue = "mpi", 
-#                                                           walltime = "48:00", 
-#                                                           processes = 1))
+reconstructed_beech_large <- clustermq::Q(fun = reconstruct_pattern,
+                                          n_random = n_random,
+                                          const = list(pattern = beech_large,
+                                                       max_runs = max_runs,
+                                                       fitting = fitting, 
+                                                       comp_fast = TRUE, 
+                                                       return_input = FALSE,
+                                                       simplify = TRUE, 
+                                                       verbose = FALSE),
+                                          seed = 42,
+                                          n_jobs = length(n_random),
+                                          template = list(queue = "mpi",
+                                                          walltime = "48:00",
+                                                          processes = 1))
+
+reconstructed_beech_large[[length(n_random) + 1]] <- spatstat::unmark(beech_large)
+names(reconstructed_beech_large) <- c(paste0("randomized_", seq_along(n_random)),
+                                      "observed")
 
 # save reconstructed pattern
 UtilityFunctions::save_rds(object = reconstructed_beech_large, 
