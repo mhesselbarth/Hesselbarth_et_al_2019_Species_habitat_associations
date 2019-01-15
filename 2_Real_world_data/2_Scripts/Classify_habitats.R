@@ -9,6 +9,7 @@
 #### Real-world data - Classify habitats using MRT ####
 
 #### Load packages ####
+library(mvpart)
 library(UtilityFunctions) # devtools::install_github("mhesselbarth/UtilityFunctions)
 library(raster)
 library(spatstat)
@@ -41,8 +42,11 @@ environmental_data_names <- purrr::map_chr(environmental_data_names,
 # set names
 names(environmental_data_raster) <- environmental_data_names
 
+# stack list
+environmental_data_raster <- raster::stack(environmental_data_raster)
+
 # extract cell id of each tree location
-pattern_2007_cell_id <- raster::extract(x = raster::stack(environmental_data_raster), 
+pattern_2007_cell_id <- raster::extract(x = environmental_data_raster, 
                                         y = pattern_2007_df[, 1:2], 
                                         cellnumbers = TRUE, df = TRUE, along = TRUE)
 
@@ -86,8 +90,40 @@ environmental_data_names <- purrr::map_chr(environmental_data_names,
 names(environmental_data_df) <- environmental_data_names
 
 #### MRT classification ####
+species_abundance_matrix <- data.matrix(species_abundance[, -1])
 
+# formula <- species_abundance_matrix ~ acidity + continentality + light_conditions + 
+#   nitrogen + soil_depth + water_content_spring + water_content_summer + water_content
 
+formula <- scale(species_abundance_matrix) ~ acidity + continentality + light_conditions +
+  nitrogen + soil_depth + water_content_spring + water_content_summer + water_content
 
+# Set a new seed for random numbers to ensure results are reproducible
+set.seed(42)
 
-total_df <- cbind(species_abundance, environmental_data)
+# run mrt classification
+mrt_model <- mvpart::mvpart(form = formula, data = environmental_data_df, 
+                            xv = "pick")
+
+raster_coords <- raster::xyFromCell(environmental_data_raster, 
+                                    cell = seq_len(raster::ncell(environmental_data_raster)))
+
+classification_df <- tibble::tibble(x = raster_coords[,1], 
+                                    y = raster_coords[, 2],
+                                    class = factor(mrt_model$where))
+
+#### Plot results ####
+table(classification_df$class)
+length(table(classification_df$class))
+
+ggplot2::ggplot(data = classification_df, ggplot2::aes(x = x, y = y)) + 
+  ggplot2::geom_raster(ggplot2::aes(fill = class)) + 
+  ggplot2::coord_equal() + 
+  ggplot2::scale_fill_viridis_d() + 
+  ggplot2::theme_bw()
+
+#### Save results ####
+UtilityFunctions::save_rds(object = classification_df, 
+                           path = paste0(getwd(), "/2_Real_world_data/3_Results"),
+                           filename = "classification_df.rds")
+
