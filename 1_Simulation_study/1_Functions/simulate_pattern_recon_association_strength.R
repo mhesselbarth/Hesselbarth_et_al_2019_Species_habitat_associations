@@ -27,6 +27,7 @@ simulate_pattern_recon_association_strength <- function(number_coloumns, number_
                                                 n_random = n_random,
                                                 max_runs = max_runs, 
                                                 fitting = FALSE, 
+                                                comp_fast = TRUE,
                                                 verbose = FALSE)
       
   # get habitat associations
@@ -49,6 +50,7 @@ simulate_pattern_recon_association_strength <- function(number_coloumns, number_
                                                 n_random = n_random,
                                                 max_runs = max_runs, 
                                                 fitting = TRUE, 
+                                                comp_fast = TRUE,
                                                 verbose = FALSE)
       
   # get habitat associations
@@ -70,7 +72,8 @@ simulate_pattern_recon_association_strength <- function(number_coloumns, number_
   random_species_3 <- SHAR::reconstruct_pattern(pattern = species_3, 
                                                 n_random = n_random,
                                                 max_runs = max_runs, 
-                                                fitting = FALSE, 
+                                                fitting = FALSE,
+                                                comp_fast = TRUE,
                                                 verbose = FALSE)
       
   # get habitat associations
@@ -93,6 +96,7 @@ simulate_pattern_recon_association_strength <- function(number_coloumns, number_
                                                 n_random = n_random,
                                                 max_runs = max_runs, 
                                                 fitting = TRUE, 
+                                                comp_fast = TRUE,
                                                 verbose = FALSE)
       
   # get habitat associations
