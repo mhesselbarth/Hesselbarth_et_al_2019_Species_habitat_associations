@@ -100,36 +100,48 @@ UtilityFunctions::save_rds(object = reconstructed_beech_dead,
 
 #### Environmental data ####
 
-environmental_data <- list.files(paste0(getwd(), "/2_Real_world_data/1_Data"), pattern = '3_', full.names = TRUE) %>%
-  purrr::map(function(x) {
-    
-    data <- readr::read_rds(x)
-    
-    environment_raster <- raster::rasterFromXYZ(data)
-    
-    SHAR::classify_habitats(environment_raster, classes = 5)
-  })
+# environmental_data <- list.files(paste0(getwd(), "/2_Real_world_data/1_Data"), pattern = '3_', full.names = TRUE) %>%
+#   purrr::map(function(x) {
+#     
+#     data <- readr::read_rds(x)
+#     
+#     environment_raster <- raster::rasterFromXYZ(data)
+#     
+#     SHAR::classify_habitats(environment_raster, classes = 5)
+#   })
+# 
+# names_environment <- list.files(paste0(getwd(), "/2_Real_world_data/1_Data"), pattern = '3_')
+
+soil_mrt_classified <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/soil_mrt_classified.rds"))
 
 #### Habitat associations ####
 
 # reconstructed_beech_living <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/reconstructed_beech_living.rds"))
 # reconstructed_beech_dead <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/reconstructed_beech_dead.rds"))
 
-names_environment <- list.files(paste0(getwd(), "/2_Real_world_data/1_Data"), pattern = '3_')
-
 # living
-associations_beech_living <- purrr::map(environmental_data, function(x) {
-  SHAR::results_habitat_association(pattern = reconstructed_beech_living,
-                                    raster = x, 
-                                    verbose = FALSE)
-})
+# associations_beech_living <- purrr::map(environmental_data, function(x) {
+#   SHAR::results_habitat_association(pattern = reconstructed_beech_living,
+#                                     raster = x, 
+#                                     verbose = FALSE)
+# })
+# 
+# names(associations_beech_living) <- names_environment
+
+associations_beech_living <- SHAR::results_habitat_association(pattern = reconstructed_beech_living, 
+                                                               raster = soil_mrt_classified)
 
 # dead
-associations_beech_dead <- purrr::map(environmental_data, function(x) {
-  SHAR::results_habitat_association(pattern = reconstructed_beech_dead,
-                                    raster = x, 
-                                    verbose = FALSE)
-})
+# associations_beech_dead <- purrr::map(environmental_data, function(x) {
+#   SHAR::results_habitat_association(pattern = reconstructed_beech_dead,
+#                                     raster = x, 
+#                                     verbose = FALSE)
+# })
+# 
+# names(associations_beech_dead) <- names_environment
+
+associations_beech_dead <- SHAR::results_habitat_association(pattern = reconstructed_beech_dead, 
+                                                             raster = soil_mrt_classified)
 
 #### Save results
 

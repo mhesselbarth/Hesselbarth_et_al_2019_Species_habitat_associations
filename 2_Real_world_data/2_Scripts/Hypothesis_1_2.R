@@ -197,15 +197,19 @@ UtilityFunctions::save_rds(object = reconstructed_others,
 
 #### Environmental data ####
 
-environmental_data <- list.files(paste0(getwd(), "/2_Real_world_data/1_Data"), pattern = '3_', full.names = TRUE) %>%
-  purrr::map(function(x) {
-    
-    data <- readr::read_rds(x)
-    
-    environment_raster <- raster::rasterFromXYZ(data)
-    
-    SHAR::classify_habitats(environment_raster, classes = 5)
-  })
+# environmental_data <- list.files(paste0(getwd(), "/2_Real_world_data/1_Data"), pattern = '3_', full.names = TRUE) %>%
+#   purrr::map(function(x) {
+#     
+#     data <- readr::read_rds(x)
+#     
+#     environment_raster <- raster::rasterFromXYZ(data)
+#     
+#     SHAR::classify_habitats(environment_raster, classes = 5)
+#   })
+# 
+# names_environment <- list.files(paste0(getwd(), "/2_Real_world_data/1_Data"), pattern = '3_')
+
+soil_mrt_classified <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/soil_mrt_classified.rds"))
 
 #### Habitat associations ####
 
@@ -215,52 +219,65 @@ environmental_data <- list.files(paste0(getwd(), "/2_Real_world_data/1_Data"), p
 # reconstructed_sycamore <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/reconstructed_sycamore.rds"))
 # reconstructed_others <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/reconstructed_others.rds"))
 
-names_environment <- list.files(paste0(getwd(), "/2_Real_world_data/1_Data"), pattern = '3_')
-
 # Beech
-associations_beech <- purrr::map(environmental_data, function(x) {
-  SHAR::results_habitat_association(pattern = reconstructed_beech,
-                                    raster = x, 
-                                    verbose = FALSE)
-})
+# associations_beech <- purrr::map(environmental_data, function(x) {
+#   SHAR::results_habitat_association(pattern = reconstructed_beech,
+#                                     raster = x, 
+#                                     verbose = FALSE)
+# })
+# 
+# names(associations_beech) <- names_environment
 
-names(associations_beech) <- names_environment
+associations_beech <- SHAR::results_habitat_association(pattern = reconstructed_beech, 
+                                                        raster = soil_mrt_classified)
 
 # Ash
-associations_ash <- purrr::map(environmental_data, function(x) {
-  SHAR::results_habitat_association(pattern = reconstructed_ash,
-                                    raster = x, 
-                                    verbose = FALSE)
-})
+# associations_ash <- purrr::map(environmental_data, function(x) {
+#   SHAR::results_habitat_association(pattern = reconstructed_ash,
+#                                     raster = x, 
+#                                     verbose = FALSE)
+# })
+# 
+# names(associations_ash) <- names_environment
 
-names(associations_ash) <- names_environment
+associations_ash <- SHAR::results_habitat_association(pattern = reconstructed_ash, 
+                                                      raster = soil_mrt_classified)
 
 # Hornbeam
-associations_hornbeam <- purrr::map(environmental_data, function(x) {
-  SHAR::results_habitat_association(pattern = reconstructed_hornbeam,
-                                    raster = x, 
-                                    verbose = FALSE)
-})
+# associations_hornbeam <- purrr::map(environmental_data, function(x) {
+#   SHAR::results_habitat_association(pattern = reconstructed_hornbeam,
+#                                     raster = x, 
+#                                     verbose = FALSE)
+# })
+# 
+# names(associations_hornbeam) <- names_environment
 
-names(associations_hornbeam) <- names_environment
+associations_hornbeam <- SHAR::results_habitat_association(pattern = reconstructed_hornbeam, 
+                                                           raster = soil_mrt_classified)
 
 # Sycamore
-associations_sycamore <- purrr::map(environmental_data, function(x) {
-  SHAR::results_habitat_association(pattern = reconstructed_sycamore,
-                                    raster = x, 
-                                    verbose = FALSE)
-})
+# associations_sycamore <- purrr::map(environmental_data, function(x) {
+#   SHAR::results_habitat_association(pattern = reconstructed_sycamore,
+#                                     raster = x, 
+#                                     verbose = FALSE)
+# })
+# 
+# names(associations_sycamore) <- names_environment
 
-names(associations_sycamore) <- names_environment
+associations_sycamore <- SHAR::results_habitat_association(pattern = reconstructed_sycamore, 
+                                                           raster = soil_mrt_classified)
 
 # others
-associations_others <- purrr::map(environmental_data, function(x) {
-  SHAR::results_habitat_association(pattern = reconstructed_others,
-                                    raster = x, 
-                                    verbose = FALSE)
-})
+# associations_others <- purrr::map(environmental_data, function(x) {
+#   SHAR::results_habitat_association(pattern = reconstructed_others,
+#                                     raster = x, 
+#                                     verbose = FALSE)
+# })
+# 
+# names(associations_others) <- names_environment
 
-names(associations_others) <- names_environment
+associations_others <- SHAR::results_habitat_association(pattern = reconstructed_others, 
+                                                         raster = soil_mrt_classified)
 
 #### Save results
 
