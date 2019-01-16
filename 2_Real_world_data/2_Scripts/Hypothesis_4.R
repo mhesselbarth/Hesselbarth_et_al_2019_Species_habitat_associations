@@ -35,6 +35,7 @@ beech_dead <- spatstat::subset.ppp(beech, Type == "dead")
 n_random <- rep(1, 199) # if HPC is used
 max_runs <- 10000 # 10000
 fitting <- TRUE # TRUE
+comp_fast <- TRUE
 
 # reconstruct pattern
 
@@ -46,11 +47,11 @@ fitting <- TRUE # TRUE
 #                                                         comp_fast = TRUE)
 
 reconstructed_beech_living <- clustermq::Q(fun = reconstruct_pattern,
-                                           pattern = beech_living,
-                                           const = list(n_random = 1,
+                                           n_random = n_random,
+                                           const = list(pattern = beech_living,
                                                         max_runs = max_runs,
                                                         fitting = fitting,
-                                                        comp_fast = TRUE,
+                                                        com_fast = comp_fast,
                                                         return_input = FALSE,
                                                         simplify = TRUE,
                                                         verbose = FALSE),
@@ -80,6 +81,7 @@ reconstructed_beech_dead <- clustermq::Q(fun = reconstruct_pattern,
                                          const = list(pattern = beech_dead,
                                                       max_runs = max_runs,
                                                       fitting = fitting,
+                                                      com_fast = comp_fast,
                                                       return_input = FALSE, 
                                                       simplify = TRUE,
                                                       verbose = FALSE),

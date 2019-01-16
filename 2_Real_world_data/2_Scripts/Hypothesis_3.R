@@ -41,6 +41,7 @@ beech_large <- spatstat::subset.ppp(beech, DBH_group == "large")
 n_random <- rep(1, 199) # if HPC is used
 max_runs <- 10000 # 10000
 fitting <- TRUE # TRUE
+com_fast <- TRUE
 
 # reconstruct pattern
 
@@ -55,6 +56,7 @@ reconstructed_beech_small <- clustermq::Q(fun = reconstruct_pattern,
                                           const = list(pattern = beech_small,
                                                        max_runs = max_runs,
                                                        fitting = fitting,
+                                                       com_fast = comp_fast,
                                                        return_input = FALSE,
                                                        simplify = TRUE,
                                                        verbose = FALSE),
@@ -84,7 +86,7 @@ reconstructed_beech_medium <- clustermq::Q(fun = reconstruct_pattern,
                                            const = list(pattern = beech_medium,
                                                         max_runs = max_runs,
                                                         fitting = fitting,
-                                                        comp_fast = TRUE,
+                                                        com_fast = comp_fast,
                                                         return_input = FALSE,
                                                         simplify = TRUE,
                                                         verbose = FALSE),
@@ -114,7 +116,7 @@ reconstructed_beech_large <- clustermq::Q(fun = reconstruct_pattern,
                                           const = list(pattern = beech_large,
                                                        max_runs = max_runs,
                                                        fitting = fitting, 
-                                                       comp_fast = TRUE, 
+                                                       com_fast = comp_fast,
                                                        return_input = FALSE,
                                                        simplify = TRUE, 
                                                        verbose = FALSE),
