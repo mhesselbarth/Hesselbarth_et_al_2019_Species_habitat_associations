@@ -78,7 +78,7 @@ habitat_randomization <- clustermq::Q(fun = simulate_habitat_random_association_
                                                     create_simulation_pattern = create_simulation_pattern,
                                                     detect_habitat_associations = detect_habitat_associations), 
                                       seed = 42, 
-                                      n_jobs = 1250, 
+                                      n_jobs = length(association_strength) / 4, 
                                       template = list(queue = "mpi", 
                                                       walltime = "48:00", 
                                                       processes = 1))
@@ -103,7 +103,7 @@ torus_translation <- clustermq::Q(fun = simulate_torus_trans_association_strengt
                                                 create_simulation_pattern = create_simulation_pattern,
                                                 detect_habitat_associations = detect_habitat_associations), 
                                   seed = 42, 
-                                  n_jobs = 1250, 
+                                  n_jobs = length(association_strength) / 4, 
                                   template = list(queue = "mpi", 
                                                   walltime = "48:00", 
                                                   processes = 1))
@@ -129,7 +129,7 @@ gamma_test <- clustermq::Q(fun = simulate_point_process_association_strength,
                                          create_simulation_pattern = create_simulation_pattern,
                                          detect_habitat_associations = detect_habitat_associations), 
                            seed = 42, 
-                           n_jobs = 1250, 
+                           n_jobs = length(association_strength) / 4, 
                            template = list(queue = "mpi", 
                                            walltime = "48:00", 
                                            processes = 1)) 
@@ -156,7 +156,7 @@ pattern_reconstruction <- clustermq::Q(fun = simulate_pattern_recon_association_
                                                      create_simulation_pattern = create_simulation_pattern,
                                                      detect_habitat_associations = detect_habitat_associations), 
                                        seed = 42, 
-                                       n_jobs = 1250, 
+                                       n_jobs = length(association_strength) / 4, 
                                        template = list(queue = "mpi", 
                                                        walltime = "48:00", 
                                                        processes = 1))
