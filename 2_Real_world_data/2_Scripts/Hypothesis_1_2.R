@@ -31,7 +31,7 @@ pattern_2007_dead <- spatstat::subset.ppp(pattern_2007, Type == "dead")
 # set parameters
 # n_random <- 199 # 199
 n_random <- rep(1, 199) # if HPC is used
-max_runs <- 20000 # 10000
+max_runs <- 20000 # 20000
 fitting <- TRUE # TRUE
 comp_fast <- TRUE
 
@@ -83,7 +83,7 @@ reconstructed_ash <- clustermq::Q(fun = reconstruct_pattern,
                                   const = list(pattern = ash,
                                                max_runs = max_runs,
                                                fitting = fitting,
-                                               com_fast = comp_fast,
+                                               comp_fast = comp_fast,
                                                return_input = FALSE,
                                                simplify = TRUE,
                                                verbose = FALSE),
@@ -116,7 +116,7 @@ reconstructed_hornbeam <- clustermq::Q(fun = reconstruct_pattern,
                                        const = list(pattern = hornbeam,
                                                     max_runs = max_runs,
                                                     fitting = fitting,
-                                                    com_fast = comp_fast,
+                                                    comp_fast = comp_fast,
                                                     return_input = FALSE,
                                                     simplify = TRUE,
                                                     verbose = FALSE),
@@ -149,7 +149,7 @@ reconstructed_sycamore <- clustermq::Q(fun = reconstruct_pattern,
                                        const = list(pattern = sycamore,
                                                     max_runs = max_runs,
                                                     fitting = fitting,
-                                                    com_fast = comp_fast,
+                                                    comp_fast = comp_fast,
                                                     return_input = FALSE,
                                                     simplify = TRUE,
                                                     verbose = FALSE),
@@ -182,7 +182,7 @@ reconstructed_others <- clustermq::Q(fun = reconstruct_pattern,
                                      const = list(pattern = others,
                                                   max_runs = max_runs,
                                                   fitting = fitting,
-                                                  com_fast = comp_fast,
+                                                  comp_fast = comp_fast,
                                                   return_input = FALSE,
                                                   simplify = TRUE,
                                                   verbose = FALSE),

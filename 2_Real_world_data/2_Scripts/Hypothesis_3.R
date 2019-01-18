@@ -39,7 +39,7 @@ beech_large <- spatstat::subset.ppp(beech, DBH_group == "large")
 # set parameters
 # n_random <- 199 # 199
 n_random <- rep(1, 199) # if HPC is used
-max_runs <- 20000 # 10000
+max_runs <- 20000 # 20000
 fitting <- TRUE # TRUE
 com_fast <- TRUE
 
@@ -56,7 +56,7 @@ reconstructed_beech_small <- clustermq::Q(fun = reconstruct_pattern,
                                           const = list(pattern = beech_small,
                                                        max_runs = max_runs,
                                                        fitting = fitting,
-                                                       com_fast = comp_fast,
+                                                       comp_fast = comp_fast,
                                                        return_input = FALSE,
                                                        simplify = TRUE,
                                                        verbose = FALSE),
@@ -86,7 +86,7 @@ reconstructed_beech_medium <- clustermq::Q(fun = reconstruct_pattern,
                                            const = list(pattern = beech_medium,
                                                         max_runs = max_runs,
                                                         fitting = fitting,
-                                                        com_fast = comp_fast,
+                                                        comp_fast = comp_fast,
                                                         return_input = FALSE,
                                                         simplify = TRUE,
                                                         verbose = FALSE),
@@ -116,7 +116,7 @@ reconstructed_beech_large <- clustermq::Q(fun = reconstruct_pattern,
                                           const = list(pattern = beech_large,
                                                        max_runs = max_runs,
                                                        fitting = fitting, 
-                                                       com_fast = comp_fast,
+                                                       comp_fast = comp_fast,
                                                        return_input = FALSE,
                                                        simplify = TRUE, 
                                                        verbose = FALSE),
