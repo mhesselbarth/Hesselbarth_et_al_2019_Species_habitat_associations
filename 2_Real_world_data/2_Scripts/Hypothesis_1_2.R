@@ -15,7 +15,7 @@ library(clustermq)
 
 library(UtilityFunctions) # devtools::install_github("mhesselbarth/UtilityFunctions)
 library(raster)
-library(SHAR) # devtools::install_github("r-spatialecology/SHAR")
+library(shar) # devtools::install_github("r-spatialecology/shar")
 library(spatstat)
 library(tidyverse)
 
@@ -39,7 +39,7 @@ comp_fast <- TRUE
 beech <- spatstat::subset.ppp(pattern_2007_living, Species == "Beech")
 
 # reconstruct pattern
-# reconstructed_beech <- SHAR::reconstruct_pattern(pattern = beech, 
+# reconstructed_beech <- shar::reconstruct_pattern(pattern = beech, 
 #                                                  n_random = n_random, 
 #                                                  max_runs = max_runs, 
 #                                                  fitting = fitting, 
@@ -73,7 +73,7 @@ UtilityFunctions::save_rds(object = reconstructed_beech,
 ash <- subset.ppp(pattern_2007_living, Species == "Ash")
 
 # reconstruct pattern
-# reconstructed_ash <- SHAR::reconstruct_pattern(pattern = ash, 
+# reconstructed_ash <- shar::reconstruct_pattern(pattern = ash, 
 #                                                n_random = n_random, 
 #                                                max_runs = max_runs, 
 #                                                fitting = fitting)
@@ -106,7 +106,7 @@ UtilityFunctions::save_rds(object = reconstructed_ash,
 hornbeam <- subset.ppp(pattern_2007_living, Species == "Hornbeam")
 
 # reconstruct pattern
-# reconstructed_hornbeam <- SHAR::reconstruct_pattern(pattern = hornbeam, 
+# reconstructed_hornbeam <- shar::reconstruct_pattern(pattern = hornbeam, 
 #                                                     n_random = n_random, 
 #                                                     max_runs = max_runs, 
 #                                                     fitting = fitting)
@@ -139,7 +139,7 @@ UtilityFunctions::save_rds(object = reconstructed_hornbeam,
 sycamore <- subset.ppp(pattern_2007_living, Species == "Sycamore")
 
 # reconstruct pattern
-# reconstructed_sycamore <- SHAR::reconstruct_pattern(pattern = sycamore, 
+# reconstructed_sycamore <- shar::reconstruct_pattern(pattern = sycamore, 
 #                                                     n_random = n_random, 
 #                                                     max_runs = max_runs, 
 #                                                     fitting = fitting)
@@ -172,7 +172,7 @@ UtilityFunctions::save_rds(object = reconstructed_sycamore,
 others <- subset.ppp(pattern_2007_living, Species == "others")
 
 # reconstruct pattern
-# reconstructed_others <- SHAR::reconstruct_pattern(pattern = others, 
+# reconstructed_others <- shar::reconstruct_pattern(pattern = others, 
 #                                                   n_random = n_random, 
 #                                                   max_runs = max_runs, 
 #                                                   fitting = fitting)
@@ -209,7 +209,7 @@ UtilityFunctions::save_rds(object = reconstructed_others,
 #     
 #     environment_raster <- raster::rasterFromXYZ(data)
 #     
-#     SHAR::classify_habitats(environment_raster, classes = 5)
+#     shar::classify_habitats(environment_raster, classes = 5)
 #   })
 # 
 # names_environment <- list.files(paste0(getwd(), "/2_Real_world_data/1_Data"), pattern = '3_')
@@ -226,62 +226,62 @@ soil_mrt_classified <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Res
 
 # Beech
 # associations_beech <- purrr::map(environmental_data, function(x) {
-#   SHAR::results_habitat_association(pattern = reconstructed_beech,
+#   shar::results_habitat_association(pattern = reconstructed_beech,
 #                                     raster = x, 
 #                                     verbose = FALSE)
 # })
 # 
 # names(associations_beech) <- names_environment
 
-associations_beech <- SHAR::results_habitat_association(pattern = reconstructed_beech, 
+associations_beech <- shar::results_habitat_association(pattern = reconstructed_beech, 
                                                         raster = soil_mrt_classified)
 
 # Ash
 # associations_ash <- purrr::map(environmental_data, function(x) {
-#   SHAR::results_habitat_association(pattern = reconstructed_ash,
+#   shar::results_habitat_association(pattern = reconstructed_ash,
 #                                     raster = x, 
 #                                     verbose = FALSE)
 # })
 # 
 # names(associations_ash) <- names_environment
 
-associations_ash <- SHAR::results_habitat_association(pattern = reconstructed_ash, 
+associations_ash <- shar::results_habitat_association(pattern = reconstructed_ash, 
                                                       raster = soil_mrt_classified)
 
 # Hornbeam
 # associations_hornbeam <- purrr::map(environmental_data, function(x) {
-#   SHAR::results_habitat_association(pattern = reconstructed_hornbeam,
+#   shar::results_habitat_association(pattern = reconstructed_hornbeam,
 #                                     raster = x, 
 #                                     verbose = FALSE)
 # })
 # 
 # names(associations_hornbeam) <- names_environment
 
-associations_hornbeam <- SHAR::results_habitat_association(pattern = reconstructed_hornbeam, 
+associations_hornbeam <- shar::results_habitat_association(pattern = reconstructed_hornbeam, 
                                                            raster = soil_mrt_classified)
 
 # Sycamore
 # associations_sycamore <- purrr::map(environmental_data, function(x) {
-#   SHAR::results_habitat_association(pattern = reconstructed_sycamore,
+#   shar::results_habitat_association(pattern = reconstructed_sycamore,
 #                                     raster = x, 
 #                                     verbose = FALSE)
 # })
 # 
 # names(associations_sycamore) <- names_environment
 
-associations_sycamore <- SHAR::results_habitat_association(pattern = reconstructed_sycamore, 
+associations_sycamore <- shar::results_habitat_association(pattern = reconstructed_sycamore, 
                                                            raster = soil_mrt_classified)
 
 # others
 # associations_others <- purrr::map(environmental_data, function(x) {
-#   SHAR::results_habitat_association(pattern = reconstructed_others,
+#   shar::results_habitat_association(pattern = reconstructed_others,
 #                                     raster = x, 
 #                                     verbose = FALSE)
 # })
 # 
 # names(associations_others) <- names_environment
 
-associations_others <- SHAR::results_habitat_association(pattern = reconstructed_others, 
+associations_others <- shar::results_habitat_association(pattern = reconstructed_others, 
                                                          raster = soil_mrt_classified)
 
 #### Save results

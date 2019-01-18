@@ -3,7 +3,7 @@ simulate_torus_trans_association_strength <- function(number_coloumns, number_ro
                                                       number_points, association_strength){
   
   # create simulation landscape with 5 discrete classes
-  simulation_habitats <- SHAR::classify_habitats(NLMR::nlm_fbm(ncol = number_coloumns, nrow = number_rows,
+  simulation_habitats <- shar::classify_habitats(NLMR::nlm_fbm(ncol = number_coloumns, nrow = number_rows,
                                                                resolution = resolution, 
                                                                fract_dim = fract_dim, 
                                                                verbose = FALSE), 
@@ -18,12 +18,12 @@ simulate_torus_trans_association_strength <- function(number_coloumns, number_ro
   names_species <- as.character(unique(simulation_pattern$marks$species))
   
   # randomize raster using torus translation
-  random_habitats <- SHAR::translate_raster(raster = simulation_habitats, 
+  random_habitats <- shar::translate_raster(raster = simulation_habitats, 
                                             verbose = FALSE)
      
   # Species 1
   # get habitat associations
-  associations_species_1 <- SHAR::results_habitat_association(pattern = spatstat::subset.ppp(simulation_pattern, 
+  associations_species_1 <- shar::results_habitat_association(pattern = spatstat::subset.ppp(simulation_pattern, 
                                                                                              species_code == 1),
                                                               raster = random_habitats, 
                                                               verbose = FALSE)
@@ -36,7 +36,7 @@ simulate_torus_trans_association_strength <- function(number_coloumns, number_ro
   
   # Species 2
   # get habitat associations
-  associations_species_2 <- SHAR::results_habitat_association(pattern = spatstat::subset.ppp(simulation_pattern, 
+  associations_species_2 <- shar::results_habitat_association(pattern = spatstat::subset.ppp(simulation_pattern, 
                                                                                              species_code == 2),
                                                               raster = random_habitats,
                                                               verbose = FALSE)
@@ -49,7 +49,7 @@ simulate_torus_trans_association_strength <- function(number_coloumns, number_ro
   
   # Species 3
   # get habitat associations
-  associations_species_3 <- SHAR::results_habitat_association(pattern = spatstat::subset.ppp(simulation_pattern, 
+  associations_species_3 <- shar::results_habitat_association(pattern = spatstat::subset.ppp(simulation_pattern, 
                                                                                              species_code == 3),
                                                               raster = random_habitats,
                                                               verbose = FALSE)
@@ -62,7 +62,7 @@ simulate_torus_trans_association_strength <- function(number_coloumns, number_ro
   
   # Species 4
   # get habitat associations
-  associations_species_4 <- SHAR::results_habitat_association(pattern = spatstat::subset.ppp(simulation_pattern, 
+  associations_species_4 <- shar::results_habitat_association(pattern = spatstat::subset.ppp(simulation_pattern, 
                                                                                              species_code == 4),
                                                               raster = random_habitats,
                                                               verbose = FALSE)

@@ -4,7 +4,7 @@ simulate_point_process_association_strength <- function(number_coloumns, number_
                                                         association_strength) {
     
   # create simulation landscape with 5 discrete classes
-  simulation_habitats <- SHAR::classify_habitats(NLMR::nlm_fbm(ncol = number_coloumns, nrow = number_rows,
+  simulation_habitats <- shar::classify_habitats(NLMR::nlm_fbm(ncol = number_coloumns, nrow = number_rows,
                                                                resolution = resolution, 
                                                                fract_dim = fract_dim, 
                                                                verbose = FALSE), 
@@ -24,12 +24,12 @@ simulate_point_process_association_strength <- function(number_coloumns, number_
   species_1 <- spatstat::subset.ppp(simulation_pattern, species_code == 1) 
   
   # randomize pattern using point process fitting
-  random_species_1 <- SHAR::fit_point_process(species_1, process = "poisson",
+  random_species_1 <- shar::fit_point_process(species_1, process = "poisson",
                                               n_random = n_random, 
                                               verbose = FALSE)
     
   # get habitat associations
-  associations_species_1 <- SHAR::results_habitat_association(pattern = random_species_1,
+  associations_species_1 <- shar::results_habitat_association(pattern = random_species_1,
                                                               raster = simulation_habitats,
                                                               verbose = FALSE)
     
@@ -45,12 +45,12 @@ simulate_point_process_association_strength <- function(number_coloumns, number_
   species_2 <- spatstat::subset.ppp(simulation_pattern, species_code == 2) 
   
   # randomize pattern fitting point process
-  random_species_2 <- SHAR::fit_point_process(species_2, process = "cluster",
+  random_species_2 <- shar::fit_point_process(species_2, process = "cluster",
                                               n_random = n_random, 
                                               verbose = FALSE)
     
   # get habitat associations
-  associations_species_2 <- SHAR::results_habitat_association(pattern = random_species_2,
+  associations_species_2 <- shar::results_habitat_association(pattern = random_species_2,
                                                               raster = simulation_habitats,
                                                               verbose = FALSE)
     
@@ -66,12 +66,12 @@ simulate_point_process_association_strength <- function(number_coloumns, number_
   species_3 <- spatstat::subset.ppp(simulation_pattern, species_code == 3) 
   
   # randomize pattern using point process fitting
-  random_species_3 <- SHAR::fit_point_process(species_3, process = "poisson",
+  random_species_3 <- shar::fit_point_process(species_3, process = "poisson",
                                               n_random = n_random, 
                                               verbose = FALSE)
     
   # get habitat associations
-  associations_species_3 <- SHAR::results_habitat_association(pattern = random_species_3,
+  associations_species_3 <- shar::results_habitat_association(pattern = random_species_3,
                                                               raster = simulation_habitats, 
                                                               verbose = FALSE)
     
@@ -87,12 +87,12 @@ simulate_point_process_association_strength <- function(number_coloumns, number_
   species_4 <- spatstat::subset.ppp(simulation_pattern, species_code == 4) 
   
   # randomize pattern using point process fitting
-  random_species_4 <- SHAR::fit_point_process(species_4, process = "cluster",
+  random_species_4 <- shar::fit_point_process(species_4, process = "cluster",
                                               n_random = n_random, 
                                               verbose = FALSE)
     
   # get habitat associations
-  associations_species_4 <- SHAR::results_habitat_association(pattern = random_species_4,
+  associations_species_4 <- shar::results_habitat_association(pattern = random_species_4,
                                                               raster = simulation_habitats, 
                                                               verbose = FALSE)
   

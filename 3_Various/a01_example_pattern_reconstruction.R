@@ -13,7 +13,7 @@
 library(clustermq)
 library(NLMR)
 library(UtilityFunctions)
-library(SHAR)
+library(shar)
 library(spatstat)
 library(tidyverse)
 
@@ -29,7 +29,7 @@ simulation_habitats <- NLMR::nlm_fbm(ncol = 50, nrow = 50,
                                      resolution = 20, fract_dim = 1.5, 
                                      user_seed = 42,
                                      verbose = FALSE) %>%
-  SHAR::classify_habitats(classes = 5)
+  shar::classify_habitats(classes = 5)
 
 set.seed(42, kind = "L'Ecuyer-CMRG")
 simulation_pattern <- create_simulation_pattern(raster = simulation_habitats, 
@@ -49,7 +49,7 @@ max_runs <- 10000  # 2500
 # Species 1
 species_1 <- spatstat::subset.ppp(simulation_pattern, species_code == 1)
 
-# reconstruction_species_1 <- SHAR::reconstruct_pattern(pattern = species_1, 
+# reconstruction_species_1 <- shar::reconstruct_pattern(pattern = species_1, 
 #                                                       n_random = n_random, 
 #                                                       max_runs = max_runs, 
 #                                                       fitting = FALSE,
@@ -84,7 +84,7 @@ UtilityFunctions::save_rds(object = reconstruction_species_1,
 # Species 2
 species_2 <- spatstat::subset.ppp(simulation_pattern, species_code == 2)
 
-# reconstruction_species_2 <- SHAR::reconstruct_pattern(pattern = species_2, 
+# reconstruction_species_2 <- shar::reconstruct_pattern(pattern = species_2, 
 #                                                       n_random = n_random, 
 #                                                       max_runs = max_runs, 
 #                                                       fitting = TRUE,
@@ -119,7 +119,7 @@ UtilityFunctions::save_rds(object = reconstruction_species_2,
 # Species 3
 species_3 <- spatstat::subset.ppp(simulation_pattern, species_code == 3)
 
-# reconstruction_species_3 <- SHAR::reconstruct_pattern(pattern = species_3, 
+# reconstruction_species_3 <- shar::reconstruct_pattern(pattern = species_3, 
 #                                                       n_random = n_random, 
 #                                                       max_runs = max_runs, 
 #                                                       fitting = FALSE,
@@ -154,7 +154,7 @@ UtilityFunctions::save_rds(object = reconstruction_species_3,
 # Species 4
 species_4 <- spatstat::subset.ppp(simulation_pattern, species_code == 4)
 
-# reconstruction_species_4 <- SHAR::reconstruct_pattern(pattern = species_4, 
+# reconstruction_species_4 <- shar::reconstruct_pattern(pattern = species_4, 
 #                                                       n_random = n_random, 
 #                                                       max_runs = max_runs, 
 #                                                       fitting = TRUE,
@@ -192,7 +192,7 @@ n_random <- 199
 set.seed(42, kind = "L'Ecuyer-CMRG")
 
 # Species 1
-fitted_species_1 <- SHAR::fit_point_process(species_1, 
+fitted_species_1 <- shar::fit_point_process(species_1, 
                                             n_random = n_random,
                                             process = "poisson")
 
@@ -202,7 +202,7 @@ UtilityFunctions::save_rds(object = fitted_species_1,
                            overwrite = overwrite)
 
 # Species 2
-fitted_species_2 <- SHAR::fit_point_process(species_2, 
+fitted_species_2 <- shar::fit_point_process(species_2, 
                                             n_random = n_random,
                                             process = "cluster")
 
@@ -212,7 +212,7 @@ UtilityFunctions::save_rds(object = fitted_species_2,
                            overwrite = overwrite)
 
 # Species 3
-fitted_species_3 <- SHAR::fit_point_process(species_3, 
+fitted_species_3 <- shar::fit_point_process(species_3, 
                                             n_random = n_random,
                                             process = "poisson")
 
@@ -222,7 +222,7 @@ UtilityFunctions::save_rds(object = fitted_species_3,
                            overwrite = overwrite)
 
 # Species 4
-fitted_species_4 <- SHAR::fit_point_process(species_4, 
+fitted_species_4 <- shar::fit_point_process(species_4, 
                                             n_random = n_random,
                                             process = "cluster")
 

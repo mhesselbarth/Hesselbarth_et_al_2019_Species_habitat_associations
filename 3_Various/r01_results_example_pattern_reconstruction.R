@@ -12,7 +12,7 @@
 # Packages #
 library(dplyr)
 library(RColorBrewer)
-library(SHAR)
+library(shar)
 library(spatstat)
 library(tidyverse)
 

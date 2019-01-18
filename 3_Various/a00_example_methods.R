@@ -13,7 +13,7 @@
 library(NLMR)
 library(RColorBrewer)
 library(UtilityFunctions)
-library(SHAR)
+library(shar)
 library(spatstat)
 library(tidyverse)
 
@@ -28,7 +28,7 @@ set.seed(42, kind = "L'Ecuyer-CMRG")
 simulation_landscape <- NLMR::nlm_fbm(ncol = 50, nrow = 50, 
                                       resolution = 20, fract_dim = 1.5, 
                                       verbose = FALSE) %>%
-  SHAR::classify_habitats(classes = 5)
+  shar::classify_habitats(classes = 5)
 
 simulation_pattern <- create_simulation_pattern(raster = simulation_landscape, 
                                                 number_points = 100, 
@@ -54,7 +54,7 @@ ggplot() +
 
 #### 3. Point process method ####
 
-gamma_test <- SHAR::fit_point_process(example_species, 
+gamma_test <- shar::fit_point_process(example_species, 
                                       n_random = 1,
                                       process = "cluster")
 
@@ -71,7 +71,7 @@ names(gamma_test_long) <- c("method", "x", "y")
 
 #### 4. Habitat randomization ####
 
-habitats_randomized <- SHAR::randomize_raster(raster = simulation_landscape, 
+habitats_randomized <- shar::randomize_raster(raster = simulation_landscape, 
                                               n_random  = 1)
 
 habitats_randomized_long <- purrr::map_dfr(habitats_randomized, function(current_raster) {
@@ -87,7 +87,7 @@ names(habitats_randomized_long) <- c("method", "x", "y", "layer")
 
 #### 5. Torus translation ####
 
-habitats_torus <- SHAR::translate_raster(raster = simulation_landscape)
+habitats_torus <- shar::translate_raster(raster = simulation_landscape)
 
 habitats_torus$Observed <- simulation_landscape
 
@@ -103,7 +103,7 @@ names(habitats_torus_long) <- c("method", "x", "y", "layer")
 
 #### 6. Pattern reconstruction ####
 
-pattern_reconstruction <- SHAR::reconstruct_pattern(pattern = example_species, 
+pattern_reconstruction <- shar::reconstruct_pattern(pattern = example_species, 
                                                     n_random = 1, 
                                                     max_runs = 2500)
 

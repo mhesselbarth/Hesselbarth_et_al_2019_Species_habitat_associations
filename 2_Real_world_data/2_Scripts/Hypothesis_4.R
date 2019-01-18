@@ -13,7 +13,7 @@ library(clustermq)
 
 library(UtilityFunctions) # devtools::install_github("mhesselbarth/UtilityFunctions)
 library(raster)
-library(SHAR) # devtools::install_github("r-spatialecology/SHAR")
+library(shar) # devtools::install_github("r-spatialecology/shar")
 library(spatstat)
 library(tidyverse)
 
@@ -40,7 +40,7 @@ comp_fast <- TRUE
 # reconstruct pattern
 
 # living
-# reconstructed_beech_living <- SHAR::reconstruct_pattern(pattern = beech_living, 
+# reconstructed_beech_living <- shar::reconstruct_pattern(pattern = beech_living, 
 #                                                         n_random = n_random, 
 #                                                         max_runs = max_runs, 
 #                                                         fitting = fitting, 
@@ -71,7 +71,7 @@ UtilityFunctions::save_rds(object = reconstructed_beech_living,
                            path = paste0(getwd(), "/2_Real_world_data/3_Results"))
 
 # dead
-# reconstructed_beech_dead <- SHAR::reconstruct_pattern(pattern = beech_dead, 
+# reconstructed_beech_dead <- shar::reconstruct_pattern(pattern = beech_dead, 
 #                                                       n_random = n_random, 
 #                                                       max_runs = max_runs, 
 #                                                       fitting = fitting)
@@ -109,7 +109,7 @@ UtilityFunctions::save_rds(object = reconstructed_beech_dead,
 #     
 #     environment_raster <- raster::rasterFromXYZ(data)
 #     
-#     SHAR::classify_habitats(environment_raster, classes = 5)
+#     shar::classify_habitats(environment_raster, classes = 5)
 #   })
 # 
 # names_environment <- list.files(paste0(getwd(), "/2_Real_world_data/1_Data"), pattern = '3_')
@@ -123,26 +123,26 @@ soil_mrt_classified <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Res
 
 # living
 # associations_beech_living <- purrr::map(environmental_data, function(x) {
-#   SHAR::results_habitat_association(pattern = reconstructed_beech_living,
+#   shar::results_habitat_association(pattern = reconstructed_beech_living,
 #                                     raster = x, 
 #                                     verbose = FALSE)
 # })
 # 
 # names(associations_beech_living) <- names_environment
 
-associations_beech_living <- SHAR::results_habitat_association(pattern = reconstructed_beech_living, 
+associations_beech_living <- shar::results_habitat_association(pattern = reconstructed_beech_living, 
                                                                raster = soil_mrt_classified)
 
 # dead
 # associations_beech_dead <- purrr::map(environmental_data, function(x) {
-#   SHAR::results_habitat_association(pattern = reconstructed_beech_dead,
+#   shar::results_habitat_association(pattern = reconstructed_beech_dead,
 #                                     raster = x, 
 #                                     verbose = FALSE)
 # })
 # 
 # names(associations_beech_dead) <- names_environment
 
-associations_beech_dead <- SHAR::results_habitat_association(pattern = reconstructed_beech_dead, 
+associations_beech_dead <- shar::results_habitat_association(pattern = reconstructed_beech_dead, 
                                                              raster = soil_mrt_classified)
 
 #### Save results

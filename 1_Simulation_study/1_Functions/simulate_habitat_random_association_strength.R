@@ -5,7 +5,7 @@ simulate_habitat_random_association_strength <- function(number_coloumns, number
                                                          association_strength){
   
   # create landscape classified to 5 discrete classes
-  simulation_habitats <- SHAR::classify_habitats(NLMR::nlm_fbm(ncol = number_coloumns, 
+  simulation_habitats <- shar::classify_habitats(NLMR::nlm_fbm(ncol = number_coloumns, 
                                                                nrow = number_rows,
                                                                resolution = resolution, 
                                                                fract_dim = fract_dim, 
@@ -21,13 +21,13 @@ simulate_habitat_random_association_strength <- function(number_coloumns, number
   names_species <- as.character(unique(simulation_pattern$marks$species))
       
   # randomize habitats using randomization algorithm
-  random_habitats <- SHAR::randomize_raster(raster = simulation_habitats,
+  random_habitats <- shar::randomize_raster(raster = simulation_habitats,
                                             n_random = n_random, 
                                             verbose = FALSE)
 
   # Species 1
   # results of species-habitat associations
-  associations_species_1 <- SHAR::results_habitat_association(pattern = spatstat::subset.ppp(simulation_pattern, 
+  associations_species_1 <- shar::results_habitat_association(pattern = spatstat::subset.ppp(simulation_pattern, 
                                                                                              species_code == 1),
                                                               raster = random_habitats, 
                                                               verbose = FALSE)
@@ -40,7 +40,7 @@ simulate_habitat_random_association_strength <- function(number_coloumns, number
       
   # Species 2
   # results of species-habitat associations
-  associations_species_2 <- SHAR::results_habitat_association(pattern = spatstat::subset.ppp(simulation_pattern, 
+  associations_species_2 <- shar::results_habitat_association(pattern = spatstat::subset.ppp(simulation_pattern, 
                                                                                              species_code == 2),
                                                               raster = random_habitats,
                                                               verbose = FALSE)
@@ -53,7 +53,7 @@ simulate_habitat_random_association_strength <- function(number_coloumns, number
   
   # Species 3
   # results of species-habitat associations
-  associations_species_3 <- SHAR::results_habitat_association(pattern = spatstat::subset.ppp(simulation_pattern, 
+  associations_species_3 <- shar::results_habitat_association(pattern = spatstat::subset.ppp(simulation_pattern, 
                                                                                              species_code == 3),
                                                               raster = random_habitats,
                                                               verbose = FALSE)
@@ -66,7 +66,7 @@ simulate_habitat_random_association_strength <- function(number_coloumns, number
   
   # Species 4
   # results of species-habitat associations
-  associations_species_4 <- SHAR::results_habitat_association(pattern = spatstat::subset.ppp(simulation_pattern, 
+  associations_species_4 <- shar::results_habitat_association(pattern = spatstat::subset.ppp(simulation_pattern, 
                                                                                              species_code == 4),
                                                               raster = random_habitats,
                                                               verbose = FALSE)
