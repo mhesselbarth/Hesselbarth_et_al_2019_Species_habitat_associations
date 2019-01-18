@@ -36,6 +36,10 @@ mean_energy_full_patterns <- purrr::map_dfr(full_patterns_list, function(x){
                                                   comp_fast = TRUE, 
                                                   verbose = FALSE))}, .id = "species")
 
+UtilityFunctions::save_rds(object = mean_energy_full_patterns, 
+                           path = paste0(getwd(), "/2_Real_world_data/3_Results/Appendix"), 
+                           filename = "mean_energy_full_patterns.rds")
+
 # Plot summary stats
 summary_stats_species <- purrr::map_dfr(full_patterns_list, function(current_species) {
   
@@ -74,7 +78,7 @@ summary_stats_species <- purrr::map_dfr(full_patterns_list, function(current_spe
                      theo = mean(theo))
 }, .id = "species")
 
-ggplot() + 
+ggplot_full_patterns <- ggplot() + 
   geom_ribbon(data = dplyr::filter(summary_stats_species, type == "randomized"), 
               aes(x = r, ymin = lo, ymax = hi), 
               alpha = 0.3, col = "grey") +
@@ -82,3 +86,7 @@ ggplot() +
             aes(x = r, y = x_r), col = "black") +
   facet_wrap(~ species + summary_function, scales = "free", nrow = 5, ncol = 2) + 
   theme_bw()
+
+UtilityFunctions::save_ggplot(plot = ggplot_full_patterns, 
+                              path = paste0(getwd(), "/2_Real_world_data/3_Results/Appendix"), 
+                              filename = "ggplot_full_patterns.png")
