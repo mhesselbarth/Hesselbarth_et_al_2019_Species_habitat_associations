@@ -187,7 +187,7 @@ reconstructed_others <- clustermq::Q(fun = reconstruct_pattern,
                                                   simplify = TRUE,
                                                   verbose = FALSE),
                                      seed = 42,
-                                     n_jobs = n_random,
+                                     n_jobs = length(n_random),
                                      template = list(queue = "mpi",
                                                      walltime = "48:00",
                                                      processes = 1))
