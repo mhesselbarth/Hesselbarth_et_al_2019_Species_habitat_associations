@@ -41,7 +41,7 @@ beech_large <- spatstat::subset.ppp(beech, DBH_group == "large")
 n_random <- rep(1, 199) # if HPC is used
 max_runs <- 20000 # 20000
 fitting <- TRUE # TRUE
-com_fast <- TRUE
+comp_fast <- TRUE
 
 # reconstruct pattern
 
