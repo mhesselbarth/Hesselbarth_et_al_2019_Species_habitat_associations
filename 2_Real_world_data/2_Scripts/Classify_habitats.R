@@ -57,11 +57,18 @@ environmental_data_DEM <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/1_
   raster::setExtent(ext = raster::extent(environmental_data_raster)) %>%
   raster::mask(mask = rgeos::gBuffer(plot_area, width = 10))
 
+# stack all layers to one RasterStack
 environmental_data_raster <- raster::stack(environmental_data_raster, 
                                            environmental_data_DEM)
 
 # convert to data frame
 environmental_data_df <- raster::as.data.frame(environmental_data_raster)
+
+# only non-NA environmental data
+environmental_data_df <- environmental_data_df[complete.cases(environmental_data_df), ]
+
+# cell IDs of all non-NA cells
+cell_ids <- as.numeric(row.names(environmental_data_df))
 
 # extract cell id of each tree location
 pattern_2007_cell_id <- raster::extract(x = environmental_data_raster, 
@@ -70,26 +77,51 @@ pattern_2007_cell_id <- raster::extract(x = environmental_data_raster,
 
 # data frame including only  cell id, coords, and species
 pattern_2007_cell_id <- cbind(pattern_2007_cell_id[, 2], 
-                              pattern_2007_df[, c(1:2,10)])
+                              pattern_2007_df[, c(1:2, 5, 10)])
 
 # set names
 names(pattern_2007_cell_id)[1] <- "cell_id"
 
+# Calculate importance value for each species in each cell
+species_iv <- dplyr::mutate(pattern_2007_cell_id, basal_area = (pi / 4) * DBH_07 ^ 2) %>%
+  dplyr::group_by(cell_id, Species) %>%
+  dplyr::summarise(n = n(),
+                   ba_sum = sum(basal_area)) %>%
+  dplyr::mutate(n_rel = n / sum(n),
+                ba_rel = ba_sum / sum(ba_sum),
+                importance_value = n_rel + ba_rel) %>%
+  dplyr::select(cell_id, Species, importance_value) %>%
+  tidyr::spread(key = Species, value = importance_value,
+                fill = 0) %>% 
+  dplyr::full_join(y = tibble(cell_id = cell_ids),
+                   by = "cell_id") %>% 
+  dplyr::arrange(cell_id) %>% 
+  dplyr::mutate(Beech = tidyr::replace_na(Beech, 0),
+                Ash = tidyr::replace_na(Ash, 0),
+                Hornbeam = tidyr::replace_na(Hornbeam, 0),
+                Sycamore = tidyr::replace_na(Sycamore, 0),
+                others = tidyr::replace_na(others, 0))
+  
+
 # count species abundance in each cell
-species_abundance <- table(factor(pattern_2007_cell_id$cell_id, 
-                                  levels = seq_len(raster::ncell(environmental_data_raster))),
-                           pattern_2007_cell_id$Species) %>%
-  as.data.frame() %>%
-  purrr::set_names(c("cell_id", "species", "abundance")) %>%
-  tidyr::spread(key = species, value = abundance)
+# species_abundance <- table(factor(pattern_2007_cell_id$cell_id,
+#                                   levels = cell_ids),
+#                            pattern_2007_cell_id$Species) %>%
+#   as.data.frame() %>%
+#   purrr::set_names(c("cell_id", "species", "abundance")) %>%
+#   tidyr::spread(key = species, value = abundance)
 
 #### MRT classification ####
-species_abundance_matrix <- data.matrix(species_abundance[, -1])
+# convert to matrix without cell id
+# species_abundance_matrix <- data.matrix(species_abundance[, -1])
 
-# formula <- species_abundance_matrix ~ acidity + continentality + light_conditions + 
+# convert to matrix without cell id
+species_iv_matrix <- data.matrix(species_iv[, -1])
+
+# formula_soil <- scale(species_abundance_matrix) ~ acidity + continentality + light_conditions +
 #   nitrogen + soil_depth + water_content_spring + water_content_summer + water_content
 
-formula_soil <- scale(species_abundance_matrix) ~ acidity + continentality + light_conditions +
+formula_soil <- species_iv_matrix ~ acidity + continentality + light_conditions +
   nitrogen + soil_depth + water_content_spring + water_content_summer + water_content
 
 # formula_DEM <- scale(species_abundance_matrix) ~ Aspect + Elevation + Slope
@@ -133,10 +165,10 @@ ggplot2::ggplot(data = classification_df_soil, ggplot2::aes(x = x, y = y)) +
   ggplot2::scale_fill_viridis_d() + 
   ggplot2::theme_bw()
 
-# ggplot2::ggplot(data = classification_df_DEM, ggplot2::aes(x = x, y = y)) + 
-#   ggplot2::geom_raster(ggplot2::aes(fill = class)) + 
-#   ggplot2::coord_equal() + 
-#   ggplot2::scale_fill_viridis_d() + 
+# ggplot2::ggplot(data = classification_df_DEM, ggplot2::aes(x = x, y = y)) +
+#   ggplot2::geom_raster(ggplot2::aes(fill = class)) +
+#   ggplot2::coord_equal() +
+#   ggplot2::scale_fill_viridis_d() +
 #   ggplot2::theme_bw()
 
 #### Save results ####
