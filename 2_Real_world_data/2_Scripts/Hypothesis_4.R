@@ -147,13 +147,14 @@ associations_beech_dead <- shar::results_habitat_association(pattern = reconstru
 
 #### Save results
 
+overwrite <- FALSE
+
 UtilityFunctions::save_rds(object = associations_beech_living, 
                            filename = "associations_beech_living.rds", 
-                           path = paste0(getwd(), "/2_Real_world_data/3_Results"))
-
+                           path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
+                           overwrite = overwrite)
 
 UtilityFunctions::save_rds(object = associations_beech_dead, 
                            filename = "associations_beech_dead.rds", 
-                           path = paste0(getwd(), "/2_Real_world_data/3_Results"))
-
-
+                           path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
+                           overwrite = overwrite)

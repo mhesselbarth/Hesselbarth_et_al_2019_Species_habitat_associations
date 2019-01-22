@@ -196,17 +196,19 @@ associations_beech_large <- shar::results_habitat_association(pattern = reconstr
 
 #### Save results
 
+overwrite <- FALSE
+
 UtilityFunctions::save_rds(object = associations_beech_small, 
                            filename = "associations_beech_small.rds", 
-                           path = paste0(getwd(), "/2_Real_world_data/3_Results"))
-
+                           path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
+                           overwrite = overwrite)
 
 UtilityFunctions::save_rds(object = associations_beech_medium, 
                            filename = "associations_beech_medium.rds", 
-                           path = paste0(getwd(), "/2_Real_world_data/3_Results"))
-
+                           path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
+                           overwrite = overwrite)
 
 UtilityFunctions::save_rds(object = associations_beech_large, 
                            filename = "associations_beech_large.rds", 
-                           path = paste0(getwd(), "/2_Real_world_data/3_Results"))
-
+                           path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
+                           overwrite = overwrite)

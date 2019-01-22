@@ -286,22 +286,29 @@ associations_others <- shar::results_habitat_association(pattern = reconstructed
 
 #### Save results
 
+overwrite <- FALSE
+
 UtilityFunctions::save_rds(object = associations_beech, 
                            filename = "associations_beech.rds", 
-                           path = paste0(getwd(), "/2_Real_world_data/3_Results"))
+                           path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
+                           overwrite = overwrite)
 
 UtilityFunctions::save_rds(object = associations_ash, 
                            filename = "associations_ash.rds", 
-                           path = paste0(getwd(), "/2_Real_world_data/3_Results"))
+                           path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
+                           overwrite = overwrite)
 
 UtilityFunctions::save_rds(object = associations_hornbeam, 
                            filename = "associations_hornbeam.rds", 
-                           path = paste0(getwd(), "/2_Real_world_data/3_Results"))
+                           path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
+                           overwrite = overwrite)
 
 UtilityFunctions::save_rds(object = associations_sycamore, 
                            filename = "associations_sycamore.rds", 
-                           path = paste0(getwd(), "/2_Real_world_data/3_Results"))
+                           path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
+                           overwrite = overwrite)
 
 UtilityFunctions::save_rds(object = associations_others, 
                            filename = "associations_others.rds", 
-                           path = paste0(getwd(), "/2_Real_world_data/3_Results"))
+                           path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
+                           overwrite = overwrite)
