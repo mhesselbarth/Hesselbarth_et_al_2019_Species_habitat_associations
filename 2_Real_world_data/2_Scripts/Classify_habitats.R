@@ -121,7 +121,7 @@ species_iv_matrix <- data.matrix(species_iv[, -1])
 # formula_soil <- scale(species_abundance_matrix) ~ acidity + continentality + light_conditions +
 #   nitrogen + soil_depth + water_content_spring + water_content_summer + water_content
 
-formula_soil <- species_iv_matrix[ ,-1] ~ acidity + continentality + light_conditions +
+formula_soil <- species_iv_matrix ~ acidity + continentality + light_conditions +
   nitrogen + soil_depth + water_content_spring + water_content_summer + water_content
 
 # formula_DEM <- scale(species_abundance_matrix) ~ Aspect + Elevation + Slope
@@ -130,14 +130,17 @@ formula_soil <- species_iv_matrix[ ,-1] ~ acidity + continentality + light_condi
 set.seed(42)
 
 # run mrt classification
+# ==> selected 7 groups
 mrt_model_soil <- mvpart::mvpart(form = formula_soil, 
                                  data = environmental_data_df, 
-                                 xv = "pick")
+                                 # xv = "pick",
+                                 size = 7,
+                                 xval = 10000,
+                                 xvmult = 100)
 
 # mrt_model_DEM <- mvpart::mvpart(form = formula_DEM, 
 #                                 data = environmental_data_df, 
 #                                 xv = "pick")
-# ==> selected 7 groups
 
 raster_coords <- raster::xyFromCell(environmental_data_raster$acidity, 
                                     cell = raster::Which(!is.na(environmental_data_raster$acidity), 
