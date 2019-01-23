@@ -70,6 +70,9 @@ environmental_data_df <- environmental_data_df[complete.cases(environmental_data
 # cell IDs of all non-NA cells
 cell_ids <- as.numeric(row.names(environmental_data_df))
 
+# scale data 
+# environmental_data_df <- as.data.frame(apply(environmental_data_df, MARGIN = 2, FUN = scale))
+
 # extract cell id of each tree location
 pattern_2007_cell_id <- raster::extract(x = environmental_data_raster, 
                                         y = pattern_2007_df[, 1:2], 
@@ -133,8 +136,8 @@ set.seed(42)
 # ==> selected 7 groups
 mrt_model_soil <- mvpart::mvpart(form = formula_soil, 
                                  data = environmental_data_df, 
-                                 # xv = "pick",
-                                 size = 7,
+                                 xv = "pick",
+                                 # size = 7,
                                  xval = 10000,
                                  xvmult = 100)
 
