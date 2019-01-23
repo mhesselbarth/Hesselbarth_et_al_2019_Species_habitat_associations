@@ -136,8 +136,8 @@ set.seed(42)
 # ==> selected 7 groups
 mrt_model_soil <- mvpart::mvpart(form = formula_soil, 
                                  data = environmental_data_df, 
-                                 xv = "pick",
-                                 # size = 7,
+                                 # xv = "pick",
+                                 size = 7,
                                  xval = 10000,
                                  xvmult = 100)
 
@@ -158,14 +158,6 @@ classification_df_soil <- tibble::tibble(x = raster_coords[,1],
 #                                         class = factor(mrt_model_DEM$where))
 
 #### Plot results ####
-table(classification_df_soil$class)
-length(table(classification_df_soil$class))
-sum(table(classification_df_soil$class))
-
-# table(classification_df_DEM$class)
-# length(table(classification_df_DEM$class))
-# sum(table(classification_df_DEM$class))
-
 ggplot2::ggplot(data = classification_df_soil, ggplot2::aes(x = x, y = y)) + 
   ggplot2::geom_raster(ggplot2::aes(fill = class)) + 
   ggplot2::coord_equal() + 
@@ -177,6 +169,16 @@ ggplot2::ggplot(data = classification_df_soil, ggplot2::aes(x = x, y = y)) +
 #   ggplot2::coord_equal() +
 #   ggplot2::scale_fill_viridis_d() +
 #   ggplot2::theme_bw()
+
+#### Results classification
+
+table(classification_df_soil$class)
+length(table(classification_df_soil$class))
+sum(table(classification_df_soil$class))
+
+# table(classification_df_DEM$class)
+# length(table(classification_df_DEM$class))
+# sum(table(classification_df_DEM$class))
 
 #### Save results ####
 soil_mrt_classified <- raster::rasterFromXYZ(classification_df_soil)
