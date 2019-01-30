@@ -13,17 +13,16 @@
 # Packages
 library(clustermq)
 
-library(NLMR)
 library(maptools)
 library(mobsim)
-library(UtilityFunctions)
-library(shar)
-library(tidyverse)
-library(UtilityFunctions)
+library(NLMR)
 library(raster)
 library(sf)
 library(spatstat)
 library(spex)
+library(shar)
+library(tidyverse)
+library(UtilityFunctions)
 
 # Source all functions in R_functions folder
 list.files(paste0(getwd(), "/1_Simulation_study/1_Functions"), full.names = TRUE) %>%
