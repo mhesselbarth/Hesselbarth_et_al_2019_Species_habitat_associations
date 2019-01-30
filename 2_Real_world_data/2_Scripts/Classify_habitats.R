@@ -22,7 +22,8 @@ library(tidyverse)
 pattern_2007 <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/1_Data/2_pattern_2007.rds"))
 
 # convert to data frame
-pattern_2007_df <- spatstat::as.data.frame.ppp(pattern_2007)
+pattern_2007_df <- spatstat::as.data.frame.ppp(pattern_2007) %>% 
+  dplyr::filter(Type == "living")
 
 plot_area <- readr::read_rds(paste0(getwd(), 
                                     "/2_Real_world_data/1_Data/plot_area.rds"))
@@ -60,6 +61,10 @@ environmental_data_DEM <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/1_
 # stack all layers to one RasterStack
 environmental_data_raster <- raster::stack(environmental_data_raster, 
                                            environmental_data_DEM)
+
+# only data that is inside plot
+environmental_data_raster <- raster::intersect(x = environmental_data_raster,
+                                               y = plot_area)
 
 # convert to data frame
 environmental_data_df <- raster::as.data.frame(environmental_data_raster)
@@ -105,7 +110,6 @@ species_iv <- dplyr::mutate(pattern_2007_cell_id, basal_area = (pi / 4) * DBH_07
                 Sycamore = tidyr::replace_na(Sycamore, 0),
                 others = tidyr::replace_na(others, 0))
   
-
 # count species abundance in each cell
 # species_abundance <- table(factor(pattern_2007_cell_id$cell_id,
 #                                   levels = cell_ids),
@@ -133,11 +137,11 @@ formula_soil <- species_iv_matrix ~ acidity + continentality + light_conditions 
 set.seed(42)
 
 # run mrt classification
-# ==> selected 7 groups
+# ==> selected 6 groups
 mrt_model_soil <- mvpart::mvpart(form = formula_soil, 
                                  data = environmental_data_df, 
-                                 # xv = "pick",
-                                 size = 7,
+                                 xv = "pick",
+                                 # size = 6,
                                  xval = 10000,
                                  xvmult = 100)
 
@@ -145,13 +149,25 @@ mrt_model_soil <- mvpart::mvpart(form = formula_soil,
 #                                 data = environmental_data_df, 
 #                                 xv = "pick")
 
-raster_coords <- raster::xyFromCell(environmental_data_raster$acidity, 
-                                    cell = raster::Which(!is.na(environmental_data_raster$acidity), 
-                                                         cells = TRUE))
+raster_coords <- raster::xyFromCell(environmental_data_raster, 
+                                    cell = cell_ids)
 
 classification_df_soil <- tibble::tibble(x = raster_coords[,1], 
                                          y = raster_coords[, 2],
                                          class = factor(mrt_model_soil$where))
+
+class_ids <- sort(unique(classification_df_soil$class))
+
+classification_df_soil <- dplyr::mutate(classification_df_soil, 
+                                        class = dplyr::case_when(class == class_ids[1] ~ 1, 
+                                                                 class == class_ids[2] ~ 2,
+                                                                 class == class_ids[3] ~ 3,
+                                                                 class == class_ids[4] ~ 4,
+                                                                 class == class_ids[5] ~ 5,
+                                                                 class == class_ids[6] ~ 6),
+                                        class = factor(class))
+
+soil_mrt_classified <- raster::rasterFromXYZ(classification_df_soil)
 
 # classification_df_DEM <- tibble::tibble(x = raster_coords[,1], 
 #                                         y = raster_coords[, 2],
@@ -172,17 +188,23 @@ ggplot2::ggplot(data = classification_df_soil, ggplot2::aes(x = x, y = y)) +
 
 #### Results classification
 
+# number of cells in each habitat
 table(classification_df_soil$class)
-length(table(classification_df_soil$class))
-sum(table(classification_df_soil$class))
+
+# area in ha
+(table(classification_df_soil$class) * prod(raster::res(soil_mrt_classified))) / 10000
+
+# trees in each habitat
+raster::extract(x = soil_mrt_classified, 
+                y = pattern_2007_df[, 1:2]) %>% 
+  factor(levels = levels(classification_df_soil$class)) %>%
+  table()
 
 # table(classification_df_DEM$class)
 # length(table(classification_df_DEM$class))
 # sum(table(classification_df_DEM$class))
 
 #### Save results ####
-soil_mrt_classified <- raster::rasterFromXYZ(classification_df_soil)
-
 UtilityFunctions::save_rds(object = soil_mrt_classified,
                            path = paste0(getwd(), "/2_Real_world_data/3_Results"),
                            filename = "soil_mrt_classified.rds", 

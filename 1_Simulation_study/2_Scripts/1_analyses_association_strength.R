@@ -53,13 +53,13 @@ number_points <- 100 # 250 - 250 - 500???
 n_random <- 199 # 199
 
 # Number of itertations pattern reconstruction
-max_runs <- 10000 # 5000
+max_runs <- 20000 # 20000
 
 # Number of simulation runs
-simulation_runs <- 100 # 50
+simulation_runs <- 100 # 100
 
 # Different association strengths / repeat each strength simulation_runs times
-association_strength <- rep(seq(0, 1, 0.025), each = simulation_runs) # seq(0, 1, 0.025)
+association_strength <- rep(seq(0, 1, 0.025), each = simulation_runs) # rep(seq(0, 1, 0.025), each = simulation_runs)
 
 #### 3. Run simulations using HPC (clustermq)
 
@@ -157,8 +157,8 @@ pattern_reconstruction <- clustermq::Q(fun = simulate_pattern_recon_association_
                                                      detect_habitat_associations = detect_habitat_associations), 
                                        seed = 42, 
                                        n_jobs = length(association_strength) / 4, 
-                                       template = list(queue = "mpi", 
-                                                       walltime = "48:00", 
+                                       template = list(queue = "mpi-long", 
+                                                       walltime = "120:00", 
                                                        processes = 1))
 
 # combine results to one data frame
