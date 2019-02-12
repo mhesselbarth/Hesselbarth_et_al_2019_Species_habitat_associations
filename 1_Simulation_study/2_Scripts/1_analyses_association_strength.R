@@ -54,32 +54,38 @@ n_random <- 199 # 199
 # Number of itertations pattern reconstruction
 max_runs <- 20000 # 20000
 
+# Threshold for fast computation of summary functions
+comp_fast <- 0
+
+# Threshold to stop reconstruction if no change occured
+no_change <- 10000
+
 # Number of simulation runs
-simulation_runs <- 100 # 100
+simulation_runs <- 50 # 100
 
 # Different association strengths / repeat each strength simulation_runs times
-association_strength <- rep(seq(0, 1, 0.025), each = simulation_runs) # rep(seq(0, 1, 0.025), each = simulation_runs)
+association_strength <- rep(seq(0, 1, 0.05), each = simulation_runs) # rep(seq(0, 1, 0.025), each = simulation_runs)
 
 #### 3. Run simulations using HPC (clustermq)
 
 # parallelize each association strength and repetition
 
 # Randomization algorithm
-habitat_randomization <- clustermq::Q(fun = simulate_habitat_random_association_strength, 
-                                      association_strength = association_strength, 
-                                      const = list(number_coloumns = number_coloumns, 
-                                                   number_rows = number_rows, 
+habitat_randomization <- clustermq::Q(fun = simulate_habitat_random_association_strength,
+                                      association_strength = association_strength,
+                                      const = list(number_coloumns = number_coloumns,
+                                                   number_rows = number_rows,
                                                    resolution = resolution,
-                                                   fract_dim = fract_dim, 
-                                                   number_points = number_points, 
+                                                   fract_dim = fract_dim,
+                                                   number_points = number_points,
                                                    n_random = n_random),
-                                      export = list(create_simulation_species = create_simulation_species, 
+                                      export = list(create_simulation_species = create_simulation_species,
                                                     create_simulation_pattern = create_simulation_pattern,
-                                                    detect_habitat_associations = detect_habitat_associations), 
-                                      seed = 42, 
-                                      n_jobs = length(association_strength) / 4, 
-                                      template = list(queue = "mpi", 
-                                                      walltime = "48:00", 
+                                                    detect_habitat_associations = detect_habitat_associations),
+                                      seed = 42,
+                                      n_jobs = length(association_strength),
+                                      template = list(queue = "mpi",
+                                                      walltime = "48:00",
                                                       processes = 1))
 
 # combine results to one data frame
@@ -87,24 +93,24 @@ habitat_randomization <- dplyr::bind_rows(habitat_randomization)
 
 UtilityFunctions::save_rds(object = habitat_randomization,
                            filename = paste0("habitat_randomization_", simulation_runs, "_runs.rds"),
-                           path = paste0(getwd(), "/1_Simulation_study/3_Results/"), 
+                           path = paste0(getwd(), "/1_Simulation_study/3_Results/"),
                            overwrite = overwrite)
 
 # Torus translation
-torus_translation <- clustermq::Q(fun = simulate_torus_trans_association_strength, 
-                                  association_strength = association_strength, 
-                                  const = list(number_coloumns = number_coloumns, 
-                                               number_rows = number_rows, 
+torus_translation <- clustermq::Q(fun = simulate_torus_trans_association_strength,
+                                  association_strength = association_strength,
+                                  const = list(number_coloumns = number_coloumns,
+                                               number_rows = number_rows,
                                                resolution = resolution,
-                                               fract_dim = fract_dim, 
+                                               fract_dim = fract_dim,
                                                number_points = number_points),
-                                  export = list(create_simulation_species = create_simulation_species, 
+                                  export = list(create_simulation_species = create_simulation_species,
                                                 create_simulation_pattern = create_simulation_pattern,
-                                                detect_habitat_associations = detect_habitat_associations), 
-                                  seed = 42, 
-                                  n_jobs = length(association_strength) / 4, 
-                                  template = list(queue = "mpi", 
-                                                  walltime = "48:00", 
+                                                detect_habitat_associations = detect_habitat_associations),
+                                  seed = 42,
+                                  n_jobs = length(association_strength),
+                                  template = list(queue = "mpi",
+                                                  walltime = "48:00",
                                                   processes = 1))
 
 # combine results to one data frame
@@ -116,22 +122,22 @@ UtilityFunctions::save_rds(object = torus_translation,
                            overwrite = overwrite)
 
 # Gamma test
-gamma_test <- clustermq::Q(fun = simulate_point_process_association_strength, 
-                           association_strength = association_strength, 
-                           const = list(number_coloumns = number_coloumns, 
-                                        number_rows = number_rows, 
+gamma_test <- clustermq::Q(fun = simulate_point_process_association_strength,
+                           association_strength = association_strength,
+                           const = list(number_coloumns = number_coloumns,
+                                        number_rows = number_rows,
                                         resolution = resolution,
-                                        fract_dim = fract_dim, 
-                                        number_points = number_points, 
+                                        fract_dim = fract_dim,
+                                        number_points = number_points,
                                         n_random = n_random),
-                           export = list(create_simulation_species = create_simulation_species, 
+                           export = list(create_simulation_species = create_simulation_species,
                                          create_simulation_pattern = create_simulation_pattern,
-                                         detect_habitat_associations = detect_habitat_associations), 
-                           seed = 42, 
-                           n_jobs = length(association_strength) / 4, 
-                           template = list(queue = "mpi", 
-                                           walltime = "48:00", 
-                                           processes = 1)) 
+                                         detect_habitat_associations = detect_habitat_associations),
+                           seed = 42,
+                           n_jobs = length(association_strength),
+                           template = list(queue = "mpi",
+                                           walltime = "48:00",
+                                           processes = 1))
 
 # combine results to one data frame
 gamma_test <- dplyr::bind_rows(gamma_test)
@@ -140,7 +146,7 @@ UtilityFunctions::save_rds(object = gamma_test,
                            filename = paste0("gamma_test_", simulation_runs, "_runs.rds"),
                            path = paste0(getwd(), "/1_Simulation_study/3_Results/"),
                            overwrite = overwrite)
-                           
+
 # Pattern reconstruction
 pattern_reconstruction <- clustermq::Q(fun = simulate_pattern_recon_association_strength, 
                                        association_strength = association_strength, 
@@ -150,12 +156,14 @@ pattern_reconstruction <- clustermq::Q(fun = simulate_pattern_recon_association_
                                                     fract_dim = fract_dim, 
                                                     number_points = number_points, 
                                                     n_random = n_random, 
-                                                    max_runs = max_runs),
+                                                    max_runs = max_runs, 
+                                                    comp_fast = comp_fast,
+                                                    no_change = no_change),
                                        export = list(create_simulation_species = create_simulation_species, 
                                                      create_simulation_pattern = create_simulation_pattern,
                                                      detect_habitat_associations = detect_habitat_associations), 
                                        seed = 42, 
-                                       n_jobs = length(association_strength) / 4, 
+                                       n_jobs = length(association_strength), 
                                        template = list(queue = "mpi-long", 
                                                        walltime = "120:00", 
                                                        processes = 1))
@@ -163,7 +171,7 @@ pattern_reconstruction <- clustermq::Q(fun = simulate_pattern_recon_association_
 # combine results to one data frame
 pattern_reconstruction <- dplyr::bind_rows(pattern_reconstruction)
 
-UtilityFunctions::save_rds(object=pattern_reconstruction,
+UtilityFunctions::save_rds(object = pattern_reconstruction,
                            filename = paste0("pattern_reconstruction_", simulation_runs, "_runs.rds"),
                            path = paste0(getwd(), "/1_Simulation_study/3_Results/"),
                            overwrite = overwrite)
@@ -305,5 +313,3 @@ UtilityFunctions::save_rds(object=pattern_reconstruction,
 #     break()
 #   }
 # }
-
-
