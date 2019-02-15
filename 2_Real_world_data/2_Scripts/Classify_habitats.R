@@ -25,6 +25,8 @@ pattern_2007 <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/1_Data/2_pat
 pattern_2007_df <- spatstat::as.data.frame.ppp(pattern_2007) %>% 
   dplyr::filter(Type == "living")
 
+# pattern_2007_df$ID_new <- 1:nrow(pattern_2007_df)
+
 plot_area <- readr::read_rds(paste0(getwd(), 
                                     "/2_Real_world_data/1_Data/plot_area.rds"))
 
@@ -35,7 +37,7 @@ environmental_data_raster <- list.files(paste0(getwd(), "/2_Real_world_data/1_Da
     data <- readr::read_rds(x)
     data_raster <- raster::rasterFromXYZ(data)
     raster::mask(x = data_raster,
-                 mask = rgeos::gBuffer(plot_area, width = 10))
+                 mask = plot_area)
   })
 
 # get names of environmental data
@@ -53,18 +55,18 @@ names(environmental_data_raster) <- environmental_data_names
 environmental_data_raster <- raster::stack(environmental_data_raster)
 
 # import DEM
-environmental_data_DEM <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/1_Data/4_DEM.rds")) %>%
-  raster::crop(environmental_data_raster) %>% 
-  raster::setExtent(ext = raster::extent(environmental_data_raster)) %>%
-  raster::mask(mask = rgeos::gBuffer(plot_area, width = 10))
+# environmental_data_DEM <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/1_Data/4_DEM.rds")) %>%
+#   raster::crop(environmental_data_raster) %>% 
+#   raster::setExtent(ext = raster::extent(environmental_data_raster)) %>%
+#   raster::mask(mask = rgeos::gBuffer(plot_area, width = 10))
 
 # stack all layers to one RasterStack
-environmental_data_raster <- raster::stack(environmental_data_raster, 
-                                           environmental_data_DEM)
+# environmental_data_raster <- raster::stack(environmental_data_raster, 
+#                                            environmental_data_DEM)
 
 # only data that is inside plot
-environmental_data_raster <- raster::intersect(x = environmental_data_raster,
-                                               y = plot_area)
+# environmental_data_raster <- raster::intersect(x = environmental_data_raster,
+#                                                y = plot_area)
 
 # convert to data frame
 environmental_data_df <- raster::as.data.frame(environmental_data_raster)
@@ -83,27 +85,28 @@ pattern_2007_cell_id <- raster::extract(x = environmental_data_raster,
                                         y = pattern_2007_df[, 1:2], 
                                         cellnumbers = TRUE, df = TRUE, along = TRUE)
 
-# data frame including only  cell id, coords, and species
-pattern_2007_cell_id <- cbind(pattern_2007_cell_id[, 2], 
-                              pattern_2007_df[, c(1:2, 5, 10)])
+# combine data to get cell id and species information
+pattern_2007_cell_id <- cbind(pattern_2007_cell_id, 
+                              pattern_2007_df)
 
-# set names
-names(pattern_2007_cell_id)[1] <- "cell_id"
+# only non NA data
+pattern_2007_cell_id <- pattern_2007_cell_id[complete.cases(pattern_2007_cell_id), ]
+
+# data frame including only  cell id, and species
+pattern_2007_cell_id <- pattern_2007_cell_id[, c(2, 15, 20)]
 
 # Calculate importance value for each species in each cell
 species_iv <- dplyr::mutate(pattern_2007_cell_id, basal_area = (pi / 4) * DBH_07 ^ 2) %>%
-  dplyr::group_by(cell_id, Species) %>%
+  dplyr::group_by(cells, Species) %>%
   dplyr::summarise(n = n(),
                    ba_sum = sum(basal_area)) %>%
   dplyr::mutate(n_rel = n / sum(n),
                 ba_rel = ba_sum / sum(ba_sum),
                 importance_value = n_rel + ba_rel) %>%
-  dplyr::select(cell_id, Species, importance_value) %>%
+  dplyr::select(cells, Species, importance_value) %>%
   tidyr::spread(key = Species, value = importance_value,
                 fill = 0) %>% 
-  dplyr::full_join(y = tibble(cell_id = cell_ids),
-                   by = "cell_id") %>% 
-  dplyr::arrange(cell_id) %>% 
+  dplyr::arrange(cells) %>% 
   dplyr::mutate(Beech = tidyr::replace_na(Beech, 0),
                 Ash = tidyr::replace_na(Ash, 0),
                 Hornbeam = tidyr::replace_na(Hornbeam, 0),
@@ -140,10 +143,7 @@ set.seed(42)
 # ==> selected 6 groups
 mrt_model_soil <- mvpart::mvpart(form = formula_soil, 
                                  data = environmental_data_df, 
-                                 xv = "pick",
-                                 # size = 6,
-                                 xval = 10000,
-                                 xvmult = 100)
+                                 size = 5) # xv = "pick")
 
 # mrt_model_DEM <- mvpart::mvpart(form = formula_DEM, 
 #                                 data = environmental_data_df, 
