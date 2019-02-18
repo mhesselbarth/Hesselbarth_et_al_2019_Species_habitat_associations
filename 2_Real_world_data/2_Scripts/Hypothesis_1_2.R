@@ -36,7 +36,7 @@ library(tidyverse)
 # comp_fast <- 0
 # 
 # # Beech
-# beech <- spatstat::subset.ppp(pattern_2007_living, Species == "Beech")
+# beech <- spatstat::unmark(spatstat::subset.ppp(pattern_2007_living, Species == "Beech"))
 # 
 # # reconstruct pattern
 # # reconstructed_beech <- shar::reconstruct_pattern(pattern = beech, 
@@ -70,7 +70,7 @@ library(tidyverse)
 #                            path = paste0(getwd(), "/2_Real_world_data/3_Results"))
 # 
 # # Ash
-# ash <- subset.ppp(pattern_2007_living, Species == "Ash")
+# ash <- spatstat::unmark(subset.ppp(pattern_2007_living, Species == "Ash"))
 # 
 # # reconstruct pattern
 # # reconstructed_ash <- shar::reconstruct_pattern(pattern = ash, 
@@ -103,7 +103,7 @@ library(tidyverse)
 #                            path = paste0(getwd(), "/2_Real_world_data/3_Results"))
 # 
 # # Hornbeam
-# hornbeam <- subset.ppp(pattern_2007_living, Species == "Hornbeam")
+# hornbeam <- spatstat::unmark(subset.ppp(pattern_2007_living, Species == "Hornbeam"))
 # 
 # # reconstruct pattern
 # # reconstructed_hornbeam <- shar::reconstruct_pattern(pattern = hornbeam, 
@@ -136,7 +136,7 @@ library(tidyverse)
 #                            path = paste0(getwd(), "/2_Real_world_data/3_Results"))
 # 
 # # Sycamore
-# sycamore <- subset.ppp(pattern_2007_living, Species == "Sycamore")
+# sycamore <- spatstat::unmark(subset.ppp(pattern_2007_living, Species == "Sycamore"))
 # 
 # # reconstruct pattern
 # # reconstructed_sycamore <- shar::reconstruct_pattern(pattern = sycamore, 
@@ -169,7 +169,7 @@ library(tidyverse)
 #                            path = paste0(getwd(), "/2_Real_world_data/3_Results"))
 # 
 # # others
-# others <- subset.ppp(pattern_2007_living, Species == "others")
+# others <- spatstat::unmark(subset.ppp(pattern_2007_living, Species == "others"))
 # 
 # # reconstruct pattern
 # # reconstructed_others <- shar::reconstruct_pattern(pattern = others, 

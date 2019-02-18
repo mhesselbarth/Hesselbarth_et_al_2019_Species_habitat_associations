@@ -26,9 +26,9 @@ library(tidyverse)
 # beech <- spatstat::subset.ppp(pattern_2007, Species == "Beech")
 # 
 # # split into living and dead
-# beech_living <- spatstat::subset.ppp(beech, Type != "dead")
+# beech_living <- spatstat::unmark(spatstat::subset.ppp(beech, Type != "dead"))
 # 
-# beech_dead <- spatstat::subset.ppp(beech, Type == "dead")
+# beech_dead <- spatstat::unmark(spatstat::subset.ppp(beech, Type == "dead"))
 # 
 # # set parameters
 # # n_random <- 199 # 199

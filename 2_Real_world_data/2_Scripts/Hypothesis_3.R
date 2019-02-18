@@ -30,11 +30,11 @@ library(tidyverse)
 # beech <- spatstat::subset.ppp(pattern_2007_living, Species == "Beech")
 # 
 # # split into DBH groups
-# beech_small <- spatstat::subset.ppp(beech, DBH_group == "small")
+# beech_small <- spatstat::unmark(spatstat::subset.ppp(beech, DBH_group == "small"))
 # 
-# beech_medium <- spatstat::subset.ppp(beech, DBH_group == "medium")
+# beech_medium <- spatstat::unmark(spatstat::subset.ppp(beech, DBH_group == "medium"))
 # 
-# beech_large <- spatstat::subset.ppp(beech, DBH_group == "large")
+# beech_large <- spatstat::unmark(spatstat::subset.ppp(beech, DBH_group == "large"))
 # 
 # # set parameters
 # # n_random <- 199 # 199
