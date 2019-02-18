@@ -41,7 +41,7 @@ library(tidyverse)
 # n_random <- rep(1, 199) # if HPC is used
 # max_runs <- 20000 # 20000
 # fitting <- TRUE # TRUE
-# comp_fast <- TRUE
+# comp_fast <- 0
 # 
 # # reconstruct pattern
 # 
