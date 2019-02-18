@@ -175,15 +175,8 @@ soil_mrt_classified <- raster::rasterFromXYZ(classification_df_soil)
 
 
 #### Add values on edge ####
-
-soil_mrt_classified_padded <- landscapemetrics::pad_raster(soil_mrt_classified, 
-                                                           pad_raster_value = NA)[[1]]
-
-soil_mrt_classified <- landscapemetrics::matrix_to_raster(matrix = soil_mrt_classified_padded, 
-                                                          extent = raster::extent(soil_mrt_classified) + 
-                                                            raster::res(soil_mrt_classified)[[1]] * 2, 
-                                                          resolution = raster::res(soil_mrt_classified), 
-                                                          crs = raster::crs(soil_mrt_classified))
+soil_mrt_classified <- landscapemetrics::pad_raster(soil_mrt_classified, 
+                                                    pad_raster_value = NA)[[1]]
 
 cells_na <- raster::Which(is.na(soil_mrt_classified), 
                           cells = TRUE)
