@@ -173,9 +173,44 @@ soil_mrt_classified <- raster::rasterFromXYZ(classification_df_soil)
 #                                         y = raster_coords[, 2],
 #                                         class = factor(mrt_model_DEM$where))
 
+
+#### Add values on edge ####
+
+soil_mrt_classified_padded <- landscapemetrics::pad_raster(soil_mrt_classified, 
+                                                           pad_raster_value = NA)[[1]]
+
+soil_mrt_classified <- landscapemetrics::matrix_to_raster(matrix = soil_mrt_classified_padded, 
+                                                          extent = raster::extent(soil_mrt_classified) + 
+                                                            raster::res(soil_mrt_classified)[[1]] * 2, 
+                                                          resolution = raster::res(soil_mrt_classified), 
+                                                          crs = raster::crs(soil_mrt_classified))
+
+cells_na <- raster::Which(is.na(soil_mrt_classified), 
+                          cells = TRUE)
+
+neighbours <- raster::adjacent(x = soil_mrt_classified, 
+                               cells = cells_na, 
+                               directions = 8)
+
+neighbours_value <- tibble::tibble(focal = neighbours[, 1],
+                                   neighbour = neighbours[, 2],
+                                   x = soil_mrt_classified[neighbours[, 2]]) %>% 
+  dplyr::filter(!is.na(x)) %>%
+  dplyr::group_by(neighbour, focal) %>% 
+  dplyr::summarise(x =  as.numeric(names(which.max(table(x)))))
+
+soil_mrt_classified[neighbours_value$focal] <- neighbours_value$x
+
 #### Plot results ####
-ggplot2::ggplot(data = classification_df_soil, ggplot2::aes(x = x, y = y)) + 
-  ggplot2::geom_raster(ggplot2::aes(fill = class)) + 
+plot_area_matrix <- as.data.frame(raster::geom(plot_area))
+soil_mrt_classified_df <- raster::as.data.frame(soil_mrt_classified, xy = TRUE)
+soil_mrt_classified_df$layer<- as.factor(soil_mrt_classified_df$layer)
+
+ggplot2::ggplot(data = soil_mrt_classified_df, ggplot2::aes(x = x, y = y)) + 
+  ggplot2::geom_raster(ggplot2::aes(fill = layer)) + 
+  ggplot2::geom_polygon(data = plot_area_matrix, 
+                        aes(x = plot_area_matrix[, 5], y = plot_area_matrix[, 6]), 
+                        fill = NA, col = "black") + 
   ggplot2::coord_equal() + 
   ggplot2::scale_fill_viridis_d() + 
   ggplot2::theme_bw()
@@ -209,4 +244,3 @@ UtilityFunctions::save_rds(object = soil_mrt_classified,
                            path = paste0(getwd(), "/2_Real_world_data/3_Results"),
                            filename = "soil_mrt_classified.rds", 
                            overwrite = FALSE)
-
