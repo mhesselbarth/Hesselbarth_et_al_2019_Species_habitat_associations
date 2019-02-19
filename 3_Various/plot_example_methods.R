@@ -1,10 +1,9 @@
-#### Examples methods #### 
-
 ###################################################
-##    Author: Maximilian Hesselbarth             ##
+##    Author: Maximilian H.K. Hesselbarth        ##
 ##    Department of Ecosystem Modelling          ##
 ##    University of Goettingen                   ##
 ##    maximilian.hesselbarth@uni-goettingen.de   ##
+##    www.github.com/mhesselbarth                ##
 ###################################################
 
 #### 1. Import packages and data ####
@@ -12,44 +11,45 @@
 # Packages #
 library(patchwork)
 library(raster)
-library(RColorBrewer)
 library(spatstat)
 library(tidyverse)
 
 #### 1. Input data ####
-results <- list.files(paste0(getwd(), '/4_Output'), pattern = 'o00_', full.names = TRUE) %>%
+
+# import data
+results <- list.files(path = "3_Various/1_Output/", full.names = TRUE) %>%
   purrr::map(function(files) readr::read_rds(files))
 
-results_names <- list.files(paste0(getwd(), '/4_Output'), pattern = 'o00_', full.names = FALSE) %>%
+# get names of input
+results_names <- list.files(path = "3_Various/1_Output/", full.names = FALSE) %>%
   purrr::map_chr(function(files) files)
 
-results_names <- stringr::str_sub(results_names, start = 1, end = -5)
-names_split <- stringr::str_split(results_names, pattern = "_", simplify = TRUE)
-names_combined <- paste0(names_split[, 2], "_", names_split[, 3])
-names(results) <- names_combined
-
-colors_spec <- rev(RColorBrewer::brewer.pal(n = 5, name = "Spectral"))
+# assign names to result list
+names(results) <- stringr::str_sub(results_names, start = 1, end = -5)
 
 #### Plot results ####
 
-point_size = 3.5
+# set point size
+point_size <- 3
 
 # Observed
-
+# convert to data frame
 simulation_landscape <- raster::as.data.frame(results$simulation_landscape, xy = TRUE)
-simulation_landscape$Method <- "(a) Observed"
+
+# set method
+simulation_landscape$method <- "(a) Observed"
 
 plot_observed <- ggplot() +
   geom_raster(data = simulation_landscape, aes(x = x, y = y, fill = factor(layer))) +
   geom_point(data = as.data.frame(results$example_species),
              aes(x = x, y = y), size = point_size) +
-  facet_wrap(~ Method, ncol = 1, nrow = 1) +
-  scale_fill_manual(values = colors_spec) + 
+  facet_wrap(~ method, ncol = 1, nrow = 1) +
+  scale_fill_viridis_d() +
   theme_classic() + 
   theme(aspect.ratio = 1, 
         panel.spacing = unit(15, "mm"),
         legend.position = "none", 
-        text = element_text(size = 30),
+        text = element_text(size = 32.5),
         axis.title = element_blank(),
         axis.text = element_blank(),
         axis.ticks = element_blank())
@@ -63,12 +63,12 @@ plot_gamma_test <- ggplot(data = gamma_test) +
               aes(x = x, y = y, fill = factor(layer))) +
   geom_point(aes(x = x, y = y), size = point_size) +
   facet_wrap(~ method, ncol = 1, nrow = 1) +
-  scale_fill_manual(values = colors_spec) + 
+  scale_fill_viridis_d() +
   theme_classic() + 
   theme(aspect.ratio = 1, 
         panel.spacing = unit(15, "mm"),
         legend.position = "none", 
-        text = element_text(size = 30),
+        text = element_text(size = 32.5),
         axis.title = element_blank(),
         axis.text = element_blank(),
         axis.ticks = element_blank())
@@ -82,12 +82,12 @@ plot_torus_translation_test <- ggplot(data = torus_translation) +
   geom_point(data = as.data.frame(results$example_species), 
              aes(x = x, y = y), size = point_size) +
   facet_wrap(~ method, ncol = 1, nrow = 1) +
-  scale_fill_manual(values = colors_spec) + 
+  scale_fill_viridis_d() +
   theme_classic() + 
   theme(aspect.ratio = 1, 
         panel.spacing = unit(15, "mm"),
         legend.position = "none", 
-        text = element_text(size = 30),
+        text = element_text(size = 32.5),
         axis.title = element_blank(),
         axis.text = element_blank(),
         axis.ticks = element_blank())
@@ -102,12 +102,12 @@ plot_patch_randomization_algorithm <- ggplot(data = patch_randomization) +
   geom_point(data = as.data.frame(results$example_species), 
              aes(x = x, y = y), size = point_size) +
   facet_wrap(~ method, ncol = 1, nrow = 1) +
-  scale_fill_manual(values = colors_spec) + 
+  scale_fill_viridis_d() +
   theme_classic() + 
   theme(aspect.ratio = 1, 
         panel.spacing = unit(15, "mm"),
         legend.position = "none",
-        text = element_text(size = 30),
+        text = element_text(size = 32.5),
         axis.title = element_blank(),
         axis.text = element_blank(),
         axis.ticks = element_blank())
@@ -122,12 +122,12 @@ plot_pattern_reconstruction <- ggplot(data = pattern_reconstruction) +
               aes(x = x, y = y, fill = factor(layer))) +
   geom_point(aes(x = x, y = y), size = point_size) +
   facet_wrap(~ method, ncol = 1, nrow = 1) +
-  scale_fill_manual(values = colors_spec) + 
+  scale_fill_viridis_d() +
   theme_classic() + 
   theme(aspect.ratio = 1, 
         panel.spacing = unit(15, "mm"),
         legend.position = "none", 
-        text = element_text(size = 30),
+        text = element_text(size = 32.5),
         axis.title = element_blank(),
         axis.text = element_blank(),
         axis.ticks = element_blank())
@@ -135,7 +135,9 @@ plot_pattern_reconstruction <- ggplot(data = pattern_reconstruction) +
 
 # Plot overall
 
+# set plot size for overall
 width_plot <- 1
+
 width_spacer <- 0.25
 
 plot_overall <- plot_observed + plot_spacer() + 
@@ -152,17 +154,20 @@ plot_overall <- plot_observed + plot_spacer() +
 
 #### 6. Save plot ####
 
+# set plot saving parameters
 width <- 700
+
 heigth <- 180 
+
 overwrite <- FALSE
 
 UtilityFunctions::save_ggplot(plot = plot_overall,
-                              filename = "p00_plot_methods.png",
-                              path = "6_Figures",
-                              overwrite = overwrite,
+                              filename = "plot_methods.png",
+                              path = "3_Various/2_Figures/",
                               width = width,
                               height = heigth,
-                              units = "mm")
+                              units = "mm", 
+                              overwrite = overwrite)
 
 # UtilityFunctions::save_ggplot(plot = plot_gamma_test, 
 #                               filename = "p00_plot_gamma_test.png", 

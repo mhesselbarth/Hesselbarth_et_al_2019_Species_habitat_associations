@@ -202,6 +202,9 @@ library(tidyverse)
 #### Plot results ####
 soil_mrt_classified <- readr::read_rds("2_Real_world_data/3_Results/soil_mrt_classified.rds")
 
+plot_area <- readr::read_rds(paste0(getwd(),
+                                    "/2_Real_world_data/1_Data/plot_area.rds"))
+
 plot_area_matrix <- as.data.frame(raster::geom(plot_area))
 
 soil_mrt_classified_df <- raster::as.data.frame(soil_mrt_classified, xy = TRUE) %>%
