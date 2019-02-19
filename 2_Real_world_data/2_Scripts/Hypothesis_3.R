@@ -17,13 +17,14 @@ library(shar) # devtools::install_github("r-spatialecology/shar")
 library(spatstat)
 library(tidyverse)
 
-# #### Pattern reconstruction ####
+#### Pattern reconstruction ####
 # 
 # # import point pattern data
 # pattern_2007 <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/1_Data/2_pattern_2007.rds"))
 # 
 # # split into living and dead
 # pattern_2007_living <- spatstat::subset.ppp(pattern_2007, Type != "dead")
+# 
 # pattern_2007_dead <- spatstat::subset.ppp(pattern_2007, Type == "dead")
 # 
 # # only enough individuals in all groups for beech
@@ -38,17 +39,21 @@ library(tidyverse)
 # 
 # # set parameters
 # # n_random <- 199 # 199
+# 
 # n_random <- rep(1, 199) # if HPC is used
+# 
 # max_runs <- 20000 # 20000
+# 
 # fitting <- TRUE # TRUE
+# 
 # comp_fast <- 0
 # 
 # # reconstruct pattern
 # 
 # # small
-# # reconstructed_beech_small <- shar::reconstruct_pattern(pattern = beech_small, 
-# #                                                        n_random = n_random, 
-# #                                                        max_runs = max_runs, 
+# # reconstructed_beech_small <- shar::reconstruct_pattern(pattern = beech_small,
+# #                                                        n_random = n_random,
+# #                                                        max_runs = max_runs,
 # #                                                        fitting = fitting)
 # 
 # reconstructed_beech_small <- clustermq::Q(fun = reconstruct_pattern,
@@ -66,19 +71,22 @@ library(tidyverse)
 #                                                           walltime = "48:00",
 #                                                           processes = 1))
 # 
-# reconstructed_beech_small[[length(n_random) + 1]] <- spatstat::unmark(beech_small)
+# # add observed pattern
+# reconstructed_beech_small[[length(n_random) + 1]] <- beech_small
+# 
+# # add names to list
 # names(reconstructed_beech_small) <- c(paste0("randomized_", seq_along(n_random)),
 #                                       "observed")
 # 
 # # save reconstructed pattern
-# UtilityFunctions::save_rds(object = reconstructed_beech_small, 
-#                            filename = "reconstructed_beech_small.rds", 
+# UtilityFunctions::save_rds(object = reconstructed_beech_small,
+#                            filename = "reconstructed_beech_small.rds",
 #                            path = paste0(getwd(), "/2_Real_world_data/3_Results"))
 # 
 # # medium
-# # reconstructed_beech_medium <- shar::reconstruct_pattern(pattern = beech_medium, 
-# #                                                         n_random = n_random, 
-# #                                                         max_runs = max_runs, 
+# # reconstructed_beech_medium <- shar::reconstruct_pattern(pattern = beech_medium,
+# #                                                         n_random = n_random,
+# #                                                         max_runs = max_runs,
 # #                                                         fitting = fitting)
 # 
 # reconstructed_beech_medium <- clustermq::Q(fun = reconstruct_pattern,
@@ -96,29 +104,32 @@ library(tidyverse)
 #                                                            walltime = "48:00",
 #                                                            processes = 1))
 # 
-# reconstructed_beech_medium[[length(n_random) + 1]] <- spatstat::unmark(beech_medium)
+# # add observed pattern
+# reconstructed_beech_medium[[length(n_random) + 1]] <- beech_medium
+# 
+# # add names to list
 # names(reconstructed_beech_medium) <- c(paste0("randomized_", seq_along(n_random)),
 #                                        "observed")
 # 
 # # save reconstructed pattern
-# UtilityFunctions::save_rds(object = reconstructed_beech_medium, 
-#                            filename = "reconstructed_beech_medium.rds", 
+# UtilityFunctions::save_rds(object = reconstructed_beech_medium,
+#                            filename = "reconstructed_beech_medium.rds",
 #                            path = paste0(getwd(), "/2_Real_world_data/3_Results"))
 # 
 # # large
-# # reconstructed_beech_large <- shar::reconstruct_pattern(pattern = beech_large, 
-# #                                                         n_random = n_random, 
-# #                                                         max_runs = max_runs, 
+# # reconstructed_beech_large <- shar::reconstruct_pattern(pattern = beech_large,
+# #                                                         n_random = n_random,
+# #                                                         max_runs = max_runs,
 # #                                                         fitting = fitting)
 # 
 # reconstructed_beech_large <- clustermq::Q(fun = reconstruct_pattern,
 #                                           n_random = n_random,
 #                                           const = list(pattern = beech_large,
 #                                                        max_runs = max_runs,
-#                                                        fitting = fitting, 
+#                                                        fitting = fitting,
 #                                                        comp_fast = comp_fast,
 #                                                        return_input = FALSE,
-#                                                        simplify = TRUE, 
+#                                                        simplify = TRUE,
 #                                                        verbose = FALSE),
 #                                           seed = 42,
 #                                           n_jobs = length(n_random),
@@ -126,13 +137,16 @@ library(tidyverse)
 #                                                           walltime = "48:00",
 #                                                           processes = 1))
 # 
-# reconstructed_beech_large[[length(n_random) + 1]] <- spatstat::unmark(beech_large)
+# # add observed pattern
+# reconstructed_beech_large[[length(n_random) + 1]] <- beech_large
+# 
+# # add names to list
 # names(reconstructed_beech_large) <- c(paste0("randomized_", seq_along(n_random)),
 #                                       "observed")
 # 
 # # save reconstructed pattern
-# UtilityFunctions::save_rds(object = reconstructed_beech_large, 
-#                            filename = "reconstructed_beech_large.rds", 
+# UtilityFunctions::save_rds(object = reconstructed_beech_large,
+#                            filename = "reconstructed_beech_large.rds",
 #                            path = paste0(getwd(), "/2_Real_world_data/3_Results"))
 # 
 #### Environmental data ####
@@ -149,12 +163,16 @@ library(tidyverse)
 # 
 # names_environment <- list.files(paste0(getwd(), "/2_Real_world_data/1_Data"), pattern = '3_')
 
+# import MRT classification
 soil_mrt_classified <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/soil_mrt_classified.rds"))
 
 #### Habitat associations ####
 
+# import reconstructed pattern
 reconstructed_beech_small <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/reconstructed_beech_small.rds"))
+
 reconstructed_beech_medium <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/reconstructed_beech_medium.rds"))
+
 reconstructed_beech_large <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/reconstructed_beech_large.rds"))
 
 # small
@@ -166,6 +184,7 @@ reconstructed_beech_large <- readr::read_rds(paste0(getwd(), "/2_Real_world_data
 # 
 # names(associations_beech_small) <- names_environment
 
+# get habitat associations to MRT map
 associations_beech_small <- shar::results_habitat_association(pattern = reconstructed_beech_small, 
                                                               raster = soil_mrt_classified)
 
@@ -178,6 +197,7 @@ associations_beech_small <- shar::results_habitat_association(pattern = reconstr
 # 
 # names(associations_beech_medium) <- names_environment
 
+# get habitat associations to MRT map
 associations_beech_medium <- shar::results_habitat_association(pattern = reconstructed_beech_medium, 
                                                                raster = soil_mrt_classified)
 
@@ -190,6 +210,7 @@ associations_beech_medium <- shar::results_habitat_association(pattern = reconst
 # 
 # names(associations_beech_large) <- names_environment
 
+# get habitat associations to MRT map
 associations_beech_large <- shar::results_habitat_association(pattern = reconstructed_beech_large, 
                                                               raster = soil_mrt_classified)
 

@@ -17,7 +17,7 @@ library(shar) # devtools::install_github("r-spatialecology/shar")
 library(spatstat)
 library(tidyverse)
 
-# #### Pattern reconstruction ####
+#### Pattern reconstruction ####
 # 
 # # import point pattern data
 # pattern_2007 <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/1_Data/2_pattern_2007.rds"))
@@ -33,17 +33,20 @@ library(tidyverse)
 # # set parameters
 # # n_random <- 199 # 199
 # n_random <- rep(1, 199) # if HPC is used
+# 
 # max_runs <- 20000 # 20000
+# 
 # fitting <- TRUE # TRUE
+# 
 # comp_fast <- 0
 # 
 # # reconstruct pattern
 # 
 # # living
-# # reconstructed_beech_living <- shar::reconstruct_pattern(pattern = beech_living, 
-# #                                                         n_random = n_random, 
-# #                                                         max_runs = max_runs, 
-# #                                                         fitting = fitting, 
+# # reconstructed_beech_living <- shar::reconstruct_pattern(pattern = beech_living,
+# #                                                         n_random = n_random,
+# #                                                         max_runs = max_runs,
+# #                                                         fitting = fitting,
 # #                                                         comp_fast = TRUE)
 # 
 # reconstructed_beech_living <- clustermq::Q(fun = reconstruct_pattern,
@@ -61,19 +64,22 @@ library(tidyverse)
 #                                                            walltime = "48:00",
 #                                                            processes = 1))
 # 
+# # add observed pattern
 # reconstructed_beech_living[[length(n_random) + 1]] <- spatstat::unmark(beech_living)
+# 
+# # add names to list
 # names(reconstructed_beech_living) <- c(paste0("randomized_", seq_along(n_random)),
 #                                        "observed")
 # 
 # # save reconstructed pattern
-# UtilityFunctions::save_rds(object = reconstructed_beech_living, 
-#                            filename = "reconstructed_beech_living.rds", 
+# UtilityFunctions::save_rds(object = reconstructed_beech_living,
+#                            filename = "reconstructed_beech_living.rds",
 #                            path = paste0(getwd(), "/2_Real_world_data/3_Results"))
 # 
 # # dead
-# # reconstructed_beech_dead <- shar::reconstruct_pattern(pattern = beech_dead, 
-# #                                                       n_random = n_random, 
-# #                                                       max_runs = max_runs, 
+# # reconstructed_beech_dead <- shar::reconstruct_pattern(pattern = beech_dead,
+# #                                                       n_random = n_random,
+# #                                                       max_runs = max_runs,
 # #                                                       fitting = fitting)
 # 
 # reconstructed_beech_dead <- clustermq::Q(fun = reconstruct_pattern,
@@ -82,7 +88,7 @@ library(tidyverse)
 #                                                       max_runs = max_runs,
 #                                                       fitting = fitting,
 #                                                       comp_fast = comp_fast,
-#                                                       return_input = FALSE, 
+#                                                       return_input = FALSE,
 #                                                       simplify = TRUE,
 #                                                       verbose = FALSE),
 #                                          seed = 42,
@@ -91,13 +97,16 @@ library(tidyverse)
 #                                                          walltime = "48:00",
 #                                                          processes = 1))
 # 
+# # add observed pattern
 # reconstructed_beech_dead[[length(n_random) + 1]] <- spatstat::unmark(beech_dead)
+# 
+# # add names to list
 # names(reconstructed_beech_dead) <- c(paste0("randomized_", seq_along(n_random)),
 #                                      "observed")
 # 
 # # save reconstructed pattern
-# UtilityFunctions::save_rds(object = reconstructed_beech_dead, 
-#                            filename = "reconstructed_beech_dead.rds", 
+# UtilityFunctions::save_rds(object = reconstructed_beech_dead,
+#                            filename = "reconstructed_beech_dead.rds",
 #                            path = paste0(getwd(), "/2_Real_world_data/3_Results"))
 # 
 #### Environmental data ####
@@ -114,11 +123,14 @@ library(tidyverse)
 # 
 # names_environment <- list.files(paste0(getwd(), "/2_Real_world_data/1_Data"), pattern = '3_')
 
+# import MRT classified map
 soil_mrt_classified <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/soil_mrt_classified.rds"))
 
 #### Habitat associations ####
 
+# import reconstructed patterns
 reconstructed_beech_living <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/reconstructed_beech_living.rds"))
+
 reconstructed_beech_dead <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/reconstructed_beech_dead.rds"))
 
 # living
@@ -130,6 +142,7 @@ reconstructed_beech_dead <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/
 # 
 # names(associations_beech_living) <- names_environment
 
+# associations between MRT map and pattern
 associations_beech_living <- shar::results_habitat_association(pattern = reconstructed_beech_living, 
                                                                raster = soil_mrt_classified)
 
@@ -142,6 +155,7 @@ associations_beech_living <- shar::results_habitat_association(pattern = reconst
 # 
 # names(associations_beech_dead) <- names_environment
 
+# associations between MRT map and pattern
 associations_beech_dead <- shar::results_habitat_association(pattern = reconstructed_beech_dead, 
                                                              raster = soil_mrt_classified)
 
