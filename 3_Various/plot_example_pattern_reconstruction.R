@@ -108,12 +108,14 @@ pcf_null_model$method <- factor(pcf_null_model$method,
 
 #### 3. Plot results ###
 plot_method_comparison <- ggplot() + 
+  geom_line(data = pcf_observed, aes(x = r, y = theo, col = "CSR"), linetype = 2, size = 1) +
   geom_line(data = pcf_null_model, aes(x = r, y = lo, col = method), size = 1) +
   geom_line(data = pcf_null_model, aes(x = r, y = hi, col = method), size = 1) +
   geom_line(data = pcf_observed, aes(x = r, y = iso, col = "Observed"), size = 1) +
   scale_color_manual(values = c("Gamma test" = "#1b9e77",
                                 "Pattern reconstruction" = "#7570b3", 
-                                "Observed" = "black"), 
+                                "Observed" = "black", 
+                                "CSR" = "grey"), 
                      name = "") +
   facet_wrap(~ species, scales = "free") +
   labs(x = "r [m]", y = "g(r)") +
