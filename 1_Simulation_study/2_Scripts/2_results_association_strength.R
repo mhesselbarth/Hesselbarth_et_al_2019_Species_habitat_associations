@@ -9,118 +9,115 @@
 #### Simulation study - Results ####
 
 # Packages #
+library(shar)
+library(spatstat)
 library(tidyverse)
 
-# Data #
-results <- list.files(paste0(getwd(), '1_Simulation_study/3_Results'), full.names = TRUE) %>%
+# import results simulation study
+results <- list.files(path = "1_Simulation_study/3_Results/", full.names = TRUE) %>%
   purrr::map(function(files) readr::read_rds(files))
 
-names_result <- list.files(paste0(getwd(), '/4_Output'), pattern = 'o1_', full.names = FALSE)
-names_short <- stringr::str_sub(names_result, start = 1, end = -5)
-names_split <- stringr::str_split(names_short, pattern = "_", simplify = TRUE)
-names_combined <- paste0(names_split[, 2], "_", names_split[, 3], 
-                         "_", names_split[, 4], "_", names_split[, 5])
+# get names of results
+names_result <- list.files(path = "1_Simulation_study/3_Results/", full.names = FALSE)
 
-names(results) <- names_combined
+# add names to result
+names(results) <- stringr::str_sub(names_result, start = 1, end = -13)
 
 #### 2. Preprocessing data ####
 
-pattern <- "_100_100"
-
-results_filter <- results[stringr::str_detect(names(results), pattern = pattern)]
-names(results_filter)
-
-results_summarised <- purrr::map_dfr(results_filter, function(current_result) {
-
-  species_type_df <- dplyr::mutate(current_result,
-                                   Species_type= dplyr::case_when(Species_code == 1 ~ "Complete spatial randomness (positive association)",
-                                                                  Species_code == 2 ~ "Cluster process (positive association)",
-                                                                  Species_code == 3 ~ "Complete spatial randomness (negative association)",
-                                                                  Species_code == 4 ~ "Cluster process (negative association)"))
+# summarise the results
+results <- purrr::map_dfr(results, function(current_result) {
   
-  species_type_df_grouped <- dplyr::group_by(species_type_df, Species_type, Variable)
-  
-  dplyr::summarise(species_type_df_grouped,
-                   Correct_mean = mean(Correct),
-                   Correct_hi = mean(Correct) + (stats::sd(Correct, na.rm=T)/sqrt(length(Correct))),
-                   Correct_lo = mean(Correct) - (stats::sd(Correct, na.rm=T)/sqrt(length(Correct))),
-                   
-                   False_mean = mean(False),
-                   False_hi = mean(False) + (stats::sd(False, na.rm=T)/sqrt(length(False))),
-                   False_lo = mean(False) - (stats::sd(False, na.rm=T)/sqrt(length(False)))
-                   )
-}, .id = "Method")
+  dplyr::mutate(current_result,
+                species_type = dplyr::case_when(species_code == 1 ~ "Complete spatial randomness (positive association)",
+                species_code == 2 ~ "Cluster process (positive association)",
+                species_code == 3 ~ "Complete spatial randomness (negative association)",
+                species_code == 4 ~ "Cluster process (negative association)")) %>%
+    dplyr::group_by(species_type, variable) %>%
+    dplyr::summarise(correct_mean = mean(correct),
+                     correct_hi = mean(correct) + (stats::sd(correct, na.rm=T)/sqrt(length(correct))),
+                     correct_lo = mean(correct) - (stats::sd(correct, na.rm=T)/sqrt(length(correct))),
+                     
+                     false_mean = mean(false),
+                     false_hi = mean(false) + (stats::sd(false, na.rm=T)/sqrt(length(false))),
+                     false_lo = mean(false) - (stats::sd(false, na.rm=T)/sqrt(length(false)))
+                     )
+  }, .id = "method")
 
-results_summarised <- dplyr::mutate(results_summarised, Method = dplyr::case_when(Method == paste0("point_process", pattern) ~ "(I) Gamma test", 
-                                                                                  Method == paste0("torus_translation", pattern) ~ "(II) Torus-translation test", 
-                                                                                  Method == paste0("habitat_randomization", pattern) ~ "(III) Patch randomization test", 
-                                                                                  Method == paste0("pattern_reconstruction", pattern) ~ "(IV) Pattern reconstruction"))
+# Rename method for nicer plotting
+results <- dplyr::mutate(results, method = dplyr::case_when(method == "gamma_test" ~ "(I) Gamma test", 
+                                                            method == "torus_translation" ~ "(II) Torus-translation test", 
+                                                            method == "habitat_randomization" ~ "(III) Patch randomization test", 
+                                                            method == "pattern_reconstruction" ~ "(IV) Pattern reconstruction"))
 
-results_summarised$Method <- factor(results_summarised$Method, 
-                                    levels = c("(I) Gamma test",               
-                                               "(II) Torus-translation test", 
-                                               "(III) Patch randomization test", 
-                                               "(IV) Pattern reconstruction"))
+# convert the results col as factor
+results$method <- factor(results$method, 
+                         levels = c("(I) Gamma test",               
+                                    "(II) Torus-translation test", 
+                                    "(III) Patch randomization test", 
+                                    "(IV) Pattern reconstruction"))
 
-results_summarised$Species_type <- factor(results_summarised$Species_type, 
-                                          levels = c("Complete spatial randomness (positive association)", 
-                                                     "Cluster process (positive association)",
-                                                     "Complete spatial randomness (negative association)",
-                                                     "Cluster process (negative association)"))
+# convert species type col as factor
+results$species_type <- factor(results$species_type, 
+                               levels = c("Complete spatial randomness (positive association)", 
+                                          "Cluster process (positive association)",
+                                          "Complete spatial randomness (negative association)",
+                                          "Cluster process (negative association)"))
 
 
 #### 3. Plotting data ####
 
-colors_spec <- rev(RColorBrewer::brewer.pal(n = 4, name = "Spectral"))
-
-strength_association_correct_ggplot <- ggplot(data = results_summarised) +
-  geom_line(aes(x = Variable, y = Correct_mean, col = Method, group = Method), size = 1.5) +
-  geom_ribbon(aes(x = Variable, ymin = Correct_lo, ymax = Correct_hi, fill = Method, group = Method), alpha = 0.3) +
-  facet_wrap(~ Species_type, nrow = 2, ncol = 2) + 
+# plot correct detections
+strength_association_correct_ggplot <- ggplot(data = results) +
+  geom_line(aes(x = variable, y = correct_mean, col = method, group = method), size = 1.5) +
+  geom_ribbon(aes(x = variable, ymin = correct_lo, ymax = correct_hi, fill = method, group = method), alpha = 0.3) +
+  facet_wrap(~ species_type, nrow = 2, ncol = 2) + 
   scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.25)) +
-  scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2)) +
-  scale_fill_manual(values = colors_spec, name = '') +
-  scale_colour_manual(values = colors_spec, name = '') +
+  scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.1)) +
+  scale_fill_viridis_d(name = "") +
+  scale_colour_viridis_d(name = "") +
   labs(x = expression(paste("Association strength ", alpha)), y = "Mean correct detections") +
-  theme_classic(base_size = 25) + 
+  theme_classic(base_size = 28.5) + 
   theme(legend.position = "bottom", 
         panel.spacing.x = unit(25, "mm"), 
         panel.spacing.y = unit(15, "mm"), 
         legend.key.size = unit(15, "mm"))
 
-strength_association_false_ggplot <- ggplot(data = results_summarised) +
-  geom_line(aes(x = Variable, y = False_mean, 
-                col = Method, group = Method), size = 1) +
-  geom_ribbon(aes(x = Variable, ymin = False_lo, ymax = False_hi, 
-                  fill = Method, group = Method), alpha = 0.3) +
-  facet_wrap(~ Species_type, nrow = 2, ncol = 2) + 
+# plot wrong detections
+strength_association_false_ggplot <- ggplot(data = results) +
+  geom_line(aes(x = variable, y = false_mean, col = method, group = method), size = 1) +
+  geom_ribbon(aes(x = variable, ymin = false_lo, ymax = false_hi, fill = method, group = method), alpha = 0.3) +
+  facet_wrap(~ species_type, nrow = 2, ncol = 2) + 
   scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2)) +
   scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2)) +
-  scale_fill_manual(values = colors_spec, name = '') +
-  scale_colour_manual(values = colors_spec, name = '') +
+  scale_fill_viridis_d(name = "") +
+  scale_colour_viridis_d(name = "") +
   labs(x = expression(paste("Association strength ", alpha)), y = "Mean false detections") +
-  theme_classic(base_size = 40) + 
+  theme_classic(base_size = 28.5) + 
   theme(legend.position = "bottom", 
         panel.spacing.x = unit(50, "mm"), 
         panel.spacing.y = unit(25, "mm"), 
         legend.key.size = unit(25, "mm"))
 
-
 #### 4. Save plots ####
 
-width <- 1250
-height <- 650
+# set parameters for plot
+width <- 400
+
+height <- 300
+
 overwrite <- TRUE
 
+# save plots
 UtilityFunctions::save_ggplot(plot = strength_association_correct_ggplot, 
-                              path = paste0(getwd(), "/6_Figures"),
-                              filename = "p1_association_strength_correct.png",
+                              path = "1_Simulation_study/4_Figures/",
+                              filename = "simulation_study_correct.png",
                               width = width, height = height, units = "mm", 
                               overwrite = overwrite)
 
 UtilityFunctions::save_ggplot(plot = strength_association_false_ggplot, 
-                              path = paste0(getwd(), "/6_Figures"),
-                              filename = "p1_association_strength_false.png",
+                              path = "1_Simulation_study/4_Figures/",
+                              filename = "simulation_study_false.png",
                               width = width, height = height, units = "mm",
                               overwrite = overwrite)
 
