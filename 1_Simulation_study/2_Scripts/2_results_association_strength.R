@@ -29,9 +29,9 @@ names(results) <- stringr::str_sub(names_result, start = 1, end = -13)
 results <- purrr::map_dfr(results, function(current_result) {
   
   dplyr::mutate(current_result,
-                species_type = dplyr::case_when(species_code == 1 ~ "Complete spatial randomness (positive association)",
+                species_type = dplyr::case_when(species_code == 1 ~ "CSR (positive association)",
                 species_code == 2 ~ "Cluster process (positive association)",
-                species_code == 3 ~ "Complete spatial randomness (negative association)",
+                species_code == 3 ~ "CSR (negative association)",
                 species_code == 4 ~ "Cluster process (negative association)")) %>%
     dplyr::group_by(species_type, variable) %>%
     dplyr::summarise(correct_mean = mean(correct),
@@ -59,9 +59,9 @@ results$method <- factor(results$method,
 
 # convert species type col as factor
 results$species_type <- factor(results$species_type, 
-                               levels = c("Complete spatial randomness (positive association)", 
+                               levels = c("CSR (positive association)", 
                                           "Cluster process (positive association)",
-                                          "Complete spatial randomness (negative association)",
+                                          "CSR (negative association)",
                                           "Cluster process (negative association)"))
 
 
