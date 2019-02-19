@@ -9,7 +9,7 @@
 #### 1. Import packages & functions ####
 
 # Packages #
-# library(clustermq)
+library(clustermq)
 
 library(NLMR)
 library(UtilityFunctions)
@@ -49,130 +49,130 @@ names_species <- simulation_pattern$marks$Species %>%
 #### 4. Pattern reconstruction ####
 
 # set parameters
-n_random <- 199
+# n_random <- 199
 
-# n_random <- rep(1, 199) # rep(1, 199)
+n_random <- rep(1, 199) # rep(1, 199)
 
-max_runs <- 10 # 2500
+max_runs <- 20000 # 2500
 
 # Species 1
 species_1 <- spatstat::unmark(spatstat::subset.ppp(simulation_pattern, species_code == 1))
 
-reconstruction_species_1 <- shar::reconstruct_pattern(pattern = species_1,
-                                                      n_random = n_random,
-                                                      max_runs = max_runs,
-                                                      fitting = FALSE)
-
-# reconstruction_species_1 <- clustermq::Q(fun = reconstruct_pattern,
-#                                          n_random = n_random,
-#                                          const = list(pattern = species_1,
+# reconstruction_species_1 <- shar::reconstruct_pattern(pattern = species_1,
+#                                                       n_random = n_random,
 #                                                       max_runs = max_runs,
-#                                                       fitting = FALSE,
-#                                                       return_input = FALSE,
-#                                                       simplify = TRUE,
-#                                                       verbose = FALSE),
-#                                          seed = 42,
-#                                          n_jobs = length(n_random),
-#                                          template = list(queue = "mpi",
-#                                                          walltime = "48:00",
-#                                                          processes = 1))
-# 
-# # add observed pattern
-# reconstruction_species_1[[length(n_random) + 1]] <- species_1
-# 
-# # add names to list
-# names(reconstruction_species_1) <- c(rep(paste0("randomized_", 1:length(n_random))), 
-#                    "observed")
+#                                                       fitting = FALSE)
+
+reconstruction_species_1 <- clustermq::Q(fun = reconstruct_pattern,
+                                         n_random = n_random,
+                                         const = list(pattern = species_1,
+                                                      max_runs = max_runs,
+                                                      fitting = FALSE,
+                                                      return_input = FALSE,
+                                                      simplify = TRUE,
+                                                      verbose = FALSE),
+                                         seed = 42,
+                                         n_jobs = length(n_random),
+                                         template = list(queue = "mpi",
+                                                         walltime = "48:00",
+                                                         processes = 1))
+
+# add observed pattern
+reconstruction_species_1[[length(n_random) + 1]] <- species_1
+
+# add names to list
+names(reconstruction_species_1) <- c(rep(paste0("randomized_", 1:length(n_random))),
+                   "observed")
 
 # Species 2
 species_2 <- spatstat::unmark(spatstat::subset.ppp(simulation_pattern, species_code == 2))
 
-reconstruction_species_2 <- shar::reconstruct_pattern(pattern = species_2,
-                                                      n_random = n_random,
-                                                      max_runs = max_runs,
-                                                      fitting = TRUE,
-                                                      verbose = TRUE)
-
-# reconstruction_species_2 <- clustermq::Q(fun = reconstruct_pattern,
-#                                          n_random = n_random,
-#                                          const = list(pattern = species_2,
+# reconstruction_species_2 <- shar::reconstruct_pattern(pattern = species_2,
+#                                                       n_random = n_random,
 #                                                       max_runs = max_runs,
-#                                                       fitting = FALSE,
-#                                                       return_input = FALSE,
-#                                                       simplify = TRUE,
-#                                                       verbose = FALSE),
-#                                          seed = 42,
-#                                          n_jobs = length(n_random),
-#                                          template = list(queue = "mpi",
-#                                                          walltime = "48:00",
-#                                                          processes = 1))
-# 
-# # add observed pattern
-# reconstruction_species_2[[length(n_random) + 1]] <- spatstat::unmark(species_2)
-# 
-# # add names to list
-# names(reconstruction_species_2) <- c(rep(paste0("randomized_", 1:length(n_random))), 
-#                                      "observed")
+#                                                       fitting = TRUE,
+#                                                       verbose = TRUE)
+
+reconstruction_species_2 <- clustermq::Q(fun = reconstruct_pattern,
+                                         n_random = n_random,
+                                         const = list(pattern = species_2,
+                                                      max_runs = max_runs,
+                                                      fitting = FALSE,
+                                                      return_input = FALSE,
+                                                      simplify = TRUE,
+                                                      verbose = FALSE),
+                                         seed = 42,
+                                         n_jobs = length(n_random),
+                                         template = list(queue = "mpi",
+                                                         walltime = "48:00",
+                                                         processes = 1))
+
+# add observed pattern
+reconstruction_species_2[[length(n_random) + 1]] <- spatstat::unmark(species_2)
+
+# add names to list
+names(reconstruction_species_2) <- c(rep(paste0("randomized_", 1:length(n_random))),
+                                     "observed")
 
 # Species 3
 species_3 <- spatstat::unmark(spatstat::subset.ppp(simulation_pattern, species_code == 3))
 
-reconstruction_species_3 <- shar::reconstruct_pattern(pattern = species_3,
-                                                      n_random = n_random,
-                                                      max_runs = max_runs,
-                                                      fitting = FALSE,
-                                                      verbose = TRUE)
-
-# reconstruction_species_3 <- clustermq::Q(fun = reconstruct_pattern,
-#                                          n_random = n_random,
-#                                          const = list(pattern = species_3,
+# reconstruction_species_3 <- shar::reconstruct_pattern(pattern = species_3,
+#                                                       n_random = n_random,
 #                                                       max_runs = max_runs,
 #                                                       fitting = FALSE,
-#                                                       return_input = FALSE,
-#                                                       simplify = TRUE,
-#                                                       verbose = FALSE),
-#                                          seed = 42,
-#                                          n_jobs = length(n_random),
-#                                          template = list(queue = "mpi",
-#                                                          walltime = "48:00",
-#                                                          processes = 1))
-# 
-# # add observed pattern
-# reconstruction_species_3[[length(n_random) + 1]] <- spatstat::unmark(species_3)
-# 
-# # add names to list
-# names(reconstruction_species_3) <- c(rep(paste0("randomized_", 1:length(n_random))), 
-#                                      "observed")
+#                                                       verbose = TRUE)
+
+reconstruction_species_3 <- clustermq::Q(fun = reconstruct_pattern,
+                                         n_random = n_random,
+                                         const = list(pattern = species_3,
+                                                      max_runs = max_runs,
+                                                      fitting = FALSE,
+                                                      return_input = FALSE,
+                                                      simplify = TRUE,
+                                                      verbose = FALSE),
+                                         seed = 42,
+                                         n_jobs = length(n_random),
+                                         template = list(queue = "mpi",
+                                                         walltime = "48:00",
+                                                         processes = 1))
+
+# add observed pattern
+reconstruction_species_3[[length(n_random) + 1]] <- spatstat::unmark(species_3)
+
+# add names to list
+names(reconstruction_species_3) <- c(rep(paste0("randomized_", 1:length(n_random))),
+                                     "observed")
 
 # Species 4
 species_4 <- spatstat::unmark(spatstat::subset.ppp(simulation_pattern, species_code == 4))
 
-reconstruction_species_4 <- shar::reconstruct_pattern(pattern = species_4,
-                                                      n_random = n_random,
-                                                      max_runs = max_runs,
-                                                      fitting = TRUE,
-                                                      verbose = TRUE)
-
-# reconstruction_species_4 <- clustermq::Q(fun = reconstruct_pattern,
-#                                          n_random = n_random,
-#                                          const = list(pattern = species_4,
+# reconstruction_species_4 <- shar::reconstruct_pattern(pattern = species_4,
+#                                                       n_random = n_random,
 #                                                       max_runs = max_runs,
-#                                                       fitting = FALSE,
-#                                                       return_input = FALSE,
-#                                                       simplify = TRUE,
-#                                                       verbose = FALSE),
-#                                          seed = 42,
-#                                          n_jobs = length(n_random),
-#                                          template = list(queue = "mpi",
-#                                                          walltime = "48:00",
-#                                                          processes = 1))
-# 
-# # add observed pattern
-# reconstruction_species_4[[length(n_random) + 1]] <- spatstat::unmark(species_4)
-# 
-# # add names to list
-# names(reconstruction_species_4) <- c(rep(paste0("randomized_", 1:length(n_random))), 
-#                                      "observed")
+#                                                       fitting = TRUE,
+#                                                       verbose = TRUE)
+
+reconstruction_species_4 <- clustermq::Q(fun = reconstruct_pattern,
+                                         n_random = n_random,
+                                         const = list(pattern = species_4,
+                                                      max_runs = max_runs,
+                                                      fitting = FALSE,
+                                                      return_input = FALSE,
+                                                      simplify = TRUE,
+                                                      verbose = FALSE),
+                                         seed = 42,
+                                         n_jobs = length(n_random),
+                                         template = list(queue = "mpi",
+                                                         walltime = "48:00",
+                                                         processes = 1))
+
+# add observed pattern
+reconstruction_species_4[[length(n_random) + 1]] <- spatstat::unmark(species_4)
+
+# add names to list
+names(reconstruction_species_4) <- c(rep(paste0("randomized_", 1:length(n_random))),
+                                     "observed")
 
 # combine to one list
 example_reconstructed_pattern <- list(species_1 = reconstruction_species_1, 
