@@ -35,7 +35,7 @@ simulate_pattern_recon_association_strength <- function(number_coloumns,
                                                 fitting = FALSE, 
                                                 comp_fast = comp_fast,
                                                 no_change = no_change,
-                                                verbose = TRUE)
+                                                verbose = FALSE)
   
   # get habitat associations
   associations_species_1 <- shar::results_habitat_association(pattern = random_species_1, 

@@ -58,7 +58,7 @@ max_runs <- 20000 # 20000
 comp_fast <- 0
 
 # Threshold to stop reconstruction if no change occured
-no_change <- 10000
+no_change <- 5000
 
 # Number of simulation runs
 simulation_runs <- 50 # 100
