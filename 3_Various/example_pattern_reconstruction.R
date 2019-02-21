@@ -74,7 +74,7 @@ reconstruction_species_1 <- clustermq::Q(fun = reconstruct_pattern,
                                          seed = 42,
                                          n_jobs = length(n_random),
                                          template = list(queue = "mpi",
-                                                         walltime = "48:00",
+                                                         walltime = "01:00",
                                                          processes = 1))
 
 # add observed pattern
@@ -104,7 +104,7 @@ reconstruction_species_2 <- clustermq::Q(fun = reconstruct_pattern,
                                          seed = 42,
                                          n_jobs = length(n_random),
                                          template = list(queue = "mpi",
-                                                         walltime = "48:00",
+                                                         walltime = "01:00",
                                                          processes = 1))
 
 # add observed pattern
@@ -134,7 +134,7 @@ reconstruction_species_3 <- clustermq::Q(fun = reconstruct_pattern,
                                          seed = 42,
                                          n_jobs = length(n_random),
                                          template = list(queue = "mpi",
-                                                         walltime = "48:00",
+                                                         walltime = "01:00",
                                                          processes = 1))
 
 # add observed pattern
@@ -164,7 +164,7 @@ reconstruction_species_4 <- clustermq::Q(fun = reconstruct_pattern,
                                          seed = 42,
                                          n_jobs = length(n_random),
                                          template = list(queue = "mpi",
-                                                         walltime = "48:00",
+                                                         walltime = "01:00",
                                                          processes = 1))
 
 # add observed pattern

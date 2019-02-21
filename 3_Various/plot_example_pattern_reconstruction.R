@@ -108,6 +108,7 @@ pcf_null_model$method <- factor(pcf_null_model$method,
 
 #### 3. Plot results ###
 plot_method_comparison <- ggplot() + 
+  geom_ribbon(data = pcf_null_model, aes(x = r, ymin = lo, ymax = hi, fill = method), size = 1, alpha = 0.3) +
   geom_line(data = pcf_observed, aes(x = r, y = theo, col = "CSR"), linetype = 2, size = 1) +
   geom_line(data = pcf_null_model, aes(x = r, y = lo, col = method), size = 1) +
   geom_line(data = pcf_null_model, aes(x = r, y = hi, col = method), size = 1) +
@@ -117,10 +118,13 @@ plot_method_comparison <- ggplot() +
                                 "Observed" = "black", 
                                 "CSR" = "grey"), 
                      name = "") +
+  scale_fill_manual(values = c("Gamma test" = "#1b9e77",
+                               "Pattern reconstruction" = "#7570b3"), 
+                     name = "") +
   facet_wrap(~ species, scales = "free") +
   labs(x = "r [m]", y = "g(r)") +
   theme_classic(base_size = 30) +  
-  guides(color = guide_legend(nrow = 2, byrow = TRUE)) +
+  guides(color = guide_legend(nrow = 2, byrow = TRUE), fill = FALSE) +
   theme(legend.position = "bottom", 
         legend.key.width = unit(1.5, "cm"))
 
