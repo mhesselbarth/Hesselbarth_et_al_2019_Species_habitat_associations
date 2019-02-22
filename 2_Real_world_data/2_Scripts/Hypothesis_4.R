@@ -124,7 +124,7 @@ library(tidyverse)
 # names_environment <- list.files(paste0(getwd(), "/2_Real_world_data/1_Data"), pattern = '3_')
 
 # import MRT classified map
-soil_mrt_classified <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/soil_mrt_classified.rds"))
+classification_raster_list <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/classification_raster_list.rds"))
 
 #### Habitat associations ####
 
@@ -144,7 +144,7 @@ reconstructed_beech_dead <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/
 
 # associations between MRT map and pattern
 associations_beech_living <- shar::results_habitat_association(pattern = reconstructed_beech_living, 
-                                                               raster = soil_mrt_classified)
+                                                               raster = classification_raster_list$status)
 
 # dead
 # associations_beech_dead <- purrr::map(environmental_data, function(x) {
@@ -157,7 +157,7 @@ associations_beech_living <- shar::results_habitat_association(pattern = reconst
 
 # associations between MRT map and pattern
 associations_beech_dead <- shar::results_habitat_association(pattern = reconstructed_beech_dead, 
-                                                             raster = soil_mrt_classified)
+                                                             raster = classification_raster_list$status)
 
 #### Save results
 

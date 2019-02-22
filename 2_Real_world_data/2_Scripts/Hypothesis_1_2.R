@@ -236,7 +236,7 @@ library(tidyverse)
 # names_environment <- list.files(paste0(getwd(), "/2_Real_world_data/1_Data"), pattern = '3_')
 
 # imporrt MRT classification
-soil_mrt_classified <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/soil_mrt_classified.rds"))
+classification_raster_list <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/classification_raster_list.rds"))
 
 #### Habitat associations ####
 
@@ -262,7 +262,7 @@ reconstructed_others <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Re
 
 # calculate associations with MRT map
 associations_beech <- shar::results_habitat_association(pattern = reconstructed_beech, 
-                                                        raster = soil_mrt_classified)
+                                                        raster = classification_raster_list$species)
 
 # Ash
 # associations_ash <- purrr::map(environmental_data, function(x) {
@@ -275,7 +275,7 @@ associations_beech <- shar::results_habitat_association(pattern = reconstructed_
 
 # calculate associations with MRT map
 associations_ash <- shar::results_habitat_association(pattern = reconstructed_ash, 
-                                                      raster = soil_mrt_classified)
+                                                      raster = classification_raster_list$species)
 
 # Hornbeam
 # associations_hornbeam <- purrr::map(environmental_data, function(x) {
@@ -288,7 +288,7 @@ associations_ash <- shar::results_habitat_association(pattern = reconstructed_as
 
 # calculate associations with MRT map
 associations_hornbeam <- shar::results_habitat_association(pattern = reconstructed_hornbeam, 
-                                                           raster = soil_mrt_classified)
+                                                           raster = classification_raster_list$species)
 
 # Sycamore
 # associations_sycamore <- purrr::map(environmental_data, function(x) {
@@ -301,7 +301,7 @@ associations_hornbeam <- shar::results_habitat_association(pattern = reconstruct
 
 # calculate associations with MRT map
 associations_sycamore <- shar::results_habitat_association(pattern = reconstructed_sycamore, 
-                                                           raster = soil_mrt_classified)
+                                                           raster = classification_raster_list$species)
 
 # others
 # associations_others <- purrr::map(environmental_data, function(x) {
@@ -314,7 +314,7 @@ associations_sycamore <- shar::results_habitat_association(pattern = reconstruct
 
 # calculate associations with MRT map
 associations_others <- shar::results_habitat_association(pattern = reconstructed_others, 
-                                                         raster = soil_mrt_classified)
+                                                         raster = classification_raster_list$species)
 
 #### Save results
 

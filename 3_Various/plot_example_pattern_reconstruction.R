@@ -132,5 +132,5 @@ plot_method_comparison <- ggplot() +
 UtilityFunctions::save_ggplot(plot = plot_method_comparison, 
                               path = "3_Various/2_Figures/",
                               filename = "gamma_vs_reconstruction.png",
-                              width = 325, height = 250, units = "mm", 
+                              width = 375, height = 250, units = "mm", 
                               overwrite = TRUE)

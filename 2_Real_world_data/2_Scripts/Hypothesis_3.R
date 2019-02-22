@@ -164,7 +164,7 @@ library(tidyverse)
 # names_environment <- list.files(paste0(getwd(), "/2_Real_world_data/1_Data"), pattern = '3_')
 
 # import MRT classification
-soil_mrt_classified <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/soil_mrt_classified.rds"))
+classification_raster_list <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/classification_raster_list.rds"))
 
 #### Habitat associations ####
 
@@ -186,7 +186,7 @@ reconstructed_beech_large <- readr::read_rds(paste0(getwd(), "/2_Real_world_data
 
 # get habitat associations to MRT map
 associations_beech_small <- shar::results_habitat_association(pattern = reconstructed_beech_small, 
-                                                              raster = soil_mrt_classified)
+                                                              raster = classification_raster_list$size)
 
 # medium
 # associations_beech_medium <- purrr::map(environmental_data, function(x) {
@@ -199,7 +199,7 @@ associations_beech_small <- shar::results_habitat_association(pattern = reconstr
 
 # get habitat associations to MRT map
 associations_beech_medium <- shar::results_habitat_association(pattern = reconstructed_beech_medium, 
-                                                               raster = soil_mrt_classified)
+                                                               raster = classification_raster_list$size)
 
 # large
 # associations_beech_large <- purrr::map(environmental_data, function(x) {
@@ -212,7 +212,7 @@ associations_beech_medium <- shar::results_habitat_association(pattern = reconst
 
 # get habitat associations to MRT map
 associations_beech_large <- shar::results_habitat_association(pattern = reconstructed_beech_large, 
-                                                              raster = soil_mrt_classified)
+                                                              raster = classification_raster_list$size)
 
 #### Save results
 
