@@ -165,7 +165,7 @@ pattern_reconstruction <- clustermq::Q(fun = simulate_pattern_recon_association_
                                        seed = 42, 
                                        n_jobs = length(association_strength), 
                                        template = list(queue = "mpi-long", 
-                                                       walltime = "120:00", 
+                                                       walltime = "60:00", 
                                                        processes = 1))
 
 # combine results to one data frame
