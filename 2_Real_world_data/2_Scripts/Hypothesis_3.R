@@ -200,7 +200,10 @@ classification_raster_list <- readr::read_rds(paste0(getwd(), "/2_Real_world_dat
 #                            path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
 #                            overwrite = FALSE)
 
-random_habitats_size <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/random_habitats_size.rds"))
+# random_habitats_size <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/random_habitats_size.rds"))
+
+random_habitats_species <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/random_habitats_species.rds"))
+
 
 #### Habitat associations ####
 
@@ -229,13 +232,13 @@ fitted_beech_large <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Resu
 
 # get habitat associations to MRT map
 associations_beech_small <- shar::results_habitat_association(pattern = reconstructed_beech_small, 
-                                                              raster = classification_raster_list$size)
+                                                              raster = classification_raster_list$species)
 
 associations_beech_small_fitted <- shar::results_habitat_association(pattern = fitted_beech_small, 
-                                                                     raster = classification_raster_list$size)
+                                                                     raster = classification_raster_list$species)
 
 associations_beech_small_walk <- shar::results_habitat_association(pattern = beech_small,
-                                                                   raster = random_habitats_size)
+                                                                   raster = random_habitats_species)
 
 # medium
 # associations_beech_medium <- purrr::map(environmental_data, function(x) {
@@ -248,13 +251,13 @@ associations_beech_small_walk <- shar::results_habitat_association(pattern = bee
 
 # get habitat associations to MRT map
 associations_beech_medium <- shar::results_habitat_association(pattern = reconstructed_beech_medium, 
-                                                               raster = classification_raster_list$size)
+                                                               raster = classification_raster_list$species)
 
 associations_beech_medium_fitted <- shar::results_habitat_association(pattern = fitted_beech_medium, 
-                                                                      raster = classification_raster_list$size)
+                                                                      raster = classification_raster_list$species)
 
 associations_beech_medium_walk <- shar::results_habitat_association(pattern = beech_medium,
-                                                                    raster = random_habitats_size)
+                                                                    raster = random_habitats_species)
 
 # large
 # associations_beech_large <- purrr::map(environmental_data, function(x) {
@@ -267,13 +270,13 @@ associations_beech_medium_walk <- shar::results_habitat_association(pattern = be
 
 # get habitat associations to MRT map
 associations_beech_large <- shar::results_habitat_association(pattern = reconstructed_beech_large, 
-                                                              raster = classification_raster_list$size)
+                                                              raster = classification_raster_list$species)
 
 associations_beech_large_fitted <- shar::results_habitat_association(pattern = fitted_beech_large, 
-                                                                     raster = classification_raster_list$size)
+                                                                     raster = classification_raster_list$species)
 
 associations_beech_large_walk <- shar::results_habitat_association(pattern = beech_large,
-                                                                   raster = random_habitats_size)
+                                                                   raster = random_habitats_species)
 
 #### Save results
 

@@ -152,7 +152,10 @@ classification_raster_list <- readr::read_rds(paste0(getwd(), "/2_Real_world_dat
 #                            path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
 #                            overwrite = FALSE)
 
-random_habitats_status <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/random_habitats_status.rds"))
+# random_habitats_status <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/random_habitats_status.rds"))
+
+random_habitats_species <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/random_habitats_species.rds"))
+
 
 #### Habitat associations ####
 
@@ -177,13 +180,13 @@ fitted_beech_dead <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Resul
 
 # associations between MRT map and pattern
 associations_beech_living <- shar::results_habitat_association(pattern = reconstructed_beech_living, 
-                                                               raster = classification_raster_list$status)
+                                                               raster = classification_raster_list$species)
 
 associations_beech_living_fitted <- shar::results_habitat_association(pattern = fitted_beech_living, 
-                                                                      raster = classification_raster_list$status)
+                                                                      raster = classification_raster_list$species)
 
 associations_beech_living_walk <- shar::results_habitat_association(pattern = beech_living,
-                                                                    raster = random_habitats_status)
+                                                                    raster = random_habitats_species)
 
 # dead
 # associations_beech_dead <- purrr::map(environmental_data, function(x) {
@@ -196,13 +199,13 @@ associations_beech_living_walk <- shar::results_habitat_association(pattern = be
 
 # associations between MRT map and pattern
 associations_beech_dead <- shar::results_habitat_association(pattern = reconstructed_beech_dead, 
-                                                             raster = classification_raster_list$status)
+                                                             raster = classification_raster_list$species)
 
 associations_beech_dead_fitted <- shar::results_habitat_association(pattern = fitted_beech_dead, 
-                                                                    raster = classification_raster_list$status)
+                                                                    raster = classification_raster_list$species)
 
 associations_beech_dead_walk <- shar::results_habitat_association(pattern = beech_dead,
-                                                                  raster = random_habitats_status)
+                                                                  raster = random_habitats_species)
 
 #### Save results
 
