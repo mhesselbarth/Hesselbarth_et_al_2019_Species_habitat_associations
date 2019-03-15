@@ -6,13 +6,137 @@
 ##    www.github.com/mhesselbarth                ##
 ###################################################
 
-#### Real-world data -Appendix ####
+#### Real-world data - Hypothesis 1 & 2 ####
 
 # Load packages #
-library(UtilityFunctions) # devtools::install_github("mhesselbarth/UtilityFunctions)
+
+# library(clustermq)
+
+library(helpeR) # devtools::install_github("mhesselbarth/helpeR)
+library(onpoint) # devtools::install_github("mhesselbarth/onpoint")
+library(raster)
 library(shar) # devtools::install_github("r-spatialecology/shar")
 library(spatstat)
 library(tidyverse)
+library(patchwork)
+
+#### Import data ####
+
+# import point pattern data
+pattern_2007 <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/1_Data/2_pattern_2007.rds"))
+
+# split into living and dead
+pattern_2007_living <- spatstat::subset.ppp(pattern_2007, Type != "dead")
+
+pattern_2007_dead <- spatstat::subset.ppp(pattern_2007, Type == "dead")
+
+# split into species
+beech <- spatstat::unmark(spatstat::subset.ppp(pattern_2007_living, Species == "Beech"))
+ash <- spatstat::unmark(subset.ppp(pattern_2007_living, Species == "Ash"))
+hornbeam <- spatstat::unmark(subset.ppp(pattern_2007_living, Species == "Hornbeam"))
+sycamore <- spatstat::unmark(subset.ppp(pattern_2007_living, Species == "Sycamore"))
+others <- spatstat::unmark(subset.ppp(pattern_2007_living, Species == "others"))
+
+#### Forest structure ####
+
+# Species abundance
+abundance <- table(pattern_2007_living$marks$Species) %>%
+  as.data.frame() %>% 
+  purrr::set_names(c("species", "abundance")) %>% 
+  dplyr::mutate(abundance_rel = abundance / sum(abundance) * 100, 
+                species = as.factor(species))
+
+species_abundance <- ggplot2::ggplot(data = abundance) + 
+  ggplot2::geom_bar(ggplot2::aes(x = species, y = abundance_rel), stat = "identity") + 
+  ggplot2::geom_text(ggplot2::aes(x = species, y = abundance_rel, label = paste0("n = ", abundance)), 
+                     vjust = -1) +
+  ggplot2::scale_y_continuous(breaks = seq(from = 0, to = 100, by = 20), limits = c(0, 100)) + 
+  ggplot2::labs(x = "Species", y = "Relative abundance [%]") + 
+  ggplot2::theme_bw(base_size = 15)
+
+helpeR::save_ggplot(plot = species_abundance, 
+                              path = "2_Real_world_data/4_Figures", 
+                              filename = "species_abundance.png", 
+                              dpi = 300, width = 15, height = 10, units = "cm",
+                              overwrite = TRUE)
+
+# DBH distribution 
+
+dbh_distribution <- ggplot2::ggplot(data = data.frame(pattern_2007_living$marks)) + 
+  ggplot2::geom_histogram(ggplot2::aes(x = DBH_07), 
+                          binwidth = 1, fill = "black", col = "white") + 
+  ggplot2::scale_x_continuous(breaks = seq(from = 0, to = 100, by = 10), limits = c(0, 100)) +
+  ggplot2::labs(x = "DBH [cm]", y = "Count") + 
+  ggplot2::theme_bw(base_size = 15)
+
+helpeR::save_ggplot(plot = dbh_distribution, 
+                              path = "2_Real_world_data/4_Figures", 
+                              filename = "dbh_distribution.png", 
+                              dpi = 300, width = 15, height = 10, units = "cm",
+                              overwrite = TRUE)
+
+
+#### PPA ####
+
+nsim <- 199
+
+envelope_all <- spatstat::envelope(pattern_2007_living, 
+                                   fun = pcfinhom, 
+                                   funargs = list(divisor = "d", 
+                                                  correction = "Ripley"), 
+                                   nsim = nsim)
+
+plot_all <- quantum_plot(envelope_all, title = "All species", 
+                         ylab = "g(r)", xlab = "r [m]", quantum_position = 0)
+
+envelope_beech <- spatstat::envelope(beech, fun = pcfinhom, 
+                                     funargs = list(divisor = "d", 
+                                                    correction = "Ripley"), 
+                                     nsim = nsim)
+
+plot_beech <- quantum_plot(envelope_beech, title = "Beech", 
+                           legend_position = "none", ylab = "g(r)", xlab = "r [m]")
+
+envelope_ash <- spatstat::envelope(ash, fun = pcfinhom, 
+                                   funargs = list(divisor = "d", 
+                                                  correction = "Ripley"),
+                                   nsim = nsim)
+
+plot_ash <- quantum_plot(envelope_ash, title = "Ash", 
+                         legend_position = "none", ylab = "g(r)", xlab = "r [m]")
+
+envelope_hornbeam <- spatstat::envelope(hornbeam, fun = pcfinhom, 
+                                   funargs = list(divisor = "d", 
+                                                  correction = "Ripley"),
+                                   nsim = nsim)
+
+plot_hornbeam <- quantum_plot(envelope_hornbeam, title = "Hornbeam", 
+                              legend_position = "none", ylab = "g(r)", xlab = "r [m]")
+
+envelope_sycamore <- spatstat::envelope(sycamore, fun = pcfinhom, 
+                                        funargs = list(divisor = "d", 
+                                                       correction = "Ripley"),
+                                        nsim = nsim)
+
+plot_sycamore <- quantum_plot(envelope_sycamore, title = "Sycamore", 
+                              legend_position = "none", ylab = "g(r)", xlab = "r [m]")
+
+
+envelope_others <- spatstat::envelope(others, fun = pcfinhom, 
+                                        funargs = list(divisor = "d", 
+                                                       correction = "Ripley"),
+                                        nsim = nsim)
+
+plot_others <- quantum_plot(envelope_others, title = "others", 
+                            legend_position = "none", ylab = "g(r)", xlab = "r [m]")
+
+plot_overall <- plot_all + {plot_beech + plot_ash + plot_hornbeam + plot_sycamore + plot_others} + plot_layout(nrow = 2)
+
+helpeR::save_ggplot(plot = plot_overall, filename = "pcf_overall.png", 
+                    path = "2_Real_world_data/4_Figures", 
+                    width = 210, height = 297, units = "mm", 
+                    dpi = 300,
+                    overwrite = TRUE)
 
 #### Hypotheses 1 & 2 ####
 
@@ -36,7 +160,7 @@ mean_energy_full_patterns <- purrr::map_dfr(full_patterns_list, function(x){
                                                   comp_fast = TRUE, 
                                                   verbose = FALSE))}, .id = "species")
 
-UtilityFunctions::save_rds(object = mean_energy_full_patterns, 
+helpeR::save_rds(object = mean_energy_full_patterns, 
                            path = paste0(getwd(), "/2_Real_world_data/3_Results/Appendix"), 
                            filename = "mean_energy_full_patterns.rds")
 
@@ -87,6 +211,6 @@ ggplot_full_patterns <- ggplot() +
   facet_wrap(~ species + summary_function, scales = "free", nrow = 5, ncol = 2) + 
   theme_bw()
 
-UtilityFunctions::save_ggplot(plot = ggplot_full_patterns, 
+helpeR::save_ggplot(plot = ggplot_full_patterns, 
                               path = paste0(getwd(), "/2_Real_world_data/3_Results/Appendix"), 
                               filename = "ggplot_full_patterns.png")
