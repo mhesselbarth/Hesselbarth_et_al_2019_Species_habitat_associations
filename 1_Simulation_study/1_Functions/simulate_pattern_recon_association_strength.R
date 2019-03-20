@@ -13,6 +13,7 @@ simulate_pattern_recon_association_strength <- function(number_coloumns,
   simulation_habitats <- shar::classify_habitats(NLMR::nlm_fbm(ncol = number_coloumns, nrow = number_rows,
                                                                resolution = resolution, 
                                                                fract_dim = fract_dim,
+                                                               verbose = FALSE,
                                                                cPrintlevel = 0), 
                                                  classes = 5)
   

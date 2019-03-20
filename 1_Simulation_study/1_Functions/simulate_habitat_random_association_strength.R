@@ -9,6 +9,7 @@ simulate_habitat_random_association_strength <- function(number_coloumns, number
                                                                nrow = number_rows,
                                                                resolution = resolution, 
                                                                fract_dim = fract_dim,
+                                                               verbose = FALSE,
                                                                cPrintlevel = 0), 
                                                  classes = 5)
     
