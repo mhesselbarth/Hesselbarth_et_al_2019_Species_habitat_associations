@@ -8,8 +8,8 @@ simulate_habitat_random_association_strength <- function(number_coloumns, number
   simulation_habitats <- shar::classify_habitats(NLMR::nlm_fbm(ncol = number_coloumns, 
                                                                nrow = number_rows,
                                                                resolution = resolution, 
-                                                               fract_dim = fract_dim, 
-                                                               verbose = FALSE), 
+                                                               fract_dim = fract_dim,
+                                                               cPrintlevel = 0), 
                                                  classes = 5)
     
   # create simulation pattern with 4 species
