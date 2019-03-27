@@ -9,6 +9,7 @@
 #### Simulation study - Results ####
 
 # Packages #
+library(helpeR)
 library(shar)
 library(spatstat)
 library(tidyverse)
@@ -106,18 +107,18 @@ width <- 400
 
 height <- 300
 
-overwrite <- TRUE
+overwrite <- FALSE
 
 # save plots
-UtilityFunctions::save_ggplot(plot = strength_association_correct_ggplot, 
-                              path = "1_Simulation_study/4_Figures/",
-                              filename = "simulation_study_correct.png",
-                              width = width, height = height, units = "mm", 
-                              overwrite = overwrite)
+helpeR::save_ggplot(plot = strength_association_correct_ggplot, 
+                    path = "1_Simulation_study/4_Figures/",
+                    filename = "simulation_study_correct.png",
+                    width = width, height = height, units = "mm", 
+                    overwrite = overwrite)
 
-UtilityFunctions::save_ggplot(plot = strength_association_false_ggplot, 
-                              path = "1_Simulation_study/4_Figures/",
-                              filename = "simulation_study_false.png",
-                              width = width, height = height, units = "mm",
-                              overwrite = overwrite)
+helpeR::save_ggplot(plot = strength_association_false_ggplot, 
+                    path = "1_Simulation_study/4_Figures/",
+                    filename = "simulation_study_false.png",
+                    width = width, height = height, units = "mm",
+                    overwrite = overwrite)
 
