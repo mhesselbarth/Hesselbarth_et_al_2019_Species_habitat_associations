@@ -65,10 +65,9 @@ simulation_runs <- 50 # 100
 
 # Different association strengths / repeat each strength simulation_runs times
 # association_strength <- rep(seq(0, 1, 0.05), each = simulation_runs) # rep(seq(0, 1, 0.025), each = simulation_runs)
-association_strength <- seq(0, 1, 0.05) # rep(seq(0, 1, 0.025), each = simulation_runs)
+association_strength <- seq(0.05, 1, 0.05) # rep(seq(0, 1, 0.025), each = simulation_runs)
 
-
-#### Create input data ####
+#### 3. Create input data ####
 
 # input_data <- create_input_data(number_coloumns = number_coloumns,
 #                                 number_rows = number_rows,
@@ -87,7 +86,7 @@ association_strength <- seq(0, 1, 0.05) # rep(seq(0, 1, 0.025), each = simulatio
 input_data <- readr::read_rds("1_Simulation_study/3_Results/input_data.rds")
 
 
-#### 3. Run simulations using HPC (clustermq)
+#### 4. Run simulations using HPC (clustermq) ####
 
 # parallelize each association strength and repetition
 
@@ -256,7 +255,7 @@ helpeR::save_rds(object = pattern_reconstruction,
                  path = paste0(getwd(), "/1_Simulation_study/3_Results"),
                  overwrite = overwrite)
 
-#### 4. Specify future topology ####
+#### 5. Specify future topology ####
 # 
 # future_map for 1) alpha (x) 2) simulation runs (y) 3) within null model function
 # login node -> { cluster nodes } -> { multiple cores }
@@ -273,7 +272,7 @@ helpeR::save_rds(object = pattern_reconstruction,
 # 
 # future::plan(future::multiprocess)
 # 
-#### 5. Simulation study of different methods to analyze species habitat assocations ####
+#### 6. Simulation study of different methods to analyze species habitat assocations ####
 # 
 # # Habitat randomization (Harms et al. 2001) #
 # habitat_randomization %<-% {simulate_habitat_random_association_strength(
