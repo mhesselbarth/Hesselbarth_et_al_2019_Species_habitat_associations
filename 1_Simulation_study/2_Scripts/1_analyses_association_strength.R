@@ -64,7 +64,19 @@ no_change <- 5000
 simulation_runs <- 50 # 100
 
 # Different association strengths / repeat each strength simulation_runs times
-association_strength <- rep(seq(0, 1, 0.05), each = simulation_runs) # rep(seq(0, 1, 0.025), each = simulation_runs)
+# association_strength <- rep(seq(0, 1, 0.05), each = simulation_runs) # rep(seq(0, 1, 0.025), each = simulation_runs)
+association_strength <- seq(0, 1, 0.05) # rep(seq(0, 1, 0.025), each = simulation_runs)
+
+
+#### Create input data ####
+
+input_data <- create_input_data(number_coloumns = number_coloumns,
+                                number_rows = number_rows,
+                                resolution = resolution,
+                                fract_dim = fract_dim,
+                                number_points = number_points, 
+                                association_strength = association_strength,
+                                simulation_runs = simulation_runs)
 
 #### 3. Run simulations using HPC (clustermq)
 
@@ -124,19 +136,30 @@ helpeR::save_rds(object = torus_translation,
                  overwrite = overwrite)
 
 # Gamma test
+# gamma_test <- clustermq::Q(fun = simulate_point_process_association_strength,
+#                            association_strength = association_strength,
+#                            const = list(number_coloumns = number_coloumns,
+#                                         number_rows = number_rows,
+#                                         resolution = resolution,
+#                                         fract_dim = fract_dim,
+#                                         number_points = number_points,
+#                                         n_random = n_random),
+#                            export = list(create_simulation_species = create_simulation_species,
+#                                          create_simulation_pattern = create_simulation_pattern,
+#                                          detect_habitat_associations = detect_habitat_associations),
+#                            seed = 42,
+#                            n_jobs = length(association_strength),
+#                            job_size = 1,
+#                            template = list(queue = "mpi",
+#                                            walltime = "48:00",
+#                                            processes = 1))
+
+# Gamma test
 gamma_test <- clustermq::Q(fun = simulate_point_process_association_strength,
-                           association_strength = association_strength,
-                           const = list(number_coloumns = number_coloumns,
-                                        number_rows = number_rows,
-                                        resolution = resolution,
-                                        fract_dim = fract_dim,
-                                        number_points = number_points,
-                                        n_random = n_random),
-                           export = list(create_simulation_species = create_simulation_species,
-                                         create_simulation_pattern = create_simulation_pattern,
-                                         detect_habitat_associations = detect_habitat_associations),
+                           simulation_habitat = input_data$habitats,
+                           simulation_pattern = input_data$patterns,
                            seed = 42,
-                           n_jobs = length(association_strength),
+                           n_jobs = length(input_data$habitats),
                            job_size = 1,
                            template = list(queue = "mpi",
                                            walltime = "48:00",
