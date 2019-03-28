@@ -15,11 +15,13 @@ library(spatstat)
 library(tidyverse)
 
 # import results simulation study
-results <- list.files(path = "1_Simulation_study/3_Results/", full.names = TRUE) %>%
+results <- list.files(path = "1_Simulation_study/3_Results/", 
+                      pattern = "*50_runs*", full.names = TRUE) %>%
   purrr::map(function(files) readr::read_rds(files))
 
 # get names of results
-names_result <- list.files(path = "1_Simulation_study/3_Results/", full.names = FALSE)
+names_result <- list.files(path = "1_Simulation_study/3_Results/", 
+                           pattern = "*50_runs*", full.names = FALSE)
 
 # add names to result
 names(results) <- stringr::str_sub(names_result, start = 1, end = -13)
