@@ -74,12 +74,13 @@ results$species_type <- factor(results$species_type,
 strength_association_correct_ggplot <- ggplot(data = results) +
   geom_line(aes(x = variable, y = correct_mean, col = method, group = method), size = 1.5) +
   geom_ribbon(aes(x = variable, ymin = correct_lo, ymax = correct_hi, fill = method, group = method), alpha = 0.3) +
+  geom_hline(yintercept = 0.5, linetype = 2, col = "grey") + 
   facet_wrap(~ species_type, nrow = 2, ncol = 2) + 
   scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.25)) +
   scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.1)) +
   scale_fill_viridis_d(name = "") +
   scale_colour_viridis_d(name = "") +
-  labs(x = expression(paste("Association strength ", alpha)), y = "Mean correct detections") +
+  labs(x = expression(paste("Association strength ", alpha)), y = "Correct detections rate") +
   guides(fill = guide_legend(ncol = 2, nrow = 2)) + 
   theme_classic(base_size = 28.5) + 
   theme(legend.position = "bottom", 
@@ -96,7 +97,7 @@ strength_association_false_ggplot <- ggplot(data = results) +
   scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2)) +
   scale_fill_viridis_d(name = "") +
   scale_colour_viridis_d(name = "") +
-  labs(x = expression(paste("Association strength ", alpha)), y = "Mean false detections") +
+  labs(x = expression(paste("Association strength ", alpha)), y = "False detections rate") +
   guides(fill = guide_legend(ncol = 2, nrow = 2)) + 
   theme_classic(base_size = 28.5) + 
   theme(legend.position = "bottom", 

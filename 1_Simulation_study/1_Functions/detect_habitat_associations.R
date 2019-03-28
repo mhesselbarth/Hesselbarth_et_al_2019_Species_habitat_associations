@@ -19,13 +19,26 @@ detect_habitat_associations <- function(input,
   # determine if positive or negative association
   association <- stringr::str_extract(species_type, "(?<=_).+?(?=_)")
   
+  opposite <- ifelse(test = association == "positive", 
+                     yes = "negative", no = "positive")
+  
+  
+  correct <- sum(input$significance[input$habitat == habitat] == association, 
+                 na.rm = TRUE)
+  
+  false <- sum(sum(input$significance[input$habitat != habitat] == association, 
+                   na.rm = TRUE),
+               sum(input$significance[input$habitat == habitat] == opposite, 
+                   na.rm = TRUE),
+               sum(input$significance[input$habitat == habitat] == "n.s.", 
+                   na.rm = TRUE), 
+               na.rm = TRUE)
+  
   # count correct/wrong detections of habitat associations
   result_summarised <- c(species_code = species_code, 
                          variable = variable,
-                         correct = sum(input$significance[input$habitat == habitat] == association, 
-                                       na.rm = TRUE),
-                         false = sum(input$significance[input$habitat != habitat] == association, 
-                                     na.rm = TRUE))
-
+                         correct = correct,
+                         false = false)
+  
   return(result_summarised)
 }
