@@ -80,6 +80,7 @@ strength_association_correct_ggplot <- ggplot(data = results) +
   scale_fill_viridis_d(name = "") +
   scale_colour_viridis_d(name = "") +
   labs(x = expression(paste("Association strength ", alpha)), y = "Mean correct detections") +
+  guides(fill = guide_legend(ncol = 2, nrow = 2)) + 
   theme_classic(base_size = 28.5) + 
   theme(legend.position = "bottom", 
         panel.spacing.x = unit(25, "mm"), 
@@ -96,6 +97,7 @@ strength_association_false_ggplot <- ggplot(data = results) +
   scale_fill_viridis_d(name = "") +
   scale_colour_viridis_d(name = "") +
   labs(x = expression(paste("Association strength ", alpha)), y = "Mean false detections") +
+  guides(fill = guide_legend(ncol = 2, nrow = 2)) + 
   theme_classic(base_size = 28.5) + 
   theme(legend.position = "bottom", 
         panel.spacing.x = unit(50, "mm"), 
