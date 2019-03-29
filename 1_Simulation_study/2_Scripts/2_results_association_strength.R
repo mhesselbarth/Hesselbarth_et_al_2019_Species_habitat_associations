@@ -93,8 +93,8 @@ strength_association_false_ggplot <- ggplot(data = results) +
   geom_line(aes(x = variable, y = false_mean, col = method, group = method), size = 1) +
   geom_ribbon(aes(x = variable, ymin = false_lo, ymax = false_hi, fill = method, group = method), alpha = 0.3) +
   facet_wrap(~ species_type, nrow = 2, ncol = 2) + 
-  scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2)) +
-  scale_x_continuous(limits = c(0.05, 1), breaks = seq(0, 1, 0.2)) +
+  scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.25)) +
+  scale_x_continuous(limits = c(0.05, 1), breaks = seq(0, 1, 0.1)) +
   scale_fill_viridis_d(name = "") +
   scale_colour_viridis_d(name = "") +
   labs(x = expression(paste("Association strength ", alpha)), y = "False detections rate") +
