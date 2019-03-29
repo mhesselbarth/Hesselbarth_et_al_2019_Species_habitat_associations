@@ -72,39 +72,61 @@ results$species_type <- factor(results$species_type,
 
 # plot correct detections
 strength_association_correct_ggplot <- ggplot(data = results) +
-  geom_line(aes(x = variable, y = correct_mean, col = method, group = method), size = 1.5) +
+  geom_line(aes(x = variable, y = correct_mean, col = method, group = method), size = 1.25) +
   geom_ribbon(aes(x = variable, ymin = correct_lo, ymax = correct_hi, fill = method, group = method), alpha = 0.3) +
-  geom_hline(yintercept = 0.5, linetype = 2, col = "grey") + 
+  geom_hline(yintercept = 0.5, linetype = 3, col = "grey") + 
   facet_wrap(~ species_type, nrow = 2, ncol = 2) + 
   scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.25)) +
   scale_x_continuous(limits = c(0.05, 1), breaks = seq(0, 1, 0.1)) +
   scale_fill_viridis_d(name = "") +
   scale_colour_viridis_d(name = "") +
-  labs(x = expression(paste("Association strength ", alpha)), y = "Correct detections rate") +
+  labs(x = expression(paste("Association strength ", alpha)), y = "Correct detection rate") +
   guides(fill = guide_legend(ncol = 2, nrow = 2)) + 
   theme_classic(base_size = 28.5) + 
   theme(legend.position = "bottom", 
-        panel.spacing.x = unit(25, "mm"), 
-        panel.spacing.y = unit(15, "mm"), 
+        panel.spacing.x = unit(7.5, "mm"), 
+        panel.spacing.y = unit(5, "mm"), 
         legend.key.size = unit(15, "mm"))
 
 # plot wrong detections
 strength_association_false_ggplot <- ggplot(data = results) +
-  geom_line(aes(x = variable, y = false_mean, col = method, group = method), size = 1) +
+  geom_line(aes(x = variable, y = false_mean, col = method, group = method), size = 1.25) +
   geom_ribbon(aes(x = variable, ymin = false_lo, ymax = false_hi, fill = method, group = method), alpha = 0.3) +
-  geom_hline(yintercept = 0.5, linetype = 2, col = "grey") + 
+  geom_hline(yintercept = 0.5, linetype = 3, col = "grey") + 
   facet_wrap(~ species_type, nrow = 2, ncol = 2) + 
   scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.25)) +
   scale_x_continuous(limits = c(0.05, 1), breaks = seq(0, 1, 0.1)) +
   scale_fill_viridis_d(name = "") +
   scale_colour_viridis_d(name = "") +
-  labs(x = expression(paste("Association strength ", alpha)), y = "False detections rate") +
+  labs(x = expression(paste("Association strength ", alpha)), y = "False detection rate") +
   guides(fill = guide_legend(ncol = 2, nrow = 2)) + 
   theme_classic(base_size = 28.5) + 
   theme(legend.position = "bottom", 
-        panel.spacing.x = unit(50, "mm"), 
-        panel.spacing.y = unit(25, "mm"), 
+        panel.spacing.x = unit(7.5, "mm"), 
+        panel.spacing.y = unit(5, "mm"), 
         legend.key.size = unit(25, "mm"))
+
+# plot together
+overall_ggplot <- ggplot(data = results) +
+  geom_ribbon(aes(x = variable, ymin = correct_lo, ymax = correct_hi, fill = method, group = method), alpha = 0.3) +
+  geom_ribbon(aes(x = variable, ymin = false_lo, ymax = false_hi, fill = method, group = method), alpha = 0.3) +
+  geom_line(aes(x = variable, y = correct_mean, col = method, group = method, linetype = "Correct"), size = 1.25) +
+  geom_line(aes(x = variable, y = false_mean, col = method, group = method, linetype = "False"), size = 1.25) +
+  geom_hline(yintercept = 0.5, linetype = 3, col = "grey", size = 1.25) + 
+  facet_wrap(~ species_type, nrow = 2, ncol = 2) + 
+  scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.25)) +
+  scale_x_continuous(limits = c(0.05, 1), breaks = seq(0, 1, 0.1)) +
+  scale_fill_viridis_d(name = "") +
+  scale_linetype_manual(name = "", values = c("Correct" = 1, "False" = 2)) +
+  scale_colour_viridis_d(name = "") +
+  labs(x = expression(paste("Association strength ", alpha)), y = "Detection rate") +
+  guides(fill = guide_legend(ncol = 2, nrow = 2), 
+         linetype = guide_legend(nrow = 2)) + 
+  theme_classic(base_size = 28.5) + 
+  theme(legend.position = "bottom", 
+        panel.spacing.x = unit(7.5, "mm"), 
+        panel.spacing.y = unit(5, "mm"), 
+        legend.key.size = unit(15, "mm"))
 
 #### 4. Save plots ####
 
@@ -117,14 +139,21 @@ overwrite <- TRUE
 
 # save plots
 helpeR::save_ggplot(plot = strength_association_correct_ggplot, 
-                    path = "1_Simulation_study/4_Figures/",
+                    path = "1_Simulation_study/4_Figures",
                     filename = "simulation_study_correct.png",
                     width = width, height = height, units = "mm", 
                     overwrite = overwrite)
 
 helpeR::save_ggplot(plot = strength_association_false_ggplot, 
-                    path = "1_Simulation_study/4_Figures/",
+                    path = "1_Simulation_study/4_Figures",
                     filename = "simulation_study_false.png",
                     width = width, height = height, units = "mm",
                     overwrite = overwrite)
+
+helpeR::save_ggplot(plot = overall_ggplot, 
+                    path = "1_Simulation_study/4_Figures",
+                    filename = "overall_ggplot.png",
+                    width = width, height = height, units = "mm",
+                    overwrite = overwrite)
+
 
