@@ -109,19 +109,19 @@ input_data <- readr::read_rds("1_Simulation_study/3_Results/input_data.rds")
 #                                                       walltime = "48:00",
 #                                                       processes = 1))
 
-habitat_randomization <- clustermq::Q(fun = simulate_habitat_random_association_strength,
-                                      simulation_habitat = input_data$habitats,
-                                      simulation_pattern = input_data$patterns,
-                                      association_strength = rep(association_strength, each = simulation_runs),
-                                      const = list(n_random = n_random),
-                                      export = list(detect_habitat_associations = detect_habitat_associations),
-                                      seed = 42,
-                                      n_jobs = length(input_data$habitats),
-                                      job_size = 1,
-                                      template = list(queue = "mpi",
-                                                      walltime = "12:00",
-                                                      processes = 1))
-
+habitat_randomization <- helper::submit_to_cluster(fun = simulate_habitat_random_association_strength,
+                                                   simulation_habitat = input_data$habitats,
+                                                   simulation_pattern = input_data$patterns,
+                                                   association_strength = rep(association_strength, each = simulation_runs),
+                                                   const = list(n_random = n_random),
+                                                   export = list(detect_habitat_associations = detect_habitat_associations),
+                                                   seed = 42,
+                                                   n_jobs = length(input_data$habitats),
+                                                   job_size = 1,
+                                                   template = list(queue = "mpi",
+                                                                   walltime = "12:00",
+                                                                   processes = 1))
+             
 # combine results to one data frame
 habitat_randomization <- dplyr::bind_rows(habitat_randomization)
 
@@ -148,17 +148,17 @@ helpeR::save_rds(object = habitat_randomization,
 #                                                   walltime = "48:00",
 #                                                   processes = 1))
 
-torus_translation <- clustermq::Q(fun = simulate_torus_trans_association_strength,
-                                  simulation_habitat = input_data$habitats,
-                                  simulation_pattern = input_data$patterns,
-                                  association_strength = rep(association_strength, each = simulation_runs),
-                                  export = list(detect_habitat_associations = detect_habitat_associations),
-                                  seed = 42,
-                                  n_jobs = length(input_data$habitats),
-                                  job_size = 1,
-                                  template = list(queue = "mpi",
-                                                  walltime = "12:00",
-                                                  processes = 1))
+torus_translation <- helper::submit_to_cluster(fun = simulate_torus_trans_association_strength,
+                                               simulation_habitat = input_data$habitats,
+                                               simulation_pattern = input_data$patterns,
+                                               association_strength = rep(association_strength, each = simulation_runs),
+                                               export = list(detect_habitat_associations = detect_habitat_associations),
+                                               seed = 42,
+                                               n_jobs = length(input_data$habitats),
+                                               job_size = 1,
+                                               template = list(queue = "mpi",
+                                                               walltime = "12:00",
+                                                               processes = 1))
 
 # combine results to one data frame
 torus_translation <- dplyr::bind_rows(torus_translation)
@@ -188,18 +188,18 @@ helpeR::save_rds(object = torus_translation,
 #                                            processes = 1))
 
 # Gamma test
-gamma_test <- clustermq::Q(fun = simulate_point_process_association_strength,
-                           simulation_habitat = input_data$habitats,
-                           simulation_pattern = input_data$patterns,
-                           association_strength = rep(association_strength, each = simulation_runs),
-                           const = list(n_random = n_random),
-                           export = list(detect_habitat_associations = detect_habitat_associations),
-                           seed = 42,
-                           n_jobs = length(input_data$habitats),
-                           job_size = 1,
-                           template = list(queue = "mpi",
-                                           walltime = "12:00",
-                                           processes = 1))
+gamma_test <- helper::submit_to_cluster(fun = simulate_point_process_association_strength,
+                                        simulation_habitat = input_data$habitats,
+                                        simulation_pattern = input_data$patterns,
+                                        association_strength = rep(association_strength, each = simulation_runs),
+                                        const = list(n_random = n_random),
+                                        export = list(detect_habitat_associations = detect_habitat_associations),
+                                        seed = 42,
+                                        n_jobs = length(input_data$habitats),
+                                        job_size = 1,
+                                        template = list(queue = "mpi",
+                                                        walltime = "12:00",
+                                                        processes = 1))
 
 # combine results to one data frame
 gamma_test <- dplyr::bind_rows(gamma_test)
@@ -231,21 +231,21 @@ helpeR::save_rds(object = gamma_test,
 #                                                        walltime = "48:00", 
 #                                                        processes = 1))
 
-pattern_reconstruction <- clustermq::Q(fun = simulate_pattern_recon_association_strength, 
-                                       simulation_habitat = input_data$habitats,
-                                       simulation_pattern = input_data$patterns,
-                                       association_strength = rep(association_strength, each = simulation_runs),
-                                       const = list(n_random = n_random, 
-                                                    max_runs = max_runs, 
-                                                    comp_fast = comp_fast,
-                                                    no_change = no_change),
-                                       export = list(detect_habitat_associations = detect_habitat_associations),
-                                       seed = 42,
-                                       n_jobs = length(input_data$habitats),
-                                       job_size = 1,
-                                       template = list(queue = "mpi", 
-                                                       walltime = "48:00", 
-                                                       processes = 1))
+pattern_reconstruction <- helpeR::submit_to_cluster(fun = simulate_pattern_recon_association_strength, 
+                                                    simulation_habitat = input_data$habitats,
+                                                    simulation_pattern = input_data$patterns,
+                                                    association_strength = rep(association_strength, each = simulation_runs),
+                                                    const = list(n_random = n_random, 
+                                                                 max_runs = max_runs, 
+                                                                 comp_fast = comp_fast,
+                                                                 no_change = no_change),
+                                                    export = list(detect_habitat_associations = detect_habitat_associations),
+                                                    seed = 42,
+                                                    n_jobs = length(input_data$habitats),
+                                                    job_size = 1,
+                                                    template = list(queue = "mpi", 
+                                                                    walltime = "48:00", 
+                                                                    processes = 1))
 
 # combine results to one data frame
 pattern_reconstruction <- dplyr::bind_rows(pattern_reconstruction)
