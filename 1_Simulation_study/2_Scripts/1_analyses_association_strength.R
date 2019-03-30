@@ -148,7 +148,7 @@ helpeR::save_rds(object = habitat_randomization,
 #                                                   walltime = "48:00",
 #                                                   processes = 1))
 
-torus_translation <- helper::submit_to_cluster(fun = simulate_torus_trans_association_strength,
+torus_translation <- helpeR::submit_to_cluster(fun = simulate_torus_trans_association_strength,
                                                simulation_habitat = input_data$habitats,
                                                simulation_pattern = input_data$patterns,
                                                association_strength = rep(association_strength, each = simulation_runs),
@@ -188,7 +188,7 @@ helpeR::save_rds(object = torus_translation,
 #                                            processes = 1))
 
 # Gamma test
-gamma_test <- helper::submit_to_cluster(fun = simulate_point_process_association_strength,
+gamma_test <- helpeR::submit_to_cluster(fun = simulate_point_process_association_strength,
                                         simulation_habitat = input_data$habitats,
                                         simulation_pattern = input_data$patterns,
                                         association_strength = rep(association_strength, each = simulation_runs),

@@ -200,7 +200,7 @@ simulate_pattern_recon_association_strength <- function(simulation_habitat,
   
   # get habitat associations
   associations_species_3 <- shar::results_habitat_association(pattern = random_species_3, 
-                                                              raster = simulation_habitats, 
+                                                              raster = simulation_habitat, 
                                                               verbose = FALSE)
   
   # count correct/false detections
@@ -224,7 +224,7 @@ simulate_pattern_recon_association_strength <- function(simulation_habitat,
   
   # get habitat associations
   associations_species_4 <- shar::results_habitat_association(pattern = random_species_4,
-                                                              raster = simulation_habitats, 
+                                                              raster = simulation_habitat, 
                                                               verbose = FALSE)
   
   # count correct/false detections
