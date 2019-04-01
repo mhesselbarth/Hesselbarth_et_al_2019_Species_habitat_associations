@@ -70,6 +70,8 @@ results$species_type <- factor(results$species_type,
 
 #### 3. Plotting data ####
 
+col = c("#d7191c", "#fdae61" , "#abd9e9", "#2c7bb6")
+
 # plot correct detections
 strength_association_correct_ggplot <- ggplot(data = results) +
   geom_line(aes(x = variable, y = correct_mean, col = method, group = method), size = 1.25) +
@@ -78,8 +80,10 @@ strength_association_correct_ggplot <- ggplot(data = results) +
   facet_wrap(~ species_type, nrow = 2, ncol = 2) + 
   scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.25)) +
   scale_x_continuous(limits = c(0.05, 1), breaks = seq(0, 1, 0.1)) +
-  scale_fill_viridis_d(name = "") +
-  scale_colour_viridis_d(name = "") +
+  scale_fill_viridis_d(name = "", option = "D") +
+  scale_colour_viridis_d(name = "", option = "D") +
+  # scale_fill_manual(name = "", values = col) +
+  # scale_colour_manual(name = "", values = col) +
   labs(x = expression(paste("Association strength ", alpha)), y = "Correct detection rate") +
   guides(fill = guide_legend(ncol = 2, nrow = 2)) + 
   theme_classic(base_size = 28.5) + 
@@ -96,8 +100,8 @@ strength_association_false_ggplot <- ggplot(data = results) +
   facet_wrap(~ species_type, nrow = 2, ncol = 2) + 
   scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.25)) +
   scale_x_continuous(limits = c(0.05, 1), breaks = seq(0, 1, 0.1)) +
-  scale_fill_viridis_d(name = "") +
-  scale_colour_viridis_d(name = "") +
+  scale_fill_viridis_d(name = "", option = "D") +
+  scale_colour_viridis_d(name = "", option = "D") +
   labs(x = expression(paste("Association strength ", alpha)), y = "False detection rate") +
   guides(fill = guide_legend(ncol = 2, nrow = 2)) + 
   theme_classic(base_size = 28.5) + 
@@ -116,9 +120,11 @@ overall_ggplot <- ggplot(data = results) +
   facet_wrap(~ species_type, nrow = 2, ncol = 2) + 
   scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.25)) +
   scale_x_continuous(limits = c(0.05, 1), breaks = seq(0, 1, 0.1)) +
-  scale_fill_viridis_d(name = "") +
+  # scale_fill_manual(name = "", values = col) +
+  # scale_colour_manual(name = "", values = col) +
+  scale_fill_viridis_d(name = "", option = "D") +
+  scale_colour_viridis_d(name = "", option = "D") +
   scale_linetype_manual(name = "", values = c("Correct" = 1, "False" = 2)) +
-  scale_colour_viridis_d(name = "") +
   labs(x = expression(paste("Association strength ", alpha)), y = "Detection rate") +
   guides(fill = guide_legend(ncol = 2, nrow = 2), 
          linetype = guide_legend(nrow = 2)) + 
