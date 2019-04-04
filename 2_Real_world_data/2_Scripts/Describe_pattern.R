@@ -35,6 +35,14 @@ pcf_beech <- spatstat::pcf.ppp(beech, divisor = "d", correction = "Ripley", stoy
 
 plot(pcf_beech, main = "Pair correlation function Beech")
 
+
+# Beech dead 
+beech_dead <- spatstat::subset.ppp(pattern_2007_dead, Species == "Beech")
+
+pcf_beech_dead <- spatstat::pcf.ppp(beech_dead, divisor = "d", correction = "Ripley", stoyan = 0.25)
+
+plot(pcf_beech_dead, main = "Pair correlation function Beech")
+
 # Ash
 ash <- spatstat::unmark(spatstat::subset.ppp(pattern_2007_living, Species == "Ash"))
 

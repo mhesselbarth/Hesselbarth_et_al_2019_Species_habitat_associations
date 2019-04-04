@@ -32,6 +32,7 @@ pattern_2007_dead <- spatstat::subset.ppp(pattern_2007, Type == "dead")
 
 # split into species
 beech <- spatstat::unmark(spatstat::subset.ppp(pattern_2007_living, Species == "Beech"))
+beech_dead <- spatstat::subset.ppp(pattern_2007_dead, Species == "Beech")
 ash <- spatstat::unmark(subset.ppp(pattern_2007_living, Species == "Ash"))
 hornbeam <- spatstat::unmark(subset.ppp(pattern_2007_living, Species == "Hornbeam"))
 sycamore <- spatstat::unmark(subset.ppp(pattern_2007_living, Species == "Sycamore"))
@@ -55,10 +56,10 @@ species_abundance <- ggplot2::ggplot(data = abundance) +
   ggplot2::theme_bw(base_size = 15)
 
 helpeR::save_ggplot(plot = species_abundance, 
-                              path = "2_Real_world_data/4_Figures", 
-                              filename = "species_abundance.png", 
-                              dpi = 300, width = 15, height = 10, units = "cm",
-                              overwrite = TRUE)
+                    path = "2_Real_world_data/4_Figures", 
+                    filename = "species_abundance.png", 
+                    dpi = 300, width = 15, height = 10, units = "cm",
+                    overwrite = TRUE)
 
 # DBH distribution 
 
@@ -70,10 +71,10 @@ dbh_distribution <- ggplot2::ggplot(data = data.frame(pattern_2007_living$marks)
   ggplot2::theme_bw(base_size = 15)
 
 helpeR::save_ggplot(plot = dbh_distribution, 
-                              path = "2_Real_world_data/4_Figures", 
-                              filename = "dbh_distribution.png", 
-                              dpi = 300, width = 15, height = 10, units = "cm",
-                              overwrite = TRUE)
+                    path = "2_Real_world_data/4_Figures", 
+                    filename = "dbh_distribution.png", 
+                    dpi = 300, width = 15, height = 10, units = "cm",
+                    overwrite = TRUE)
 
 
 #### PPA ####
@@ -86,40 +87,40 @@ envelope_all <- spatstat::envelope(pattern_2007_living,
                                                   correction = "Ripley"), 
                                    nsim = nsim)
 
-plot_all <- quantum_plot(envelope_all, title = "All species", 
-                         ylab = "g(r)", xlab = "r [m]", quantum_position = 0)
+plot_all <- onpoint::plot_quantums(envelope_all, title = "All species", 
+                                   ylab = "g(r)", xlab = "r [m]", quantum_position = 0)
 
 envelope_beech <- spatstat::envelope(beech, fun = pcfinhom, 
                                      funargs = list(divisor = "d", 
                                                     correction = "Ripley"), 
                                      nsim = nsim)
 
-plot_beech <- quantum_plot(envelope_beech, title = "Beech", 
-                           legend_position = "none", ylab = "g(r)", xlab = "r [m]")
+plot_beech <- onpoint::plot_quantums(envelope_beech, title = "Beech", 
+                                     legend_position = "none", ylab = "g(r)", xlab = "r [m]")
 
 envelope_ash <- spatstat::envelope(ash, fun = pcfinhom, 
                                    funargs = list(divisor = "d", 
                                                   correction = "Ripley"),
                                    nsim = nsim)
 
-plot_ash <- quantum_plot(envelope_ash, title = "Ash", 
-                         legend_position = "none", ylab = "g(r)", xlab = "r [m]")
+plot_ash <- onpoint::plot_quantums(envelope_ash, title = "Ash", 
+                                   legend_position = "none", ylab = "g(r)", xlab = "r [m]")
 
 envelope_hornbeam <- spatstat::envelope(hornbeam, fun = pcfinhom, 
                                    funargs = list(divisor = "d", 
                                                   correction = "Ripley"),
                                    nsim = nsim)
 
-plot_hornbeam <- quantum_plot(envelope_hornbeam, title = "Hornbeam", 
-                              legend_position = "none", ylab = "g(r)", xlab = "r [m]")
+plot_hornbeam <- onpoint::plot_quantums(envelope_hornbeam, title = "Hornbeam", 
+                                        legend_position = "none", ylab = "g(r)", xlab = "r [m]")
 
 envelope_sycamore <- spatstat::envelope(sycamore, fun = pcfinhom, 
                                         funargs = list(divisor = "d", 
                                                        correction = "Ripley"),
                                         nsim = nsim)
 
-plot_sycamore <- quantum_plot(envelope_sycamore, title = "Sycamore", 
-                              legend_position = "none", ylab = "g(r)", xlab = "r [m]")
+plot_sycamore <- onpoint::plot_quantums(envelope_sycamore, title = "Sycamore", 
+                                        legend_position = "none", ylab = "g(r)", xlab = "r [m]")
 
 
 envelope_others <- spatstat::envelope(others, fun = pcfinhom, 
@@ -127,8 +128,8 @@ envelope_others <- spatstat::envelope(others, fun = pcfinhom,
                                                        correction = "Ripley"),
                                         nsim = nsim)
 
-plot_others <- quantum_plot(envelope_others, title = "others", 
-                            legend_position = "none", ylab = "g(r)", xlab = "r [m]")
+plot_others <- onpoint::plot_quantums(envelope_others, title = "others", 
+                                      legend_position = "none", ylab = "g(r)", xlab = "r [m]")
 
 plot_overall <- plot_all + {plot_beech + plot_ash + plot_hornbeam + plot_sycamore + plot_others} + plot_layout(nrow = 2)
 
@@ -136,6 +137,21 @@ helpeR::save_ggplot(plot = plot_overall, filename = "pcf_overall.png",
                     path = "2_Real_world_data/4_Figures", 
                     width = 210, height = 297, units = "mm", 
                     dpi = 300,
+                    overwrite = TRUE)
+
+# Beech dead 
+envelope_beech_dead <- spatstat::envelope(beech_dead, 
+                                          fun = pcfinhom, 
+                                          funargs = list(divisor = "d", 
+                                                         correction = "Ripley"), 
+                                          nsim = nsim)
+
+plot_beech_dead <- onpoint::plot_quantums(envelope_beech_dead, title = "Beech (dead trees)",
+                                          ylab = "g(r)", xlab = "r [m]")
+
+helpeR::save_ggplot(plot = plot_beech_dead, filename = "pcf_beech_dead.png", 
+                    path = "2_Real_world_data/4_Figures", 
+                    dpi = 300, width = 15, height = 10, units = "cm",
                     overwrite = TRUE)
 
 #### Hypotheses 1 & 2 ####
