@@ -151,7 +151,7 @@ plot_beech_dead <- onpoint::plot_quantums(envelope_beech_dead, title = "Beech (d
 
 helpeR::save_ggplot(plot = plot_beech_dead, filename = "pcf_beech_dead.png", 
                     path = "2_Real_world_data/4_Figures", 
-                    dpi = 300, width = 15, height = 10, units = "cm",
+                    dpi = 300, width = 20, height = 12, units = "cm",
                     overwrite = TRUE)
 
 #### Hypotheses 1 & 2 ####
