@@ -9,6 +9,7 @@
 #### 1. Import packages and data ####
 
 # Packages #
+library(helpeR) # devtools::install_github("mhesselbarth/helpeR)
 library(patchwork)
 library(raster)
 library(spatstat)
@@ -161,15 +162,15 @@ heigth <- 180
 
 overwrite <- FALSE
 
-UtilityFunctions::save_ggplot(plot = plot_overall,
-                              filename = "plot_methods.png",
-                              path = "3_Various/2_Figures/",
-                              width = width,
-                              height = heigth,
-                              units = "mm", 
-                              overwrite = overwrite)
+helpeR::save_ggplot(plot = plot_overall,
+                    filename = "plot_methods.png",
+                    path = "3_Various/2_Figures/",
+                    width = width,
+                    height = heigth,
+                    units = "mm", 
+                    overwrite = overwrite)
 
-# UtilityFunctions::save_ggplot(plot = plot_gamma_test, 
+# helpeR::save_ggplot(plot = plot_gamma_test, 
 #                               filename = "p00_plot_gamma_test.png", 
 #                               path = "6_Figures", 
 #                               overwrite = overwrite, 
@@ -177,7 +178,7 @@ UtilityFunctions::save_ggplot(plot = plot_overall,
 #                               height = heigth, 
 #                               units = "mm")
 # 
-# UtilityFunctions::save_ggplot(plot = plot_pattern_reconstruction, 
+# helpeR::save_ggplot(plot = plot_pattern_reconstruction, 
 #                               filename = "p00_plot_pattern_reconstruction.png", 
 #                               path = "6_Figures", 
 #                               overwrite = overwrite, 
@@ -185,7 +186,7 @@ UtilityFunctions::save_ggplot(plot = plot_overall,
 #                               height = heigth, 
 #                               units = "mm")
 # 
-# UtilityFunctions::save_ggplot(plot = plot_habitat_randomization_test, 
+# helpeR::save_ggplot(plot = plot_habitat_randomization_test, 
 #                               filename = "p00_plot_habitat_randomization_test.png", 
 #                               path = "6_Figures", 
 #                               overwrite = overwrite, 
@@ -193,7 +194,7 @@ UtilityFunctions::save_ggplot(plot = plot_overall,
 #                               height = heigth, 
 #                               units = "mm")
 # 
-# UtilityFunctions::save_ggplot(plot = plot_torus_translation_test, 
+# helpeR::save_ggplot(plot = plot_torus_translation_test, 
 #                               filename = "p00_plot_torus_translation_test.png", 
 #                               path = "6_Figures", 
 #                               overwrite = overwrite, 

@@ -10,7 +10,7 @@
 
 # Load packages #
 
-library(UtilityFunctions) # devtools::install_github("mhesselbarth/UtilityFunctions)
+library(helpeR) # devtools::install_github("mhesselbarth/helpeR)
 library(shar) # devtools::install_github("r-spatialecology/shar")
 library(spatstat)
 library(tidyverse)

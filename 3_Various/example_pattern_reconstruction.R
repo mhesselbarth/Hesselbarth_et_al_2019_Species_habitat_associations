@@ -12,7 +12,7 @@
 library(clustermq)
 
 library(NLMR)
-library(UtilityFunctions)
+library(helpeR) # devtools::install_github("mhesselbarth/helpeR)
 library(shar)
 library(spatstat)
 library(tidyverse)
@@ -181,10 +181,10 @@ example_reconstructed_pattern <- list(species_1 = reconstruction_species_1,
                                       species_4 = reconstruction_species_4)
 
 # save results
-UtilityFunctions::save_rds(object = example_reconstructed_pattern,
-                           filename = "example_reconstructed_pattern.rds",
-                           path = "3_Various/1_Output/", 
-                           overwrite = overwrite)
+helpeR::save_rds(object = example_reconstructed_pattern,
+                 filename = "example_reconstructed_pattern.rds",
+                 path = "3_Various/1_Output/", 
+                 overwrite = overwrite)
 
 #### 5. Point process ####
 
@@ -220,7 +220,7 @@ example_fitted_pattern <- list(species_1 = fitted_species_1,
                                species_4 = fitted_species_4)
 
 # save results
-UtilityFunctions::save_rds(object = example_fitted_pattern,
-                           filename = "example_fitted_pattern.rds",
-                           path = "3_Various/1_Output/", 
-                           overwrite = overwrite)
+helpeR::save_rds(object = example_fitted_pattern,
+                 filename = "example_fitted_pattern.rds",
+                 path = "3_Various/1_Output/", 
+                 overwrite = overwrite)

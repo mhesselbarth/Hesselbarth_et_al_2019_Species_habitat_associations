@@ -104,17 +104,17 @@
 # 
 # #### 5. Save data ####
 # 
-# UtilityFunctions::save_rds(object = habitat_randomization,
+# helpeR::save_rds(object = habitat_randomization,
 #                            filename = paste0("a3_habitat_randomization_", simulation_runs, "_", number_pattern, ".rds"),
 #                            path = paste0(getwd(), "/4_Output"), 
 #                            overwrite = FALSE)
 # 
-# UtilityFunctions::save_rds(object = point_process,
+# helpeR::save_rds(object = point_process,
 #                            filename = paste0("a3_point_process_", simulation_runs, "_", number_pattern, ".rds"),
 #                            path = paste0(getwd(), "/4_Output"),
 #                            overwrite = FALSE)
 # 
-# UtilityFunctions::save_rds(object=pattern_reconstruction,
+# helpeR::save_rds(object=pattern_reconstruction,
 #                            filename = paste0("a3_pattern_reconstruction_", simulation_runs, "_", number_pattern, ".rds"),
 #                            path = paste0(getwd(), "/4_Output"),
 #                            overwrite = FALSE)

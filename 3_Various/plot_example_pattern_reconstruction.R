@@ -11,6 +11,7 @@
 
 # Packages #
 library(dplyr)
+library(helpeR) # devtools::install_github("mhesselbarth/helpeR)
 library(shar)
 library(spatstat)
 library(tidyverse)
@@ -129,8 +130,8 @@ plot_method_comparison <- ggplot() +
         legend.key.width = unit(1.5, "cm"))
 
 #### 4. Save result ####
-UtilityFunctions::save_ggplot(plot = plot_method_comparison, 
-                              path = "3_Various/2_Figures/",
-                              filename = "gamma_vs_reconstruction.png",
-                              width = 375, height = 250, units = "mm", 
-                              overwrite = TRUE)
+helpeR::save_ggplot(plot = plot_method_comparison, 
+                    path = "3_Various/2_Figures/",
+                    filename = "gamma_vs_reconstruction.png",
+                    width = 375, height = 250, units = "mm", 
+                    overwrite = TRUE)

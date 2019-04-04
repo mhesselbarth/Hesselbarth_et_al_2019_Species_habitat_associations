@@ -10,7 +10,7 @@
 
 # Packages
 library(NLMR)
-library(UtilityFunctions)
+library(helpeR)
 library(shar)
 library(spatstat)
 library(tidyverse)
@@ -134,33 +134,33 @@ names(pattern_reconstruction) <- c("method", "x", "y")
 
 overwrite <- FALSE
 
-UtilityFunctions::save_rds(object = simulation_landscape,
-                           filename = "simulation_landscape.rds",
-                           path = "3_Various/1_Output",
-                           overwrite = overwrite)
+helpeR::save_rds(object = simulation_landscape,
+                 filename = "simulation_landscape.rds",
+                 path = "3_Various/1_Output",
+                 overwrite = overwrite)
 
-UtilityFunctions::save_rds(object = example_species,
-                           filename = "species.rds",
-                           path = "3_Various/1_Output",
-                           overwrite = overwrite)
+helpeR::save_rds(object = example_species,
+                 filename = "species.rds",
+                 path = "3_Various/1_Output",
+                 overwrite = overwrite)
 
-UtilityFunctions::save_rds(object = gamma_test,
-                           filename = "gamma_test.rds",
-                           path = "3_Various/1_Output",
-                           overwrite = overwrite)
+helpeR::save_rds(object = gamma_test,
+                 filename = "gamma_test.rds",
+                 path = "3_Various/1_Output",
+                 overwrite = overwrite)
 
-UtilityFunctions::save_rds(object = habitats_randomized,
-                           filename = "patch_randomization.rds",
-                           path = "3_Various/1_Output",
-                           overwrite = overwrite)
+helpeR::save_rds(object = habitats_randomized,
+                 filename = "patch_randomization.rds",
+                 path = "3_Various/1_Output",
+                 overwrite = overwrite)
 
-UtilityFunctions::save_rds(object = habitats_torus,
-                           filename = "torus_translation.rds",
-                           path = "3_Various/1_Output",
-                           overwrite = overwrite)
+helpeR::save_rds(object = habitats_torus,
+                 filename = "torus_translation.rds",
+                 path = "3_Various/1_Output",
+                 overwrite = overwrite)
 
-UtilityFunctions::save_rds(object = pattern_reconstruction,
-                           filename = "pattern_reconstruction.rds",
-                           path = "3_Various/1_Output",
-                           overwrite = overwrite)
+helpeR::save_rds(object = pattern_reconstruction,
+                 filename = "pattern_reconstruction.rds",
+                 path = "3_Various/1_Output",
+                 overwrite = overwrite)
 

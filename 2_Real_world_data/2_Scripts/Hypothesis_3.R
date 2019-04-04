@@ -11,7 +11,7 @@
 # Load packages #
 # library(clustermq)
 
-library(UtilityFunctions) # devtools::install_github("mhesselbarth/UtilityFunctions)
+library(helpeR) # devtools::install_github("mhesselbarth/helpeR)
 library(raster)
 library(shar) # devtools::install_github("r-spatialecology/shar")
 library(spatstat)
@@ -85,12 +85,12 @@ beech_large <- spatstat::unmark(spatstat::subset.ppp(beech, DBH_group == "large"
 #                                               process = "cluster")
 # 
 # # save reconstructed pattern
-# UtilityFunctions::save_rds(object = reconstructed_beech_small,
+# helpeR::save_rds(object = reconstructed_beech_small,
 #                            filename = "reconstructed_beech_small.rds",
 #                            path = paste0(getwd(), "/2_Real_world_data/3_Results"))
 # 
 # # save reconstructed pattern
-# UtilityFunctions::save_rds(object = fitted_beech_small,
+# helpeR::save_rds(object = fitted_beech_small,
 #                            filename = "fitted_beech_small.rds",
 #                            path = paste0(getwd(), "/2_Real_world_data/3_Results"))
 # 
@@ -126,12 +126,12 @@ beech_large <- spatstat::unmark(spatstat::subset.ppp(beech, DBH_group == "large"
 #                                                process = "cluster")
 # 
 # # save reconstructed pattern
-# UtilityFunctions::save_rds(object = reconstructed_beech_medium,
+# helpeR::save_rds(object = reconstructed_beech_medium,
 #                            filename = "reconstructed_beech_medium.rds",
 #                            path = paste0(getwd(), "/2_Real_world_data/3_Results"))
 # 
 # # save reconstructed pattern
-# UtilityFunctions::save_rds(object = fitted_beech_medium,
+# helpeR::save_rds(object = fitted_beech_medium,
 #                            filename = "fitted_beech_medium.rds",
 #                            path = paste0(getwd(), "/2_Real_world_data/3_Results"))
 # 
@@ -167,12 +167,12 @@ beech_large <- spatstat::unmark(spatstat::subset.ppp(beech, DBH_group == "large"
 #                                               process = "cluster")
 # 
 # # save reconstructed pattern
-# UtilityFunctions::save_rds(object = reconstructed_beech_large,
+# helpeR::save_rds(object = reconstructed_beech_large,
 #                            filename = "reconstructed_beech_large.rds",
 #                            path = paste0(getwd(), "/2_Real_world_data/3_Results"))
 # 
 # # save reconstructed pattern
-# UtilityFunctions::save_rds(object = fitted_beech_large,
+# helpeR::save_rds(object = fitted_beech_large,
 #                            filename = "fitted_beech_large.rds",
 #                            path = paste0(getwd(), "/2_Real_world_data/3_Results"))
 
@@ -195,13 +195,12 @@ classification_raster_list <- readr::read_rds(paste0(getwd(), "/2_Real_world_dat
 
 # random_habitats_size <- shar::randomize_raster(classification_raster_list$size, n_random = n_random_large)
 # 
-# UtilityFunctions::save_rds(object = random_habitats_size, 
+# helpeR::save_rds(object = random_habitats_size, 
 #                            filename = "random_habitats_size.rds", 
 #                            path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
 #                            overwrite = FALSE)
 
 # random_habitats_size <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/random_habitats_size.rds"))
-
 random_habitats_species <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/random_habitats_species.rds"))
 
 
@@ -231,8 +230,8 @@ fitted_beech_large <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Resu
 # names(associations_beech_small) <- names_environment
 
 # get habitat associations to MRT map
-associations_beech_small <- shar::results_habitat_association(pattern = reconstructed_beech_small, 
-                                                              raster = classification_raster_list$species)
+associations_beech_small_reconstruced <- shar::results_habitat_association(pattern = reconstructed_beech_small, 
+                                                                           raster = classification_raster_list$species)
 
 associations_beech_small_fitted <- shar::results_habitat_association(pattern = fitted_beech_small, 
                                                                      raster = classification_raster_list$species)
@@ -250,8 +249,8 @@ associations_beech_small_walk <- shar::results_habitat_association(pattern = bee
 # names(associations_beech_medium) <- names_environment
 
 # get habitat associations to MRT map
-associations_beech_medium <- shar::results_habitat_association(pattern = reconstructed_beech_medium, 
-                                                               raster = classification_raster_list$species)
+associations_beech_medium_reconstruced <- shar::results_habitat_association(pattern = reconstructed_beech_medium, 
+                                                                            raster = classification_raster_list$species)
 
 associations_beech_medium_fitted <- shar::results_habitat_association(pattern = fitted_beech_medium, 
                                                                       raster = classification_raster_list$species)
@@ -269,8 +268,8 @@ associations_beech_medium_walk <- shar::results_habitat_association(pattern = be
 # names(associations_beech_large) <- names_environment
 
 # get habitat associations to MRT map
-associations_beech_large <- shar::results_habitat_association(pattern = reconstructed_beech_large, 
-                                                              raster = classification_raster_list$species)
+associations_beech_large_reconstruced <- shar::results_habitat_association(pattern = reconstructed_beech_large, 
+                                                                           raster = classification_raster_list$species)
 
 associations_beech_large_fitted <- shar::results_habitat_association(pattern = fitted_beech_large, 
                                                                      raster = classification_raster_list$species)
@@ -283,50 +282,50 @@ associations_beech_large_walk <- shar::results_habitat_association(pattern = bee
 overwrite <- FALSE
 
 # reconstructed data
-UtilityFunctions::save_rds(object = associations_beech_small, 
-                           filename = "associations_beech_small.rds", 
-                           path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
-                           overwrite = overwrite)
+helpeR::save_rds(object = associations_beech_small_reconstruced, 
+                 filename = "associations_beech_small_reconstruced.rds", 
+                 path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
+                 overwrite = overwrite)
 
-UtilityFunctions::save_rds(object = associations_beech_medium, 
-                           filename = "associations_beech_medium.rds", 
-                           path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
-                           overwrite = overwrite)
+helpeR::save_rds(object = associations_beech_medium_reconstruced, 
+                 filename = "associations_beech_medium_reconstruced.rds", 
+                 path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
+                 overwrite = overwrite)
 
-UtilityFunctions::save_rds(object = associations_beech_large, 
-                           filename = "associations_beech_large.rds", 
-                           path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
-                           overwrite = overwrite)
+helpeR::save_rds(object = associations_beech_large_reconstruced, 
+                 filename = "associations_beech_large_reconstruced.rds", 
+                 path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
+                 overwrite = overwrite)
 
 # fitted data
-UtilityFunctions::save_rds(object = associations_beech_small_fitted, 
-                           filename = "associations_beech_small_fitted.rds", 
-                           path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
-                           overwrite = overwrite)
+helpeR::save_rds(object = associations_beech_small_fitted, 
+                 filename = "associations_beech_small_fitted.rds", 
+                 path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
+                 overwrite = overwrite)
 
-UtilityFunctions::save_rds(object = associations_beech_medium_fitted, 
-                           filename = "associations_beech_medium_fitted.rds", 
-                           path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
-                           overwrite = overwrite)
+helpeR::save_rds(object = associations_beech_medium_fitted, 
+                 filename = "associations_beech_medium_fitted.rds", 
+                 path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
+                 overwrite = overwrite)
 
-UtilityFunctions::save_rds(object = associations_beech_large_fitted, 
-                           filename = "associations_beech_large_fitted.rds", 
-                           path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
-                           overwrite = overwrite)
+helpeR::save_rds(object = associations_beech_large_fitted, 
+                 filename = "associations_beech_large_fitted.rds", 
+                 path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
+                 overwrite = overwrite)
 
 # random walk data
-UtilityFunctions::save_rds(object = associations_beech_small_walk, 
-                           filename = "associations_beech_small_walk.rds", 
-                           path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
-                           overwrite = overwrite)
+helpeR::save_rds(object = associations_beech_small_walk, 
+                 filename = "associations_beech_small_walk.rds", 
+                 path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
+                 overwrite = overwrite)
 
-UtilityFunctions::save_rds(object = associations_beech_medium_walk, 
-                           filename = "associations_beech_medium_walk.rds", 
-                           path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
-                           overwrite = overwrite)
+helpeR::save_rds(object = associations_beech_medium_walk, 
+                 filename = "associations_beech_medium_walk.rds", 
+                 path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
+                 overwrite = overwrite)
 
-UtilityFunctions::save_rds(object = associations_beech_large_walk, 
-                           filename = "associations_beech_large_walk.rds", 
-                           path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
-                           overwrite = overwrite)
+helpeR::save_rds(object = associations_beech_large_walk, 
+                 filename = "associations_beech_large_walk.rds", 
+                 path = paste0(getwd(), "/2_Real_world_data/3_Results"), 
+                 overwrite = overwrite)
 

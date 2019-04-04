@@ -9,8 +9,8 @@
 #### Real-world data - Classify habitats using MRT ####
 
 #### Load packages ####
-library(mvpart)
-library(UtilityFunctions) # devtools::install_github("mhesselbarth/UtilityFunctions)
+library(mvpart) # devtools::install_github("mvignon/mvpart")
+library(helpeR) # devtools::install_github("mhesselbarth/helpeR)
 library(raster)
 library(rgeos)
 library(rpart)
@@ -338,7 +338,7 @@ mrt_model_size <- mvpart::mvpart(form = species_iv_size ~ acidity + light_condit
                                    nitrogen + soil_depth + water_content_spring + 
                                    water_content_summer + water_content,
                                  data = environmental_data_df,
-                                 size = 4, 
+                                 size = 4,
                                  xvmult = 1000, 
                                  xval = 100)
 
@@ -395,10 +395,10 @@ names(classification_raster_list) <- c("species", "size", "status")
 
 landscapetools::show_landscape(raster::stack(classification_raster_list))
 
-UtilityFunctions::save_rds(object = classification_raster_list,
-                           path = paste0(getwd(), "/2_Real_world_data/3_Results"),
-                           filename = "classification_raster_list.rds",
-                           overwrite = FALSE)
+helpeR::save_rds(object = classification_raster_list,
+                 path = paste0(getwd(), "/2_Real_world_data/3_Results"),
+                 filename = "classification_raster_list.rds",
+                 overwrite = FALSE)
 
 #### Plot results ####
 plot_area <- readr::read_rds(paste0(getwd(),
@@ -429,11 +429,11 @@ plot_classified <- ggplot2::ggplot() +
   ggplot2::labs(x = "x coordinate", y = "y coordinate") +
   ggplot2::theme_bw(base_size = 15)
 
-UtilityFunctions::save_ggplot(plot = plot_classified, 
-                              filename = "plot_classified.png", 
-                              path = "2_Real_world_data/4_Figures", 
-                              dpi = 300, width = 15, height = 15, units = "cm",
-                              overwrite = FALSE)
+helpeR::save_ggplot(plot = plot_classified, 
+                    filename = "plot_classified.png", 
+                    path = "2_Real_world_data/4_Figures", 
+                    dpi = 300, width = 15, height = 15, units = "cm",
+                    overwrite = FALSE)
 
 #### Results classification
 
