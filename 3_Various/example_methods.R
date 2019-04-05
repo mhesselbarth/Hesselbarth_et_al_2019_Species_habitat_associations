@@ -27,7 +27,8 @@ set.seed(42, kind = "L'Ecuyer-CMRG")
 # create landscape
 simulation_landscape <- NLMR::nlm_fbm(ncol = 50, nrow = 50, 
                                       resolution = 20, fract_dim = 1.5, 
-                                      verbose = FALSE) %>%
+                                      verbose = FALSE, 
+                                      cPrintlevel = 0) %>%
   shar::classify_habitats(classes = 5)
 
 # create pattern with 4 species
@@ -66,9 +67,9 @@ gamma_test <- purrr::map_dfr(gamma_test, function(current_pattern) {
   }, .id = "pattern")
 
 # convert pattern col to factor
-gamma_test$pattern <- factor(gamma_test_long$pattern, 
+gamma_test$pattern <- factor(gamma_test$pattern, 
                              levels = c("observed", "randomized_1"),
-                             labels = c("Observed", "(b) Gamma test"))
+                             labels = c("Observed", "(b) gamma-test"))
 
 # set identical names
 names(gamma_test) <- c("method", "x", "y")
@@ -87,7 +88,7 @@ habitats_randomized <- purrr::map_dfr(habitats_randomized, function(current_rast
 # convert pattern col to factor\
 habitats_randomized$raster <- factor(habitats_randomized$raster, 
                                      levels = c("observed", "randomized_1"),
-                                     labels = c("Observed", "(d) Patch randomization"))
+                                     labels = c("Observed", "(d) Randomized habitats"))
 
 # set identical names
 names(habitats_randomized) <- c("method", "x", "y", "layer")
@@ -140,7 +141,7 @@ helpeR::save_rds(object = simulation_landscape,
                  overwrite = overwrite)
 
 helpeR::save_rds(object = example_species,
-                 filename = "species.rds",
+                 filename = "example_species.rds",
                  path = "3_Various/1_Output",
                  overwrite = overwrite)
 

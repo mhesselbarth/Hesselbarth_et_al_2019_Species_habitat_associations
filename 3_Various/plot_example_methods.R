@@ -31,7 +31,9 @@ names(results) <- stringr::str_sub(results_names, start = 1, end = -5)
 #### Plot results ####
 
 # set point size
-point_size <- 3
+point_size <- 1
+col <- "black"
+text_size <- 12.5
 
 # Observed
 # convert to data frame
@@ -43,33 +45,33 @@ simulation_landscape$method <- "(a) Observed"
 plot_observed <- ggplot() +
   geom_raster(data = simulation_landscape, aes(x = x, y = y, fill = factor(layer))) +
   geom_point(data = as.data.frame(results$example_species),
-             aes(x = x, y = y), size = point_size) +
+             aes(x = x, y = y), size = point_size + 0.25, col = col) +
   facet_wrap(~ method, ncol = 1, nrow = 1) +
   scale_fill_viridis_d() +
   theme_classic() + 
   theme(aspect.ratio = 1, 
         panel.spacing = unit(15, "mm"),
         legend.position = "none", 
-        text = element_text(size = 32.5),
+        text = element_text(size = text_size),
         axis.title = element_blank(),
         axis.text = element_blank(),
         axis.ticks = element_blank())
 
 # Gamma test #
 gamma_test <- dplyr::filter(results$gamma_test,
-                            method == "(b) Gamma test")
+                            method == "(b) gamma-test")
 
 plot_gamma_test <- ggplot(data = gamma_test) + 
   geom_raster(data = as.data.frame(results$simulation_landscape, xy = TRUE),
               aes(x = x, y = y, fill = factor(layer))) +
-  geom_point(aes(x = x, y = y), size = point_size) +
+  geom_point(aes(x = x, y = y), size = point_size, col = col) +
   facet_wrap(~ method, ncol = 1, nrow = 1) +
   scale_fill_viridis_d() +
   theme_classic() + 
   theme(aspect.ratio = 1, 
         panel.spacing = unit(15, "mm"),
         legend.position = "none", 
-        text = element_text(size = 32.5),
+        text = element_text(size = text_size),
         axis.title = element_blank(),
         axis.text = element_blank(),
         axis.ticks = element_blank())
@@ -81,14 +83,14 @@ torus_translation <- dplyr::filter(results$torus_translation,
 plot_torus_translation_test <- ggplot(data = torus_translation) + 
   geom_raster(aes(x = x, y = y, fill = factor(layer))) +
   geom_point(data = as.data.frame(results$example_species), 
-             aes(x = x, y = y), size = point_size) +
+             aes(x = x, y = y), size = point_size, col = col) +
   facet_wrap(~ method, ncol = 1, nrow = 1) +
   scale_fill_viridis_d() +
   theme_classic() + 
   theme(aspect.ratio = 1, 
         panel.spacing = unit(15, "mm"),
         legend.position = "none", 
-        text = element_text(size = 32.5),
+        text = element_text(size = text_size),
         axis.title = element_blank(),
         axis.text = element_blank(),
         axis.ticks = element_blank())
@@ -96,19 +98,19 @@ plot_torus_translation_test <- ggplot(data = torus_translation) +
 
 # Patch randomization test #
 patch_randomization <- dplyr::filter(results$patch_randomization,
-                                     method == "(d) Patch randomization")
+                                     method == "(d) Randomized habitats")
 
 plot_patch_randomization_algorithm <- ggplot(data = patch_randomization) + 
   geom_raster(aes(x = x, y = y, fill = factor(layer))) +
   geom_point(data = as.data.frame(results$example_species), 
-             aes(x = x, y = y), size = point_size) +
+             aes(x = x, y = y), size = point_size, col = col) +
   facet_wrap(~ method, ncol = 1, nrow = 1) +
   scale_fill_viridis_d() +
   theme_classic() + 
   theme(aspect.ratio = 1, 
         panel.spacing = unit(15, "mm"),
         legend.position = "none",
-        text = element_text(size = 32.5),
+        text = element_text(size = text_size),
         axis.title = element_blank(),
         axis.text = element_blank(),
         axis.ticks = element_blank())
@@ -121,14 +123,14 @@ pattern_reconstruction <- dplyr::filter(results$pattern_reconstruction,
 plot_pattern_reconstruction <- ggplot(data = pattern_reconstruction) + 
   geom_raster(data = as.data.frame(results$simulation_landscape, xy = TRUE),
               aes(x = x, y = y, fill = factor(layer))) +
-  geom_point(aes(x = x, y = y), size = point_size) +
+  geom_point(aes(x = x, y = y), size = point_size, col = col) +
   facet_wrap(~ method, ncol = 1, nrow = 1) +
   scale_fill_viridis_d() +
   theme_classic() + 
   theme(aspect.ratio = 1, 
         panel.spacing = unit(15, "mm"),
         legend.position = "none", 
-        text = element_text(size = 32.5),
+        text = element_text(size = text_size),
         axis.title = element_blank(),
         axis.text = element_blank(),
         axis.ticks = element_blank())
@@ -138,33 +140,32 @@ plot_pattern_reconstruction <- ggplot(data = pattern_reconstruction) +
 
 # set plot size for overall
 width_plot <- 1
+width_spacer <- 0
 
-width_spacer <- 0.25
+plot_overall <- plot_observed + {plot_gamma_test + plot_torus_translation_test + plot_patch_randomization_algorithm + plot_pattern_reconstruction}
 
-plot_overall <- plot_observed + plot_spacer() + 
-  plot_gamma_test + plot_spacer() +
-  plot_torus_translation_test + plot_spacer() +
-  plot_patch_randomization_algorithm + plot_spacer() +
-  plot_pattern_reconstruction +
-  plot_layout(nrow = 1, 
-              widths = c(width_plot, width_spacer,
-                         width_plot, width_spacer,
-                         width_plot, width_spacer,
-                         width_plot, width_spacer,
-                         width_plot)) 
+# plot_overall <- plot_observed + plot_spacer() + 
+#   plot_gamma_test + plot_spacer() +
+#   plot_torus_translation_test + plot_spacer() +
+#   plot_patch_randomization_algorithm + plot_spacer() +
+#   plot_pattern_reconstruction +
+#   plot_layout(nrow = 1, 
+#               widths = c(width_plot, width_spacer,
+#                          width_plot, width_spacer,
+#                          width_plot, width_spacer,
+#                          width_plot, width_spacer,
+#                          width_plot)) 
 
 #### 6. Save plot ####
 
 # set plot saving parameters
-width <- 700
-
-heigth <- 180 
-
-overwrite <- FALSE
+width <- 210
+heigth <- 120 
+overwrite <- TRUE
 
 helpeR::save_ggplot(plot = plot_overall,
                     filename = "plot_methods.png",
-                    path = "3_Various/2_Figures/",
+                    path = "3_Various/2_Figures",
                     width = width,
                     height = heigth,
                     units = "mm", 

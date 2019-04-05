@@ -48,7 +48,7 @@ results_fitting <- purrr::map_dfr(results_fitting, function(current_species) {
 }, .id = "species")
 
 # add method to df
-results_fitting$method = "Gamma test"
+results_fitting$method = "gamma-test"
 
 results_reconstruction <- purrr::map_dfr(results_reconstruction, function(current_species) {
   purrr::map_dfr(current_species, function(current_pattern) { 
@@ -104,7 +104,7 @@ pcf_null_model$species <- factor(pcf_null_model$species,
 
 # covert method col to factor
 pcf_null_model$method <- factor(pcf_null_model$method, 
-                                levels = c("Gamma test",
+                                levels = c("gamma-test",
                                            "Pattern reconstruction"))
 
 #### 3. Plot results ###
@@ -114,24 +114,25 @@ plot_method_comparison <- ggplot() +
   geom_line(data = pcf_null_model, aes(x = r, y = lo, col = method), size = 1) +
   geom_line(data = pcf_null_model, aes(x = r, y = hi, col = method), size = 1) +
   geom_line(data = pcf_observed, aes(x = r, y = iso, col = "Observed"), size = 1) +
-  scale_color_manual(values = c("Gamma test" = "#1b9e77",
+  scale_color_manual(values = c("gamma-test" = "#1b9e77",
                                 "Pattern reconstruction" = "#7570b3", 
                                 "Observed" = "black", 
                                 "CSR" = "grey"), 
                      name = "") +
-  scale_fill_manual(values = c("Gamma test" = "#1b9e77",
+  scale_fill_manual(values = c("gamma-test" = "#1b9e77",
                                "Pattern reconstruction" = "#7570b3"), 
                      name = "") +
   facet_wrap(~ species, scales = "free") +
   labs(x = "r [m]", y = "g(r)") +
-  theme_classic(base_size = 30) +  
+  theme_classic(base_size = 15) +  
   guides(color = guide_legend(nrow = 2, byrow = TRUE), fill = FALSE) +
   theme(legend.position = "bottom", 
         legend.key.width = unit(1.5, "cm"))
 
 #### 4. Save result ####
 helpeR::save_ggplot(plot = plot_method_comparison, 
-                    path = "3_Various/2_Figures/",
+                    path = "3_Various/2_Figures",
                     filename = "gamma_vs_reconstruction.png",
-                    width = 375, height = 250, units = "mm", 
+                    dpi = 300, 
+                    width = 210, height = 160, units = "mm", 
                     overwrite = TRUE)

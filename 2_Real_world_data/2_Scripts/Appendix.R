@@ -81,7 +81,8 @@ species_abundance <- ggplot2::ggplot(data = dplyr::filter(abundance, type == "n_
                                        "Hornbeam" = "C. betulus ", "Sycamore" = "A. pseudoplatanus ", 
                                        "others" = "others")) +
   ggplot2::labs(x = "Species", y = "Relative value [%]") + 
-  ggplot2::theme_bw(base_size = 15)
+  ggplot2::theme_bw(base_size = 15) + 
+  ggplot2::theme(legend.position = "bottom")
 
 helpeR::save_ggplot(plot = species_abundance, 
                     path = "2_Real_world_data/4_Figures", 
@@ -109,7 +110,8 @@ dbh_distribution <- ggplot2::ggplot(data = dhb) +
   ggplot2::scale_x_continuous(breaks = seq(from = 0, to = max(dbh$smaller_than), by = 10), 
                               limits = c(0, 100)) + 
   ggplot2::labs(x = "DBH [cm]", y = "Count") + 
-  ggplot2::theme_bw(base_size = 15)
+  ggplot2::theme_bw(base_size = 15) + 
+  ggplot2::theme(legend.position = "bottom")
 
 # dbh_distribution <- ggplot2::ggplot(data = data.frame(pattern_2007_living$marks)) + 
 #   ggplot2::geom_histogram(ggplot2::aes(x = DBH_07), 
@@ -121,7 +123,7 @@ dbh_distribution <- ggplot2::ggplot(data = dhb) +
 helpeR::save_ggplot(plot = dbh_distribution, 
                     path = "2_Real_world_data/4_Figures", 
                     filename = "dbh_distribution.png", 
-                    dpi = 300, width = 15, height = 10, units = "cm",
+                    dpi = 300, width = 22, height = 12, units = "cm",
                     overwrite = TRUE)
 
 
@@ -215,7 +217,7 @@ reconstructed_others <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Re
 full_patterns_list <- list(Beech = reconstructed_beech, 
                            Ash = reconstructed_ash, 
                            Hornbeam = reconstructed_hornbeam, 
-                           Sycamore =reconstructed_sycamore,
+                           Sycamore = reconstructed_sycamore,
                            others = reconstructed_others)
 
 mean_energy_full_patterns <- purrr::map_dfr(full_patterns_list, function(x){

@@ -419,11 +419,13 @@ classification_raster_df$type <- factor(classification_raster_df$type,
                                         labels = c("Species", "Size classes", "Tree status"))
 
 plot_classified <- ggplot2::ggplot() + 
-  ggplot2::geom_raster(data = classification_raster_df, ggplot2::aes(x = x, y = y, fill = layer)) + 
-  # ggplot2::geom_polygon(data = plot_area_matrix,
-  #                       aes(x = plot_area_matrix[, 5], y = plot_area_matrix[, 6]),
-  #                       fill = NA, col = "black", size = 1) +
-  ggplot2::facet_wrap(~ type) +
+  ggplot2::geom_raster(data = dplyr::filter(classification_raster_df,
+                                            type == "Species"), 
+                       ggplot2::aes(x = x, y = y, fill = layer)) + 
+  ggplot2::geom_polygon(data = plot_area_matrix,
+                        aes(x = plot_area_matrix[, 5], y = plot_area_matrix[, 6]),
+                        fill = NA, col = "black", size = 1) +
+  # ggplot2::facet_wrap(~ type) +
   ggplot2::coord_equal() + 
   ggplot2::scale_fill_viridis_d(name = "Habitat") + 
   ggplot2::labs(x = "x coordinate", y = "y coordinate") +
@@ -432,8 +434,8 @@ plot_classified <- ggplot2::ggplot() +
 helpeR::save_ggplot(plot = plot_classified, 
                     filename = "plot_classified.png", 
                     path = "2_Real_world_data/4_Figures", 
-                    dpi = 300, width = 15, height = 15, units = "cm",
-                    overwrite = FALSE)
+                    dpi = 300, width = 210, height = 120, units = "mm",
+                    overwrite = TRUE)
 
 #### Results classification
 
