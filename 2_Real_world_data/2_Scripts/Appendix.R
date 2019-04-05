@@ -41,24 +41,52 @@ others <- spatstat::unmark(subset.ppp(pattern_2007_living, Species == "others"))
 #### Forest structure ####
 
 # Species abundance
-abundance <- table(pattern_2007_living$marks$Species) %>%
-  as.data.frame() %>% 
-  purrr::set_names(c("species", "abundance")) %>% 
-  dplyr::mutate(abundance_rel = abundance / sum(abundance) * 100, 
-                species = as.factor(species))
+# abundance <- table(pattern_2007_living$marks$Species) %>%
+#   as.data.frame() %>% 
+#   purrr::set_names(c("species", "abundance")) %>% 
+#   dplyr::mutate(abundance_rel = abundance / sum(abundance) * 100, 
+#                 species = as.factor(species))
 
-species_abundance <- ggplot2::ggplot(data = abundance) + 
-  ggplot2::geom_bar(ggplot2::aes(x = species, y = abundance_rel), stat = "identity") + 
-  ggplot2::geom_text(ggplot2::aes(x = species, y = abundance_rel, label = paste0("n = ", abundance)), 
-                     vjust = -1) +
+# position_dodge(width = 1) <- ggplot2::ggplot(data = abundance) + 
+#   ggplot2::geom_bar(ggplot2::aes(x = species, y = abundance_rel), stat = "identity") + 
+#   ggplot2::geom_text(ggplot2::aes(x = species, y = abundance_rel, label = paste0("n = ", abundance)), 
+#                      vjust = -1) +
+#   ggplot2::scale_y_continuous(breaks = seq(from = 0, to = 100, by = 20), limits = c(0, 100)) + 
+#   ggplot2::scale_x_discrete(labels = c("Beech" = "F. sylvatica", "Ash" = "F. exelcsior ", 
+#                                        "Hornbeam" = "C. betulus ", "Sycamore" = "A. pseudoplatanus ", 
+#                                        "others" = "others")) +
+#   ggplot2::labs(x = "Species", y = "Relative abundance [%]") + 
+#   ggplot2::theme_bw(base_size = 15)
+
+abundance <- pattern_2007_living$marks %>% 
+  as.data.frame() %>% 
+  dplyr::group_by(Species) %>%
+  dplyr::summarise(n = n(), 
+                   ba = sum(((DBH_07/2) ^ 2) * pi)) %>%
+  dplyr::mutate(n_rel = (n / sum(n)) * 100, 
+                ba_rel = (ba / sum(ba)) * 100) %>% 
+  tidyr::gather(key = "type", value = "value", -Species)
+
+species_abundance <- ggplot2::ggplot(data = dplyr::filter(abundance, type == "n_rel" | type == "ba_rel" )) + 
+  ggplot2::geom_bar(ggplot2::aes(x = Species, y = value, 
+                                 group = factor(type, levels = c("n_rel", "ba_rel")),
+                                 fill = factor(type, levels = c("n_rel", "ba_rel"))), 
+                    stat = "identity", position = "dodge") + 
+  ggplot2::geom_text(ggplot2::aes(x = Species, y = value, label = paste0(round(value, 1), "%"), 
+                                  group = factor(type, levels = c("n_rel", "ba_rel"))),
+                     position = position_dodge(width = 1), vjust = -1) +
+  ggplot2::scale_fill_viridis_d(name = "", labels = c("n_rel" = "Number of stems", "ba_rel" = "Basal area")) + 
   ggplot2::scale_y_continuous(breaks = seq(from = 0, to = 100, by = 20), limits = c(0, 100)) + 
-  ggplot2::labs(x = "Species", y = "Relative abundance [%]") + 
+  ggplot2::scale_x_discrete(labels = c("Beech" = "F. sylvatica", "Ash" = "F. exelcsior ", 
+                                       "Hornbeam" = "C. betulus ", "Sycamore" = "A. pseudoplatanus ", 
+                                       "others" = "others")) +
+  ggplot2::labs(x = "Species", y = "Relative value [%]") + 
   ggplot2::theme_bw(base_size = 15)
 
 helpeR::save_ggplot(plot = species_abundance, 
                     path = "2_Real_world_data/4_Figures", 
                     filename = "species_abundance.png", 
-                    dpi = 300, width = 15, height = 10, units = "cm",
+                    dpi = 300, width = 22, height = 12, units = "cm",
                     overwrite = TRUE)
 
 # DBH distribution 
@@ -95,7 +123,7 @@ envelope_beech <- spatstat::envelope(beech, fun = pcfinhom,
                                                     correction = "Ripley"), 
                                      nsim = nsim)
 
-plot_beech <- onpoint::plot_quantums(envelope_beech, title = "Beech", 
+plot_beech <- onpoint::plot_quantums(envelope_beech, title = "F. sylvatica", 
                                      legend_position = "none", ylab = "g(r)", xlab = "r [m]")
 
 envelope_ash <- spatstat::envelope(ash, fun = pcfinhom, 
@@ -103,7 +131,7 @@ envelope_ash <- spatstat::envelope(ash, fun = pcfinhom,
                                                   correction = "Ripley"),
                                    nsim = nsim)
 
-plot_ash <- onpoint::plot_quantums(envelope_ash, title = "Ash", 
+plot_ash <- onpoint::plot_quantums(envelope_ash, title = "F. excelsior", 
                                    legend_position = "none", ylab = "g(r)", xlab = "r [m]")
 
 envelope_hornbeam <- spatstat::envelope(hornbeam, fun = pcfinhom, 
@@ -111,7 +139,7 @@ envelope_hornbeam <- spatstat::envelope(hornbeam, fun = pcfinhom,
                                                   correction = "Ripley"),
                                    nsim = nsim)
 
-plot_hornbeam <- onpoint::plot_quantums(envelope_hornbeam, title = "Hornbeam", 
+plot_hornbeam <- onpoint::plot_quantums(envelope_hornbeam, title = "C. betulus", 
                                         legend_position = "none", ylab = "g(r)", xlab = "r [m]")
 
 envelope_sycamore <- spatstat::envelope(sycamore, fun = pcfinhom, 
@@ -119,7 +147,7 @@ envelope_sycamore <- spatstat::envelope(sycamore, fun = pcfinhom,
                                                        correction = "Ripley"),
                                         nsim = nsim)
 
-plot_sycamore <- onpoint::plot_quantums(envelope_sycamore, title = "Sycamore", 
+plot_sycamore <- onpoint::plot_quantums(envelope_sycamore, title = "A. pseudoplatanus", 
                                         legend_position = "none", ylab = "g(r)", xlab = "r [m]")
 
 
