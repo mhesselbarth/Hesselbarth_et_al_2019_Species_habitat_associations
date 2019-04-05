@@ -90,13 +90,33 @@ helpeR::save_ggplot(plot = species_abundance,
                     overwrite = TRUE)
 
 # DBH distribution 
+dbh <- data.frame(pattern_2007_living$marks) %>% 
+  dplyr::mutate(DBH_class = cut(DBH_07, breaks = 0:136)) %>%
+  dplyr::group_by(DBH_class) %>%
+  dplyr::summarise(n = n()) %>% 
+  dplyr::mutate(n_rel = n / sum(n) * 100, 
+                smaller_than = as.numeric(DBH_class), 
+                stage = dplyr::case_when(smaller_than <= 2.5 ~ "small", 
+                                         smaller_than > 2.5 & smaller_than <= 10 ~ "medium", 
+                                         smaller_than > 10 ~ "large"))
 
-dbh_distribution <- ggplot2::ggplot(data = data.frame(pattern_2007_living$marks)) + 
-  ggplot2::geom_histogram(ggplot2::aes(x = DBH_07), 
-                          binwidth = 1, fill = "black", col = "white") + 
-  ggplot2::scale_x_continuous(breaks = seq(from = 0, to = 100, by = 10), limits = c(0, 100)) +
+dbh_distribution <- ggplot2::ggplot(data = dhb) + 
+  ggplot2::geom_bar(ggplot2::aes(x = smaller_than, y = n, 
+                                 fill = factor(stage, 
+                                               levels = c("small", "medium", "large"))), 
+                    stat = "identity", col = "white") +  
+  ggplot2::scale_fill_viridis_d(name = "Life history stage") + 
+  ggplot2::scale_x_continuous(breaks = seq(from = 0, to = max(dbh$smaller_than), by = 10), 
+                              limits = c(0, 100)) + 
   ggplot2::labs(x = "DBH [cm]", y = "Count") + 
   ggplot2::theme_bw(base_size = 15)
+
+# dbh_distribution <- ggplot2::ggplot(data = data.frame(pattern_2007_living$marks)) + 
+#   ggplot2::geom_histogram(ggplot2::aes(x = DBH_07), 
+#                           binwidth = 1, fill = "black", col = "white") + 
+#   ggplot2::scale_x_continuous(breaks = seq(from = 0, to = 100, by = 10), limits = c(0, 100)) +
+#   ggplot2::labs(x = "DBH [cm]", y = "Count") + 
+#   ggplot2::theme_bw(base_size = 15)
 
 helpeR::save_ggplot(plot = dbh_distribution, 
                     path = "2_Real_world_data/4_Figures", 
