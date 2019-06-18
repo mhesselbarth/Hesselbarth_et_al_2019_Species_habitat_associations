@@ -11,6 +11,8 @@
 # Load packages #
 
 library(helpeR) # devtools::install_github("mhesselbarth/helpeR)
+library(onpoint) # devtools::install_github("mhesselbarth/onpoint")
+library(patchwork) # devtools::install_github("thomasp85/patchwork")
 library(shar) # devtools::install_github("r-spatialecology/shar")
 library(spatstat)
 library(tidyverse)
@@ -31,42 +33,82 @@ pattern_2007_dead <- spatstat::subset.ppp(pattern_2007, Type == "dead")
 # Beech
 beech <- spatstat::unmark(spatstat::subset.ppp(pattern_2007_living, Species == "Beech"))
 
-pcf_beech <- spatstat::pcf.ppp(beech, divisor = "d", correction = "Ripley", stoyan = 0.25)
+pcf_beech <- spatstat::envelope(beech, fun = onpoint::estimate_pcf_fast, 
+                                nsim = 199, nrank = 5,
+                                funargs = list(correction = "Ripley", 
+                                               stoyan = 0.25))
 
-plot(pcf_beech, main = "Pair correlation function Beech")
-
+plot_beech <- onpoint::plot_quantums(pcf_beech, 
+                                     xlab = "r [m]", ylab = "g(r)", title = "F. sylvatica",
+                                     line_size = 1, 
+                                     legend_position = "none")
 
 # Beech dead 
 beech_dead <- spatstat::subset.ppp(pattern_2007_dead, Species == "Beech")
 
-pcf_beech_dead <- spatstat::pcf.ppp(beech_dead, divisor = "d", correction = "Ripley", stoyan = 0.25)
+pcf_beech_dead <- spatstat::envelope(beech_dead, fun = "pcf", nsim = 199, nrank = 5,
+                                     funargs = list(divisor = "d", 
+                                                    correction = "Ripley", 
+                                                    stoyan = 0.25))
 
-plot(pcf_beech_dead, main = "Pair correlation function Beech")
+plot_beech_dead <- onpoint::plot_quantums(pcf_beech_dead, 
+                                          xlab = "r [m]", ylab = "g(r)", title = "F. sylvatica (dead)",
+                                          line_size = 1,  
+                                          legend_position = "none")
 
 # Ash
 ash <- spatstat::unmark(spatstat::subset.ppp(pattern_2007_living, Species == "Ash"))
 
-pcf_ash <- spatstat::pcf.ppp(ash, divisor = "d", correction = "Ripley", stoyan = 0.25)
+pcf_ash <- spatstat::envelope(ash, fun = "pcf", nsim = 199, nrank = 5,
+                              funargs = list(divisor = "d", 
+                                             correction = "Ripley", 
+                                             stoyan = 0.25))
 
-plot(pcf_ash, main = "Pair correlation function Ash")
+plot_ash <- onpoint::plot_quantums(pcf_ash, 
+                                   xlab = "r [m]", ylab = "g(r)", title = "F. excelsior",
+                                   line_size = 1, 
+                                   legend_position = "none")
 
 # Sycamore
 sycamore <- spatstat::unmark(spatstat::subset.ppp(pattern_2007_living, Species == "Sycamore"))
 
-pcf_sycamore <- spatstat::pcf.ppp(sycamore, divisor = "d", correction = "Ripley", stoyan = 0.25)
+pcf_sycamore <- spatstat::envelope(sycamore, fun = "pcf", nsim = 199, nrank = 5,
+                                   funargs = list(divisor = "d", 
+                                                  correction = "Ripley", 
+                                                  stoyan = 0.25))
 
-plot(pcf_sycamore, main = "Pair correlation function Sycamore")
+plot_sycamore <- onpoint::plot_quantums(pcf_sycamore,
+                                        xlab = "r [m]", ylab = "g(r)", title = "A. pseudoplatanus",
+                                        line_size = 1, 
+                                        legend_position = "none")
 
 # Hornbeam
 hornbeam <- spatstat::unmark(spatstat::subset.ppp(pattern_2007_living, Species == "Hornbeam"))
 
-pcf_hornbeam <- spatstat::pcf.ppp(hornbeam, divisor = "d", correction = "Ripley", stoyan = 0.25)
+pcf_hornbeam <- spatstat::envelope(hornbeam, fun = "pcf", nsim = 199, nrank = 5,
+                                   funargs = list(divisor = "d", 
+                                                  correction = "Ripley", 
+                                                  stoyan = 0.25))
 
-plot(pcf_hornbeam, main = "Pair correlation function Hornbeam")
+plot_hornbeam <- onpoint::plot_quantums(pcf_hornbeam, 
+                                        xlab = "r [m]", ylab = "g(r)", title = "C. betulus",
+                                        line_size = 1, 
+                                        legend_position = "none")
 
 # others
 others <- spatstat::unmark(spatstat::subset.ppp(pattern_2007_living, Species == "others"))
 
-pcf_others <- spatstat::pcf.ppp(others, divisor = "d", correction = "Ripley", stoyan = 0.25)
+pcf_others <- spatstat::envelope(others, fun = "pcf", nsim = 199, nrank = 5,
+                                   funargs = list(divisor = "d", 
+                                                  correction = "Ripley", 
+                                                  stoyan = 0.25))
 
-plot(pcf_others, main = "Pair correlation function others")
+plot_others <- onpoint::plot_quantums(pcf_others, 
+                                      xlab = "r [m]", ylab = "g(r)", title = "others",
+                                      line_size = 1, 
+                                      legend_position = "none")
+
+# combine plots 
+plot_overall <- plot_beech + plot_ash + 
+  plot_sycamore + plot_hornbeam + 
+  plot_layout(ncol = 2, nrow = 2)

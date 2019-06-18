@@ -55,7 +55,8 @@ plot_observed <- ggplot() +
         text = element_text(size = text_size),
         axis.title = element_blank(),
         axis.text = element_blank(),
-        axis.ticks = element_blank())
+        axis.ticks = element_blank(), 
+        axis.line = element_blank())
 
 # Gamma test #
 gamma_test <- dplyr::filter(results$gamma_test,
@@ -74,7 +75,8 @@ plot_gamma_test <- ggplot(data = gamma_test) +
         text = element_text(size = text_size),
         axis.title = element_blank(),
         axis.text = element_blank(),
-        axis.ticks = element_blank())
+        axis.ticks = element_blank(), 
+        axis.line = element_blank())
 
 # Torus translation test
 torus_translation <- dplyr::filter(results$torus_translation,
@@ -93,7 +95,8 @@ plot_torus_translation_test <- ggplot(data = torus_translation) +
         text = element_text(size = text_size),
         axis.title = element_blank(),
         axis.text = element_blank(),
-        axis.ticks = element_blank())
+        axis.ticks = element_blank(), 
+        axis.line = element_blank())
 
 
 # Patch randomization test #
@@ -113,7 +116,8 @@ plot_patch_randomization_algorithm <- ggplot(data = patch_randomization) +
         text = element_text(size = text_size),
         axis.title = element_blank(),
         axis.text = element_blank(),
-        axis.ticks = element_blank())
+        axis.ticks = element_blank(), 
+        axis.line = element_blank())
 
 
 # Pattern reconstruction test #
@@ -133,7 +137,8 @@ plot_pattern_reconstruction <- ggplot(data = pattern_reconstruction) +
         text = element_text(size = text_size),
         axis.title = element_blank(),
         axis.text = element_blank(),
-        axis.ticks = element_blank())
+        axis.ticks = element_blank(), 
+        axis.line = element_blank())
 
 
 # Plot overall
@@ -142,7 +147,8 @@ plot_pattern_reconstruction <- ggplot(data = pattern_reconstruction) +
 width_plot <- 1
 width_spacer <- 0
 
-plot_overall <- plot_observed + {plot_gamma_test + plot_torus_translation_test + plot_patch_randomization_algorithm + plot_pattern_reconstruction}
+plot_overall <- plot_observed + {plot_gamma_test + plot_torus_translation_test + 
+    plot_patch_randomization_algorithm + plot_pattern_reconstruction}
 
 # plot_overall <- plot_observed + plot_spacer() + 
 #   plot_gamma_test + plot_spacer() +
@@ -161,7 +167,7 @@ plot_overall <- plot_observed + {plot_gamma_test + plot_torus_translation_test +
 # set plot saving parameters
 width <- 210
 heigth <- 120 
-overwrite <- TRUE
+overwrite <- FALSE
 
 helpeR::save_ggplot(plot = plot_overall,
                     filename = "plot_methods.png",
