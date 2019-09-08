@@ -10,7 +10,7 @@
 
 #### Load packages ####
 library(mvpart) # devtools::install_github("mvignon/mvpart")
-library(helpeR) # devtools::install_github("mhesselbarth/helpeR)
+library(suppoRt) # devtools::install_github("mhesselbarth/suppoRt)
 library(raster)
 library(rgeos)
 library(rpart)
@@ -395,7 +395,7 @@ names(classification_raster_list) <- c("species", "size", "status")
 
 landscapetools::show_landscape(raster::stack(classification_raster_list))
 
-helpeR::save_rds(object = classification_raster_list,
+suppoRt::save_rds(object = classification_raster_list,
                  path = paste0(getwd(), "/2_Real_world_data/3_Results"),
                  filename = "classification_raster_list.rds",
                  overwrite = FALSE)
@@ -431,7 +431,7 @@ plot_classified <- ggplot2::ggplot() +
   ggplot2::labs(x = "x coordinate", y = "y coordinate") +
   ggplot2::theme_bw(base_size = 15)
 
-helpeR::save_ggplot(plot = plot_classified, 
+suppoRt::save_ggplot(plot = plot_classified, 
                     filename = "plot_classified.png", 
                     path = "2_Real_world_data/4_Figures", 
                     dpi = 300, width = 210, height = 120, units = "mm",
