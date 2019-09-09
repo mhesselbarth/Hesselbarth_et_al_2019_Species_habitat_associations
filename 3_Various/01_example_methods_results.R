@@ -9,7 +9,7 @@
 #### 1. Import packages and data ####
 
 # Packages #
-library(helpeR) # devtools::install_github("mhesselbarth/helpeR)
+library(suppoRt) # devtools::install_github("mhesselbarth/suppoRt)
 library(patchwork)
 library(raster)
 library(spatstat)
@@ -18,15 +18,17 @@ library(tidyverse)
 #### 1. Input data ####
 
 # import data
-results <- list.files(path = "3_Various/1_Output/", full.names = TRUE) %>%
+results <- list.files(path = "3_Various/1_Results/", full.names = TRUE,
+                      pattern = "01_") %>%
   purrr::map(function(files) readr::read_rds(files))
 
 # get names of input
-results_names <- list.files(path = "3_Various/1_Output/", full.names = FALSE) %>%
+results_names <- list.files(path = "3_Various/1_Results/", full.names = FALSE,
+                            pattern = "01_") %>%
   purrr::map_chr(function(files) files)
 
 # assign names to result list
-names(results) <- stringr::str_sub(results_names, start = 1, end = -5)
+names(results) <- stringr::str_sub(results_names, start = 4, end = -5)
 
 #### Plot results ####
 
@@ -169,42 +171,41 @@ width <- 210
 heigth <- 120 
 overwrite <- FALSE
 
-helpeR::save_ggplot(plot = plot_overall,
-                    filename = "plot_methods.png",
-                    path = "3_Various/2_Figures",
-                    width = width,
-                    height = heigth,
-                    units = "mm", 
-                    overwrite = overwrite)
+suppoRt::save_ggplot(plot = plot_overall,
+                     filename = "plot_methods.png",
+                     path = "3_Various/2_Figures",
+                     width = width, height = heigth, units = "mm", 
+                     dpi = 300,
+                     overwrite = overwrite)
 
-# helpeR::save_ggplot(plot = plot_gamma_test, 
-#                               filename = "p00_plot_gamma_test.png", 
-#                               path = "6_Figures", 
-#                               overwrite = overwrite, 
-#                               width = width, 
-#                               height = heigth, 
-#                               units = "mm")
+# suppoRt::save_ggplot(plot = plot_gamma_test, 
+#                      filename = "p00_plot_gamma_test.png", 
+#                      path = "6_Figures", 
+#                      overwrite = overwrite, 
+#                      width = width, 
+#                      height = heigth, 
+#                      units = "mm")
 # 
-# helpeR::save_ggplot(plot = plot_pattern_reconstruction, 
-#                               filename = "p00_plot_pattern_reconstruction.png", 
-#                               path = "6_Figures", 
-#                               overwrite = overwrite, 
-#                               width = width, 
-#                               height = heigth, 
-#                               units = "mm")
+# suppoRt::save_ggplot(plot = plot_pattern_reconstruction, 
+#                      filename = "p00_plot_pattern_reconstruction.png", 
+#                      path = "6_Figures", 
+#                      overwrite = overwrite, 
+#                      width = width, 
+#                      height = heigth, 
+#                      units = "mm")
 # 
-# helpeR::save_ggplot(plot = plot_habitat_randomization_test, 
-#                               filename = "p00_plot_habitat_randomization_test.png", 
-#                               path = "6_Figures", 
-#                               overwrite = overwrite, 
-#                               width = width, 
-#                               height = heigth, 
-#                               units = "mm")
+# suppoRt::save_ggplot(plot = plot_habitat_randomization_test, 
+#                      filename = "p00_plot_habitat_randomization_test.png", 
+#                      path = "6_Figures", 
+#                      overwrite = overwrite, 
+#                      width = width, 
+#                      height = heigth, 
+#                      units = "mm")
 # 
-# helpeR::save_ggplot(plot = plot_torus_translation_test, 
-#                               filename = "p00_plot_torus_translation_test.png", 
-#                               path = "6_Figures", 
-#                               overwrite = overwrite, 
-#                               width = width, 
-#                               height = heigth, 
-#                               units = "mm")
+# suppoRt::save_ggplot(plot = plot_torus_translation_test, 
+#                      filename = "p00_plot_torus_translation_test.png", 
+#                      path = "6_Figures", 
+#                      overwrite = overwrite, 
+#                      width = width, 
+#                      height = heigth, 
+#                      units = "mm")

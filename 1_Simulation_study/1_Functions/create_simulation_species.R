@@ -23,9 +23,9 @@ create_simulation_species <- function(habitats_poly, habitat,  owin_overall,
   
   scale <- mean(diff(owin_overall$yrange), diff(owin_overall$xrange)) / 25
   
-  if(type == "positive"){
+  if (type == "positive") {
     
-    if(process == "Poisson"){
+    if (process == "Poisson") {
       
       owin_pattern <- maptools::as.owin.SpatialPolygons(habitats_poly[habitats_poly$layer == habitat,])
       
@@ -49,7 +49,7 @@ create_simulation_species <- function(habitats_poly, habitat,  owin_overall,
       spatstat::marks(pattern) <- marks_pattern
     }
     
-    else if(process == "Thomas"){
+    else if (process == "Thomas") {
       
       owin_pattern <- maptools::as.owin.SpatialPolygons(habitats_poly[habitats_poly$layer == habitat,])
       
@@ -75,19 +75,19 @@ create_simulation_species <- function(habitats_poly, habitat,  owin_overall,
       spatstat::marks(pattern) <- marks_pattern
     }
     
-    else{
+    else {
       
-      if(verbose == TRUE){print("Please select either 'Poisson', 'Thomas' as process")}
+      if (verbose == TRUE) {print("Please select either 'Poisson', 'Thomas' as process")}
       pattern <- NULL
     }
   }
   
-  else if (type == "negative"){
+  else if (type == "negative") {
     
-    # spatstat.options(fastthin = FALSE)
+    # spatstat.options(fastthin = FALSE) / bug is fixed in newer spatstat version
     p_retain <- 1 - association_strength
     
-    if(process == "Poisson"){
+    if (process == "Poisson") {
       
       owin_pattern <- maptools::as.owin.SpatialPolygons(habitats_poly[habitats_poly$layer == habitat,])
       
@@ -112,7 +112,7 @@ create_simulation_species <- function(habitats_poly, habitat,  owin_overall,
       spatstat::marks(pattern) <- marks_pattern
     }
     
-    else if(process=="Thomas"){
+    else if (process=="Thomas") {
       
       owin_pattern <- maptools::as.owin.SpatialPolygons(habitats_poly[habitats_poly$layer == habitat,])
       
@@ -141,14 +141,14 @@ create_simulation_species <- function(habitats_poly, habitat,  owin_overall,
     
     else{
       
-      if(verbose == TRUE){print("Please select either 'Poisson', 'Thomas' or as process")}
+      if (verbose == TRUE) {print("Please select either 'Poisson', 'Thomas' or as process")}
       pattern <- NULL
     }
   }
   
-  else if(type == "neutral"){
+  else if (type == "neutral") {
     
-    if(process == "Poisson"){
+    if (process == "Poisson") {
       
       pattern <- mobsim::sim_poisson_community(s_pool = 1, 
                                                n_sim = number_points, 
@@ -165,7 +165,7 @@ create_simulation_species <- function(habitats_poly, habitat,  owin_overall,
       spatstat::marks(pattern) <- marks_pattern
     }
     
-    else if(process == "Thomas"){
+    else if (process == "Thomas") {
       
       pattern <- mobsim::sim_thomas_community(s_pool = 1, 
                                               n_sim = number_points, 
@@ -186,14 +186,14 @@ create_simulation_species <- function(habitats_poly, habitat,  owin_overall,
     
     else{
       
-      if(verbose == TRUE){print("Please select either 'Poisson', 'Thomas' or 'Complex' as process")}
+      if (verbose == TRUE) {print("Please select either 'Poisson', 'Thomas' or 'Complex' as process")}
       pattern <- NULL
     }
   }
   
   else{
     
-    if(verbose == TRUE){print("Please select either 'positive', 'negative' or 'neutral' as type")}
+    if (verbose == TRUE) {print("Please select either 'positive', 'negative' or 'neutral' as type")}
     pattern <- NULL
   }
   

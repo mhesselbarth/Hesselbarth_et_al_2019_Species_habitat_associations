@@ -19,15 +19,15 @@ library(tidyverse)
 #### 1. Input data ####
 
 # import data
-results <- list.files(path = "3_Various/1_Output/", pattern = "example_*", full.names = TRUE) %>%
+results <- list.files(path = "3_Various/1_Results/", pattern = "02_", full.names = TRUE) %>%
   purrr::map(function(files) readr::read_rds(files))
 
 # get name of data
-results_names <- list.files(path = "3_Various/1_Output/", pattern = "example_*", full.names = FALSE) %>%
+results_names <- list.files(path = "3_Various/1_Results/", pattern = "02_", full.names = FALSE) %>%
   purrr::map_chr(function(files) files)
 
 # add names
-names(results) <- stringr::str_sub(results_names, start = 1, end = -5)
+names(results) <- stringr::str_sub(results_names, start = 4, end = -5)
 
 # split results according to method
 results_fitting <- results$example_fitted_pattern
@@ -134,5 +134,4 @@ helpeR::save_ggplot(plot = plot_method_comparison,
                     path = "3_Various/2_Figures",
                     filename = "gamma_vs_reconstruction.png",
                     dpi = 300, 
-                    width = 210, height = 160, units = "mm", 
-                    overwrite = TRUE)
+                    width = 210, height = 160, units = "mm")

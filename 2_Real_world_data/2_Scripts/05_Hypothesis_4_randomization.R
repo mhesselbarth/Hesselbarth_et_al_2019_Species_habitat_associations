@@ -48,21 +48,21 @@ comp_fast <- 0
 #                                                                 max_runs = max_runs,
 #                                                                 comp_fast = comp_fast)
 
-reconstructed_beech_living <- clustermq::Q(fun = shar::reconstruct_pattern_cluster,
-                                           n_random = n_random_hpc,
-                                           const = list(pattern = beech_living,
-                                                        max_runs = max_runs,
-                                                        comp_fast = comp_fast,
-                                                        return_input = FALSE,
-                                                        simplify = TRUE,
-                                                        verbose = FALSE),
-                                           seed = 42,
-                                           n_jobs = length(n_random_hpc),
-                                           template = list(job_name = "beech_living_recon",
-                                                           queue = "medium",
-                                                           walltime = "48:00",
-                                                           processes = 1,
-                                                           log_file = "beech_living_recon.log"))
+reconstructed_beech_living <- suppoRt::submit_to_cluster(fun = shar::reconstruct_pattern_cluster,
+                                                         n_random = n_random_hpc,
+                                                         const = list(pattern = beech_living,
+                                                                      max_runs = max_runs,
+                                                                      comp_fast = comp_fast,
+                                                                      return_input = FALSE,
+                                                                      simplify = TRUE,
+                                                                      verbose = FALSE),
+                                                         seed = 42,
+                                                         n_jobs = length(n_random_hpc),
+                                                         template = list(job_name = "beech_living_recon",
+                                                                         queue = "medium",
+                                                                         walltime = "48:00",
+                                                                         processes = 1,
+                                                                         log_file = "beech_living_recon.log"))
 
 # add observed pattern
 reconstructed_beech_living[[length(n_random) + 1]] <- spatstat::unmark(beech_living)
@@ -91,21 +91,21 @@ helpeR::save_rds(object = fitted_beech_living,
 #                                                               max_runs = max_runs,
 #                                                               comp_fast = comp_fast)
 
-reconstructed_beech_dead <- clustermq::Q(fun = shar::reconstruct_pattern_cluster,
-                                         n_random = n_random_hpc,
-                                         const = list(pattern = beech_dead,
-                                                      max_runs = max_runs,
-                                                      comp_fast = comp_fast,
-                                                      return_input = FALSE,
-                                                      simplify = TRUE,
-                                                      verbose = FALSE),
-                                         seed = 42,
-                                         n_jobs = length(n_random_hpc),
-                                         template = list(job_name = "beech_dead_recon",
-                                                         queue = "medium",
-                                                         walltime = "48:00",
-                                                         processes = 1,
-                                                         log_file = "beech_dead_recon.log"))
+reconstructed_beech_dead <- suppoRt::submit_to_cluster(fun = shar::reconstruct_pattern_cluster,
+                                                       n_random = n_random_hpc,
+                                                       const = list(pattern = beech_dead,
+                                                                    max_runs = max_runs,
+                                                                    comp_fast = comp_fast,
+                                                                    return_input = FALSE,
+                                                                    simplify = TRUE,
+                                                                    verbose = FALSE),
+                                                       seed = 42,
+                                                       n_jobs = length(n_random_hpc),
+                                                       template = list(job_name = "beech_dead_recon",
+                                                                       queue = "medium",
+                                                                       walltime = "48:00",
+                                                                       processes = 1,
+                                                                       log_file = "beech_dead_recon.log"))
 
 # add observed pattern
 reconstructed_beech_dead[[length(n_random) + 1]] <- spatstat::unmark(beech_dead)

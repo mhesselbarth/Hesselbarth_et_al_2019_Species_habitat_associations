@@ -26,6 +26,7 @@ create_simulation_pattern <- function(raster, number_points = 100, association_s
   
   # Species 1: Positive associations (Poisson)
   habitat_1 <- sample(x = seq(min(raster::values(raster)):max(raster::values(raster))), size = 1)
+  
   species_1 <- create_simulation_species(habitats_poly = habitats_poly, 
                                          owin_overall = owin_overall,
                                          type = "positive", process = "Poisson",
@@ -36,6 +37,7 @@ create_simulation_pattern <- function(raster, number_points = 100, association_s
   
   # Species 2: Positive associations (Thomas process)
   habitat_2 <- sample(x = seq(min(raster::values(raster)):max(raster::values(raster))), size = 1)
+  
   species_2 <- create_simulation_species(habitats_poly = habitats_poly,
                                          owin_overall = owin_overall,
                                          type = "positive", process = "Thomas",
@@ -46,6 +48,7 @@ create_simulation_pattern <- function(raster, number_points = 100, association_s
   
   # Species 3: Negative associations (Poisson)
   habitat_3 <- sample(x = seq(min(raster::values(raster)):max(raster::values(raster))), size = 1)
+ 
   species_3 <- create_simulation_species(habitats_poly = habitats_poly,
                                          owin_overall = owin_overall, 
                                          type = "negative", process = "Poisson",
@@ -56,6 +59,7 @@ create_simulation_pattern <- function(raster, number_points = 100, association_s
   
   # Species 4: Negative associations habitat 4 (Thomas process)
   habitat_4 <- sample(x = seq(min(raster::values(raster)):max(raster::values(raster))), size = 1)
+  
   species_4 <- create_simulation_species(habitats_poly = habitats_poly, 
                                          owin_overall = owin_overall,
                                          type = "negative", process = "Thomas",

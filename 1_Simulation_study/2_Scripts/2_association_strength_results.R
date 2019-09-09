@@ -9,9 +9,9 @@
 #### Simulation study - Results ####
 
 # Packages #
-library(helpeR)
 library(shar)
 library(spatstat)
+library(suppoRt) # devtools::install_github("mhesselbarth/suppoRt)
 library(tidyverse)
 
 # import results simulation study

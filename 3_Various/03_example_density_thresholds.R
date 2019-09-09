@@ -13,8 +13,8 @@ library(onpoint)
 library(purrr)
 library(raster)
 library(shar)
+library(suppoRt)
 library(spatstat)
-
 
 # classify landscape
 landscape_classified <- shar::classify_habitats(shar::landscape, classes = 5)
@@ -28,18 +28,29 @@ pattern_csr <- spatstat::envelope(Y = shar::species_b, fun = pcf, nsim = 199,
 onpoint::plot_quantums(pattern_csr)
 
 # gamma test randomization
-pattern_random <- shar::fit_point_process(shar::species_b, n_random = 1999, 
+pattern_random <- shar::fit_point_process(pattern = spatstat::unmark(shar::species_b), 
+                                          n_random = 1999, 
                                           process = "cluster")
 
+# combine to one list
+pattern_random_list <- c(pattern_random$randomized, 
+                         list(pattern_random$observed))
+
+# set names
+names(pattern_random_list) <- c(paste0("randomized_", seq(from = 1,
+                                              to = length(pattern_random_list) - 1,
+                                              by = 1)),
+                    "observed")
+
 # extract points
-points_extracted <- purrr::map_dfr(pattern_random, function(x) {
+points_extracted <- purrr::map_dfr(pattern_random_list, function(x) {
   shar::extract_points(raster = landscape_classified,
                        pattern = x)}, .id = "pattern")
 
 # only random points
 points_random <- dplyr::filter(points_extracted, 
                                pattern != "observed", 
-                               habitat == 2) 
+                               habitat == 3) 
 
 thresholds <- quantile(points_random$count, probs = c(0.025, 0.975))
 
@@ -49,9 +60,12 @@ points_count <- dplyr::group_by(points_random, count) %>%
 # only observed points
 points_observed <- dplyr::filter(points_extracted, 
                                  pattern == "observed", 
-                                 habitat == 2)
+                                 habitat == 3)
 
-ggplot2::ggplot() + 
+results_habitat_association(pattern = pattern_random, 
+                            raster = landscape_classified)
+
+ggplot_density <- ggplot2::ggplot() + 
   # ggplot2::geom_bar(data = points_count, stat = "identity",
   #                   ggplot2::aes(x = count, y = n)) +
   ggplot2::geom_density(data = points_random, 
@@ -72,7 +86,7 @@ ggplot2::ggplot() +
   ggplot2::theme_bw(base_size = 15)
 
 
-ggplot2::ggplot() + 
+ggplot_threshold <- ggplot2::ggplot() + 
   # ggplot2::geom_bar(data = points_count, stat = "identity",
   #                   ggplot2::aes(x = count, y = n)) +
   ggplot2::geom_density(data = points_random, 
@@ -92,7 +106,7 @@ ggplot2::ggplot() +
   ggplot2::labs(x = "Individuals within habitat", y = "n (randomizations)") + 
   ggplot2::theme_bw(base_size = 15)
 
-ggplot2::ggplot() + 
+ggplot_result <- ggplot2::ggplot() + 
   # ggplot2::geom_bar(data = points_count, stat = "identity",
   #                   ggplot2::aes(x = count, y = n)) +
   ggplot2::geom_density(data = points_random, 
@@ -112,4 +126,20 @@ ggplot2::ggplot() +
   ggplot2::labs(x = "Individuals within habitat", y = "n (randomizations)") + 
   ggplot2::theme_bw(base_size = 15)
 
+suppoRt::save_ggplot(plot = ggplot_density,
+                     filename = "ggplot_density.png",
+                     path = "3_Various/2_Figures",
+                     width = 250, height = 125, units = "mm", 
+                     dpi = 300)
 
+suppoRt::save_ggplot(plot = ggplot_threshold,
+                     filename = "ggplot_threshold.png",
+                     path = "3_Various/2_Figures",
+                     width = 250, height = 125, units = "mm", 
+                     dpi = 300)
+
+suppoRt::save_ggplot(plot = ggplot_result,
+                     filename = "ggplot_result.png",
+                     path = "3_Various/2_Figures",
+                     width = 250, height = 125, units = "mm", 
+                     dpi = 300)

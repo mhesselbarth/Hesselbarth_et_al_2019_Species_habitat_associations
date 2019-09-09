@@ -12,8 +12,7 @@
 
 # Packages
 library(clustermq)
-
-library(helpeR) # devtools::install_github("mhesselbarth/helpeR)
+library(suppoRt) # devtools::install_github("mhesselbarth/suppoRt)
 library(maptools)
 library(mobsim)
 library(NLMR)
@@ -78,13 +77,12 @@ association_strength <- seq(0.05, 1, 0.05) # rep(seq(0, 1, 0.025), each = simula
 #                                 simulation_runs = simulation_runs, 
 #                                 threshold = 0.75)
 # 
-# helpeR::save_rds(object = input_data, 
+# suppoRt::save_rds(object = input_data, 
 #                  filename = "input_data.rds", 
 #                  path = "1_Simulation_study/3_Results", 
 #                  overwrite = overwrite)
 
 input_data <- readr::read_rds("1_Simulation_study/3_Results/input_data.rds")
-
 
 #### 4. Run simulations using HPC (clustermq) ####
 
@@ -105,27 +103,31 @@ input_data <- readr::read_rds("1_Simulation_study/3_Results/input_data.rds")
 #                                       seed = 42,
 #                                       n_jobs = length(association_strength),
 #                                       job_size = 1,
-#                                       template = list(queue = "mpi",
-#                                                       walltime = "48:00",
-#                                                       processes = 1))
+#                                       template = list(job_name = "habitat_random", 
+#                                                       queue = "medium",
+#                                                       walltime = "12:00",
+#                                                       processes = 1,
+#                                                       log_file = "habitat_random.log"))
 
-habitat_randomization <- helper::submit_to_cluster(fun = simulate_habitat_random_association_strength,
-                                                   simulation_habitat = input_data$habitats,
-                                                   simulation_pattern = input_data$patterns,
-                                                   association_strength = rep(association_strength, each = simulation_runs),
-                                                   const = list(n_random = n_random),
-                                                   export = list(detect_habitat_associations = detect_habitat_associations),
-                                                   seed = 42,
-                                                   n_jobs = length(input_data$habitats),
-                                                   job_size = 1,
-                                                   template = list(queue = "mpi",
-                                                                   walltime = "12:00",
-                                                                   processes = 1))
-             
+habitat_randomization <- suppoRt::submit_to_cluster(fun = simulate_habitat_random_association_strength,
+                                                    simulation_habitat = input_data$habitats,
+                                                    simulation_pattern = input_data$patterns,
+                                                    association_strength = rep(association_strength, each = simulation_runs),
+                                                    const = list(n_random = n_random),
+                                                    export = list(detect_habitat_associations = detect_habitat_associations),
+                                                    seed = 42,
+                                                    n_jobs = length(input_data$habitats),
+                                                    job_size = 1,
+                                                    template = list(job_name = "habitat_random", 
+                                                                    queue = "medium",
+                                                                    walltime = "12:00",
+                                                                    processes = 1,
+                                                                    log_file = "habitat_random.log"))
+
 # combine results to one data frame
 habitat_randomization <- dplyr::bind_rows(habitat_randomization)
 
-helpeR::save_rds(object = habitat_randomization,
+suppoRt::save_rds(object = habitat_randomization,
                  filename = paste0("habitat_randomization_", simulation_runs, "_runs.rds"),
                  path = paste0(getwd(), "/1_Simulation_study/3_Results"),
                  overwrite = overwrite)
@@ -144,26 +146,30 @@ helpeR::save_rds(object = habitat_randomization,
 #                                   seed = 42,
 #                                   n_jobs = length(association_strength),
 #                                   job_size = 1,
-#                                   template = list(queue = "mpi",
-#                                                   walltime = "48:00",
-#                                                   processes = 1))
+#                                   template = list(job_name = "torus_trans", 
+#                                                   queue = "medium",
+#                                                   walltime = "12:00",
+#                                                   processes = 1,
+#                                                   log_file = "torus_trans.log"))
 
-torus_translation <- helpeR::submit_to_cluster(fun = simulate_torus_trans_association_strength,
-                                               simulation_habitat = input_data$habitats,
-                                               simulation_pattern = input_data$patterns,
-                                               association_strength = rep(association_strength, each = simulation_runs),
-                                               export = list(detect_habitat_associations = detect_habitat_associations),
-                                               seed = 42,
-                                               n_jobs = length(input_data$habitats),
-                                               job_size = 1,
-                                               template = list(queue = "mpi",
-                                                               walltime = "12:00",
-                                                               processes = 1))
+torus_translation <- suppoRt::submit_to_cluster(fun = simulate_torus_trans_association_strength,
+                                                simulation_habitat = input_data$habitats,
+                                                simulation_pattern = input_data$patterns,
+                                                association_strength = rep(association_strength, each = simulation_runs),
+                                                export = list(detect_habitat_associations = detect_habitat_associations),
+                                                seed = 42,
+                                                n_jobs = length(input_data$habitats),
+                                                job_size = 1,
+                                                template = list(job_name = "torus_trans", 
+                                                                queue = "medium",
+                                                                walltime = "12:00",
+                                                                processes = 1,
+                                                                log_file = "torus_trans.log"))
 
 # combine results to one data frame
 torus_translation <- dplyr::bind_rows(torus_translation)
 
-helpeR::save_rds(object = torus_translation,
+suppoRt::save_rds(object = torus_translation,
                  filename = paste0("torus_translation_", simulation_runs, "_runs.rds"),
                  path = paste0(getwd(), "/1_Simulation_study/3_Results"),
                  overwrite = overwrite)
@@ -183,79 +189,87 @@ helpeR::save_rds(object = torus_translation,
 #                            seed = 42,
 #                            n_jobs = length(association_strength),
 #                            job_size = 1,
-#                            template = list(queue = "mpi",
-#                                            walltime = "48:00",
-#                                            processes = 1))
+#                            template = list(job_name = "point_process", 
+#                                            queue = "medium",
+#                                            walltime = "12:00",
+#                                            processes = 1,
+#                                            log_file = "point_process.log"))
 
 # Gamma test
-gamma_test <- helpeR::submit_to_cluster(fun = simulate_point_process_association_strength,
-                                        simulation_habitat = input_data$habitats,
-                                        simulation_pattern = input_data$patterns,
-                                        association_strength = rep(association_strength, each = simulation_runs),
-                                        const = list(n_random = n_random),
-                                        export = list(detect_habitat_associations = detect_habitat_associations),
-                                        seed = 42,
-                                        n_jobs = length(input_data$habitats),
-                                        job_size = 1,
-                                        template = list(queue = "mpi",
-                                                        walltime = "12:00",
-                                                        processes = 1))
+gamma_test <- suppoRt::submit_to_cluster(fun = simulate_point_process_association_strength,
+                                         simulation_habitat = input_data$habitats,
+                                         simulation_pattern = input_data$patterns,
+                                         association_strength = rep(association_strength, each = simulation_runs),
+                                         const = list(n_random = n_random),
+                                         export = list(detect_habitat_associations = detect_habitat_associations),
+                                         seed = 42,
+                                         n_jobs = length(input_data$habitats),
+                                         job_size = 1,
+                                         template = list(job_name = "point_process", 
+                                                         queue = "medium",
+                                                         walltime = "12:00",
+                                                         processes = 1,
+                                                         log_file = "point_process.log"))
 
 # combine results to one data frame
 gamma_test <- dplyr::bind_rows(gamma_test)
 
-helpeR::save_rds(object = gamma_test,
+suppoRt::save_rds(object = gamma_test,
                  filename = paste0("gamma_test_", simulation_runs, "_runs.rds"),
                  path = paste0(getwd(), "/1_Simulation_study/3_Results"),
                  overwrite = overwrite)
 
 # Pattern reconstruction
-# pattern_reconstruction <- clustermq::Q(fun = simulate_pattern_recon_association_strength, 
-#                                        association_strength = association_strength, 
-#                                        const = list(number_coloumns = number_coloumns, 
-#                                                     number_rows = number_rows, 
+# pattern_reconstruction <- clustermq::Q(fun = simulate_pattern_recon_association_strength,
+#                                        association_strength = association_strength,
+#                                        const = list(number_coloumns = number_coloumns,
+#                                                     number_rows = number_rows,
 #                                                     resolution = resolution,
-#                                                     fract_dim = fract_dim, 
-#                                                     number_points = number_points, 
-#                                                     n_random = n_random, 
-#                                                     max_runs = max_runs, 
+#                                                     fract_dim = fract_dim,
+#                                                     number_points = number_points,
+#                                                     n_random = n_random,
+#                                                     max_runs = max_runs,
 #                                                     comp_fast = comp_fast,
 #                                                     no_change = no_change),
-#                                        export = list(create_simulation_species = create_simulation_species, 
+#                                        export = list(create_simulation_species = create_simulation_species,
 #                                                      create_simulation_pattern = create_simulation_pattern,
-#                                                      detect_habitat_associations = detect_habitat_associations), 
-#                                        seed = 42, 
-#                                        n_jobs = length(association_strength), 
+#                                                      detect_habitat_associations = detect_habitat_associations),
+#                                        seed = 42,
+#                                        n_jobs = length(association_strength),
 #                                        job_size = 1,
-#                                        template = list(queue = "mpi", 
-#                                                        walltime = "48:00", 
-#                                                        processes = 1))
+#                                        template = list(job_name = "pattern_recon", 
+#                                                        queue = "medium",
+#                                                        walltime = "12:00",
+#                                                        processes = 1,
+#                                                        log_file = "pattern_recon.log"))
 
-pattern_reconstruction <- helpeR::submit_to_cluster(fun = simulate_pattern_recon_association_strength, 
-                                                    simulation_habitat = input_data$habitats,
-                                                    simulation_pattern = input_data$patterns,
-                                                    association_strength = rep(association_strength, each = simulation_runs),
-                                                    const = list(n_random = n_random, 
-                                                                 max_runs = max_runs, 
-                                                                 comp_fast = comp_fast,
-                                                                 no_change = no_change),
-                                                    export = list(detect_habitat_associations = detect_habitat_associations),
-                                                    seed = 42,
-                                                    n_jobs = length(input_data$habitats),
-                                                    job_size = 1,
-                                                    template = list(queue = "mpi", 
-                                                                    walltime = "48:00", 
-                                                                    processes = 1))
+pattern_reconstruction <- suppoRt::submit_to_cluster(fun = simulate_pattern_recon_association_strength, 
+                                                     simulation_habitat = input_data$habitats,
+                                                     simulation_pattern = input_data$patterns,
+                                                     association_strength = rep(association_strength, each = simulation_runs),
+                                                     const = list(n_random = n_random, 
+                                                                  max_runs = max_runs, 
+                                                                  comp_fast = comp_fast,
+                                                                  no_change = no_change),
+                                                     export = list(detect_habitat_associations = detect_habitat_associations),
+                                                     seed = 42,
+                                                     n_jobs = length(input_data$habitats),
+                                                     job_size = 1,
+                                                     template = list(job_name = "pattern_recon", 
+                                                                     queue = "medium",
+                                                                     walltime = "12:00",
+                                                                     processes = 1,
+                                                                     log_file = "pattern_recon.log"))
 
 # combine results to one data frame
 pattern_reconstruction <- dplyr::bind_rows(pattern_reconstruction)
 
-helpeR::save_rds(object = pattern_reconstruction,
+suppoRt::save_rds(object = pattern_reconstruction,
                  filename = paste0("pattern_reconstruction_", simulation_runs, "_runs.rds"),
                  path = paste0(getwd(), "/1_Simulation_study/3_Results"),
                  overwrite = overwrite)
 
-#### 5. Specify future topology ####
+#### 5. Specify future topology #### (OUTDATED)
 # 
 # future_map for 1) alpha (x) 2) simulation runs (y) 3) within null model function
 # login node -> { cluster nodes } -> { multiple cores }
