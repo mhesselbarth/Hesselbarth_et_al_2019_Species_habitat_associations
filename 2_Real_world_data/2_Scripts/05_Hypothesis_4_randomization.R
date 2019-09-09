@@ -58,12 +58,12 @@ reconstructed_beech_living <- suppoRt::submit_to_cluster(fun = shar::reconstruct
                                                                       verbose = FALSE),
                                                          seed = 42,
                                                          n_jobs = length(n_random_hpc),
-                                                         template = list(job_name = "beech_living_recon",
+                                                         template = list(job_name = "beech_living_rec",
                                                                          queue = "medium",
                                                                          walltime = "01:00:00",
                                                                          mem_cpu = "3072",
                                                                          processes = 1,
-                                                                         log_file = "beech_living_recon.log"))
+                                                                         log_file = "log_beech_living_rec.log"))
 
 # add observed pattern
 reconstructed_beech_living[[length(n_random) + 1]] <- spatstat::unmark(beech_living)
@@ -102,12 +102,12 @@ reconstructed_beech_dead <- suppoRt::submit_to_cluster(fun = shar::reconstruct_p
                                                                     verbose = FALSE),
                                                        seed = 42,
                                                        n_jobs = length(n_random_hpc),
-                                                       template = list(job_name = "beech_dead_recon",
+                                                       template = list(job_name = "beech_dead_rec",
                                                                        queue = "medium",
                                                                        walltime = "01:00:00",
                                                                        mem_cpu = "3072",
                                                                        processes = 1,
-                                                                       log_file = "beech_dead_recon.log"))
+                                                                       log_file = "log_beech_dead_rec.log"))
 
 # add observed pattern
 reconstructed_beech_dead[[length(n_random) + 1]] <- spatstat::unmark(beech_dead)

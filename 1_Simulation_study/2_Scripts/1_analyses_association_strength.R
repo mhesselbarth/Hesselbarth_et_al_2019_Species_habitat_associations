@@ -124,7 +124,7 @@ habitat_randomization <- suppoRt::submit_to_cluster(fun = simulate_habitat_rando
                                                                     walltime = "12:00",
                                                                     mem_cpu = "2048",
                                                                     processes = 1,
-                                                                    log_file = "habitat_random.log"))
+                                                                    log_file = "log_habitat_random.log"))
 
 # combine results to one data frame
 habitat_randomization <- dplyr::bind_rows(habitat_randomization)
@@ -167,7 +167,7 @@ torus_translation <- suppoRt::submit_to_cluster(fun = simulate_torus_trans_assoc
                                                                 walltime = "12:00:00",
                                                                 mem_cpu = "2048",
                                                                 processes = 1,
-                                                                log_file = "torus_trans.log"))
+                                                                log_file = "log_torus_trans.log"))
 
 # combine results to one data frame
 torus_translation <- dplyr::bind_rows(torus_translation)
@@ -214,7 +214,7 @@ gamma_test <- suppoRt::submit_to_cluster(fun = simulate_point_process_associatio
                                                          walltime = "12:00:00",
                                                          mem_cpu = "2048",
                                                          processes = 1,
-                                                         log_file = "point_process.log"))
+                                                         log_file = "log_point_process.log"))
 
 # combine results to one data frame
 gamma_test <- dplyr::bind_rows(gamma_test)
@@ -266,7 +266,7 @@ pattern_reconstruction <- suppoRt::submit_to_cluster(fun = simulate_pattern_reco
                                                                      walltime = "12:00:00",
                                                                      mem_cpu = "2048",
                                                                      processes = 1,
-                                                                     log_file = "pattern_recon.log"))
+                                                                     log_file = "log_pattern_recon.log"))
 
 # combine results to one data frame
 pattern_reconstruction <- dplyr::bind_rows(pattern_reconstruction)

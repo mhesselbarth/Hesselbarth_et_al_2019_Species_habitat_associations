@@ -65,12 +65,12 @@ reconstructed_beech_small <- suppoRt::submit_to_cluster(fun = shar::reconstruct_
                                                                      verbose = FALSE),
                                                         seed = 42,
                                                         n_jobs = length(n_random_hpc),
-                                                        template = list(job_name = "beech_small_recon",
+                                                        template = list(job_name = "beech_small_rec",
                                                                         queue = "medium",
                                                                         walltime = "01:00:00",
                                                                         mem_cpu = "3072",
                                                                         processes = 1,
-                                                                        log_file = "beech_small_recon.log"))
+                                                                        log_file = "log_beech_small_rec.log"))
 # add observed pattern
 reconstructed_beech_small[[length(n_random) + 1]] <- beech_small
 
@@ -108,12 +108,12 @@ reconstructed_beech_medium <- suppoRt::submit_to_cluster(fun = shar::reconstruct
                                                                       verbose = FALSE),
                                                          seed = 42,
                                                          n_jobs = length(n_random_hpc),
-                                                         template = list(job_name = "beech_medium_recon",
+                                                         template = list(job_name = "beech_medium_rec",
                                                                          queue = "medium",
                                                                          walltime = "01:00:00",
                                                                          mem_cpu = "3072",
                                                                          processes = 1,
-                                                                         log_file = "beech_medium_recon.log"))
+                                                                         log_file = "log_beech_medium_rec.log"))
 
 # add observed pattern
 reconstructed_beech_medium[[length(n_random) + 1]] <- beech_medium
@@ -152,12 +152,12 @@ reconstructed_beech_large <- suppoRt::submit_to_cluster(fun = shar::reconstruct_
                                                                      verbose = FALSE),
                                                         seed = 42,
                                                         n_jobs = length(n_random_hpc),
-                                                        template = list(job_name = "beech_large_recon",
+                                                        template = list(job_name = "beech_large_rec",
                                                                         queue = "medium",
                                                                         walltime = "01:00:00",
                                                                         mem_cpu = "3072",
                                                                         processes = 1,
-                                                                        log_file = "beech_large_recon.log"))
+                                                                        log_file = "log_beech_large_rec.log"))
 
 # add observed pattern
 reconstructed_beech_large[[length(n_random) + 1]] <- beech_large

@@ -90,12 +90,12 @@ reconstruction_species_1 <- suppoRt::submit_to_cluster(fun = shar::reconstruct_p
                                                                     verbose = FALSE),
                                                        seed = 42,
                                                        n_jobs = length(n_random_hpc),
-                                                       template = list(job_name = "exmpl_recon_spec_1",
+                                                       template = list(job_name = "spec_1_rec",
                                                                        queue = "medium",
                                                                        walltime = "01:00:00",
                                                                        mem_cpu = "2048",
                                                                        processes = 1, 
-                                                                       log_file = "exmpl_recon_spec_1.log"))
+                                                                       log_file = "log_spec_1_rec.log"))
 
 # add observed pattern
 reconstruction_species_1[[length(n_random) + 1]] <- species_1
@@ -122,12 +122,12 @@ reconstruction_species_2 <- suppoRt::submit_to_cluster(fun = shar::reconstruct_p
                                                                     verbose = FALSE),
                                                        seed = 42,
                                                        n_jobs = length(n_random_hpc),
-                                                       template = list(job_name = "exmpl_recon_spec_2",
+                                                       template = list(job_name = "spec_2_rec",
                                                                        queue = "medium",
                                                                        walltime = "01:00:00",
                                                                        mem_cpu = "2048",
                                                                        processes = 1, 
-                                                                       log_file = "exmpl_recon_spec_2.log"))
+                                                                       log_file = "log_spec_2_rec.log"))
 
 # add observed pattern
 reconstruction_species_2[[length(n_random) + 1]] <- spatstat::unmark(species_2)
@@ -154,12 +154,12 @@ reconstruction_species_3 <- suppoRt::submit_to_cluster(fun = shar::reconstruct_p
                                                                     verbose = FALSE),
                                                        seed = 42,
                                                        n_jobs = length(n_random_hpc),
-                                                       template = list(job_name = "exmpl_recon_spec_3",
+                                                       template = list(job_name = "spec_3_rec",
                                                                        queue = "medium",
                                                                        walltime = "01:00:00",
                                                                        mem_cpu = "2048",
                                                                        processes = 1, 
-                                                                       log_file = "exmpl_recon_spec_3.log"))
+                                                                       log_file = "log_spec_3_rec.log"))
 
 # add observed pattern
 reconstruction_species_3[[length(n_random) + 1]] <- spatstat::unmark(species_3)
@@ -186,12 +186,12 @@ reconstruction_species_4 <- suppoRt::submit_to_cluster(fun = shar::reconstruct_p
                                                                     verbose = FALSE),
                                                        seed = 42,
                                                        n_jobs = length(n_random_hpc),
-                                                       template = list(job_name = "exmpl_recon_spec_4",
+                                                       template = list(job_name = "spec_4_rec",
                                                                        queue = "medium",
                                                                        walltime = "01:00:00",
                                                                        mem_cpu = "2048",
                                                                        processes = 1, 
-                                                                       log_file = "exmpl_recon_spec_4.log"))
+                                                                       log_file = "log_spec_4_rec.log"))
 
 # add observed pattern
 reconstruction_species_4[[length(n_random) + 1]] <- spatstat::unmark(species_4)

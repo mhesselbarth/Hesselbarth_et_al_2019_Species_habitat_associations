@@ -63,12 +63,12 @@ reconstructed_beech <- suppoRt::submit_to_cluster(fun = shar::reconstruct_patter
                                                                simplify = TRUE),
                                                   seed = 42,
                                                   n_jobs = length(n_random_hpc),
-                                                  template = list(job_name = "beech_recon",
+                                                  template = list(job_name = "beech_rec",
                                                                   queue = "medium",
                                                                   walltime = "01:00:00",
                                                                   mem_cpu = "3072",
                                                                   processes = 1,
-                                                                  log_file = "beech_recon.log"))
+                                                                  log_file = "log_beech_rec.log"))
 
 # add observed pattern
 reconstructed_beech[[length(n_random) + 1]] <- beech
@@ -108,12 +108,12 @@ reconstructed_ash <- suppoRt::submit_to_cluster(fun = reconstruct_pattern_cluste
                                                              verbose = FALSE),
                                                 seed = 42,
                                                 n_jobs = length(n_random_hpc),
-                                                template = list(job_name = "ash_recon",
+                                                template = list(job_name = "ash_rec",
                                                                 queue = "medium",
                                                                 walltime = "01:00:00",
                                                                 mem_cpu = "3072",
                                                                 processes = 1,
-                                                                log_file = "ash_recon.log"))
+                                                                log_file = "log_ash_rec.log"))
 
 # add observed pattern
 reconstructed_ash[[length(n_random) + 1]] <- ash
@@ -153,12 +153,12 @@ reconstructed_hornbeam <- suppoRt::submit_to_cluster(fun = shar::reconstruct_pat
                                                                   verbose = FALSE),
                                                      seed = 42,
                                                      n_jobs = length(n_random_hpc),
-                                                     template = list(job_name = "hornbeam_recon",
+                                                     template = list(job_name = "hornbeam_rec",
                                                                      queue = "medium",
                                                                      walltime = "01:00:00",
                                                                      mem_cpu = "3072",
                                                                      processes = 1,
-                                                                     log_file = "hornbeam_recon.log"))
+                                                                     log_file = "log_hornbeam_rec.log"))
 
 # add observed pattern
 reconstructed_hornbeam[[length(n_random) + 1]] <- hornbeam
@@ -198,12 +198,12 @@ reconstructed_sycamore <- suppoRt::submit_to_cluster(fun = shar::reconstruct_pat
                                                                   verbose = FALSE),
                                                      seed = 42,
                                                      n_jobs = length(n_random_hpc),
-                                                     template = list(job_name = "sycamore_recon",
+                                                     template = list(job_name = "sycamore_rec",
                                                                      queue = "medium",
                                                                      walltime = "01:00:00",
                                                                      mem_cpu = "3072",
                                                                      processes = 1,
-                                                                     log_file = "sycamore_recon.log"))
+                                                                     log_file = "log_sycamore_rec.log"))
 
 # add observed pattern
 reconstructed_sycamore[[length(n_random) + 1]] <- sycamore
@@ -243,12 +243,12 @@ reconstructed_others <- suppoRt::submit_to_cluster(fun = shar::reconstruct_patte
                                                                 verbose = FALSE),
                                                    seed = 42,
                                                    n_jobs = length(n_random_hpc),
-                                                   template = list(job_name = "others_recon",
+                                                   template = list(job_name = "others_rec",
                                                                    queue = "medium",
                                                                    walltime = "01:00:00",
                                                                    mem_cpu = "3072",
                                                                    processes = 1,
-                                                                   log_file = "others_recon.log"))
+                                                                   log_file = "log_others_rec.log"))
 
 # add observed pattern
 reconstructed_others[[length(n_random) + 1]] <- others
