@@ -67,7 +67,8 @@ reconstructed_beech_small <- suppoRt::submit_to_cluster(fun = shar::reconstruct_
                                                         n_jobs = length(n_random_hpc),
                                                         template = list(job_name = "beech_small_recon",
                                                                         queue = "medium",
-                                                                        walltime = "48:00",
+                                                                        walltime = "01:00:00",
+                                                                        mem_cpu = "3072",
                                                                         processes = 1,
                                                                         log_file = "beech_small_recon.log"))
 # add observed pattern
@@ -109,7 +110,8 @@ reconstructed_beech_medium <- suppoRt::submit_to_cluster(fun = shar::reconstruct
                                                          n_jobs = length(n_random_hpc),
                                                          template = list(job_name = "beech_medium_recon",
                                                                          queue = "medium",
-                                                                         walltime = "48:00",
+                                                                         walltime = "01:00:00",
+                                                                         mem_cpu = "3072",
                                                                          processes = 1,
                                                                          log_file = "beech_medium_recon.log"))
 
@@ -152,7 +154,8 @@ reconstructed_beech_large <- suppoRt::submit_to_cluster(fun = shar::reconstruct_
                                                         n_jobs = length(n_random_hpc),
                                                         template = list(job_name = "beech_large_recon",
                                                                         queue = "medium",
-                                                                        walltime = "48:00",
+                                                                        walltime = "01:00:00",
+                                                                        mem_cpu = "3072",
                                                                         processes = 1,
                                                                         log_file = "beech_large_recon.log"))
 

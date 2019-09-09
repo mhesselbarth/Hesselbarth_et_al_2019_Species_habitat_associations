@@ -43,6 +43,7 @@ n_random_large <- 4999
 
 max_runs <- 20000 # 20000
 
+# use fast computation
 comp_fast <- 0
 
 # Beech #
@@ -64,7 +65,8 @@ reconstructed_beech <- suppoRt::submit_to_cluster(fun = shar::reconstruct_patter
                                                   n_jobs = length(n_random_hpc),
                                                   template = list(job_name = "beech_recon",
                                                                   queue = "medium",
-                                                                  walltime = "48:00",
+                                                                  walltime = "01:00:00",
+                                                                  mem_cpu = "3072",
                                                                   processes = 1,
                                                                   log_file = "beech_recon.log"))
 
@@ -108,7 +110,8 @@ reconstructed_ash <- suppoRt::submit_to_cluster(fun = reconstruct_pattern_cluste
                                                 n_jobs = length(n_random_hpc),
                                                 template = list(job_name = "ash_recon",
                                                                 queue = "medium",
-                                                                walltime = "48:00",
+                                                                walltime = "01:00:00",
+                                                                mem_cpu = "3072",
                                                                 processes = 1,
                                                                 log_file = "ash_recon.log"))
 
@@ -152,7 +155,8 @@ reconstructed_hornbeam <- suppoRt::submit_to_cluster(fun = shar::reconstruct_pat
                                                      n_jobs = length(n_random_hpc),
                                                      template = list(job_name = "hornbeam_recon",
                                                                      queue = "medium",
-                                                                     walltime = "48:00",
+                                                                     walltime = "01:00:00",
+                                                                     mem_cpu = "3072",
                                                                      processes = 1,
                                                                      log_file = "hornbeam_recon.log"))
 
@@ -196,7 +200,8 @@ reconstructed_sycamore <- suppoRt::submit_to_cluster(fun = shar::reconstruct_pat
                                                      n_jobs = length(n_random_hpc),
                                                      template = list(job_name = "sycamore_recon",
                                                                      queue = "medium",
-                                                                     walltime = "48:00",
+                                                                     walltime = "01:00:00",
+                                                                     mem_cpu = "3072",
                                                                      processes = 1,
                                                                      log_file = "sycamore_recon.log"))
 
@@ -240,7 +245,8 @@ reconstructed_others <- suppoRt::submit_to_cluster(fun = shar::reconstruct_patte
                                                    n_jobs = length(n_random_hpc),
                                                    template = list(job_name = "others_recon",
                                                                    queue = "medium",
-                                                                   walltime = "48:00",
+                                                                   walltime = "01:00:00",
+                                                                   mem_cpu = "3072",
                                                                    processes = 1,
                                                                    log_file = "others_recon.log"))
 

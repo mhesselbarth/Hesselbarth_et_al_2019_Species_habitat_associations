@@ -106,6 +106,7 @@ input_data <- readr::read_rds("1_Simulation_study/3_Results/input_data.rds")
 #                                       template = list(job_name = "habitat_random", 
 #                                                       queue = "medium",
 #                                                       walltime = "12:00",
+#                                                       mem_cpu = "2048",
 #                                                       processes = 1,
 #                                                       log_file = "habitat_random.log"))
 
@@ -121,6 +122,7 @@ habitat_randomization <- suppoRt::submit_to_cluster(fun = simulate_habitat_rando
                                                     template = list(job_name = "habitat_random", 
                                                                     queue = "medium",
                                                                     walltime = "12:00",
+                                                                    mem_cpu = "2048",
                                                                     processes = 1,
                                                                     log_file = "habitat_random.log"))
 
@@ -148,7 +150,7 @@ suppoRt::save_rds(object = habitat_randomization,
 #                                   job_size = 1,
 #                                   template = list(job_name = "torus_trans", 
 #                                                   queue = "medium",
-#                                                   walltime = "12:00",
+#                                                   walltime = "12:00:00",
 #                                                   processes = 1,
 #                                                   log_file = "torus_trans.log"))
 
@@ -162,7 +164,8 @@ torus_translation <- suppoRt::submit_to_cluster(fun = simulate_torus_trans_assoc
                                                 job_size = 1,
                                                 template = list(job_name = "torus_trans", 
                                                                 queue = "medium",
-                                                                walltime = "12:00",
+                                                                walltime = "12:00:00",
+                                                                mem_cpu = "2048",
                                                                 processes = 1,
                                                                 log_file = "torus_trans.log"))
 
@@ -189,9 +192,10 @@ suppoRt::save_rds(object = torus_translation,
 #                            seed = 42,
 #                            n_jobs = length(association_strength),
 #                            job_size = 1,
-#                            template = list(job_name = "point_process", 
+#                            template = list(job_name = "point_process",
 #                                            queue = "medium",
-#                                            walltime = "12:00",
+#                                            walltime = "12:00:00",
+#                                            mem_cpu = "2048",
 #                                            processes = 1,
 #                                            log_file = "point_process.log"))
 
@@ -207,7 +211,8 @@ gamma_test <- suppoRt::submit_to_cluster(fun = simulate_point_process_associatio
                                          job_size = 1,
                                          template = list(job_name = "point_process", 
                                                          queue = "medium",
-                                                         walltime = "12:00",
+                                                         walltime = "12:00:00",
+                                                         mem_cpu = "2048",
                                                          processes = 1,
                                                          log_file = "point_process.log"))
 
@@ -237,9 +242,10 @@ suppoRt::save_rds(object = gamma_test,
 #                                        seed = 42,
 #                                        n_jobs = length(association_strength),
 #                                        job_size = 1,
-#                                        template = list(job_name = "pattern_recon", 
+#                                        template = list(job_name = "pattern_recon",
 #                                                        queue = "medium",
-#                                                        walltime = "12:00",
+#                                                        walltime = "12:00:00",
+#                                                        mem_cpu = "2048",
 #                                                        processes = 1,
 #                                                        log_file = "pattern_recon.log"))
 
@@ -257,7 +263,8 @@ pattern_reconstruction <- suppoRt::submit_to_cluster(fun = simulate_pattern_reco
                                                      job_size = 1,
                                                      template = list(job_name = "pattern_recon", 
                                                                      queue = "medium",
-                                                                     walltime = "12:00",
+                                                                     walltime = "12:00:00",
+                                                                     mem_cpu = "2048",
                                                                      processes = 1,
                                                                      log_file = "pattern_recon.log"))
 

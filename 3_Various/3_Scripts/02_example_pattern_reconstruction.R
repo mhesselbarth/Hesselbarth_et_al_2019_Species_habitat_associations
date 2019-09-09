@@ -92,7 +92,8 @@ reconstruction_species_1 <- suppoRt::submit_to_cluster(fun = shar::reconstruct_p
                                                        n_jobs = length(n_random_hpc),
                                                        template = list(job_name = "exmpl_recon_spec_1",
                                                                        queue = "medium",
-                                                                       walltime = "01:00",
+                                                                       walltime = "01:00:00",
+                                                                       mem_cpu = "2048",
                                                                        processes = 1, 
                                                                        log_file = "exmpl_recon_spec_1.log"))
 
@@ -123,7 +124,8 @@ reconstruction_species_2 <- suppoRt::submit_to_cluster(fun = shar::reconstruct_p
                                                        n_jobs = length(n_random_hpc),
                                                        template = list(job_name = "exmpl_recon_spec_2",
                                                                        queue = "medium",
-                                                                       walltime = "01:00",
+                                                                       walltime = "01:00:00",
+                                                                       mem_cpu = "2048",
                                                                        processes = 1, 
                                                                        log_file = "exmpl_recon_spec_2.log"))
 
@@ -154,7 +156,8 @@ reconstruction_species_3 <- suppoRt::submit_to_cluster(fun = shar::reconstruct_p
                                                        n_jobs = length(n_random_hpc),
                                                        template = list(job_name = "exmpl_recon_spec_3",
                                                                        queue = "medium",
-                                                                       walltime = "01:00",
+                                                                       walltime = "01:00:00",
+                                                                       mem_cpu = "2048",
                                                                        processes = 1, 
                                                                        log_file = "exmpl_recon_spec_3.log"))
 
@@ -185,7 +188,8 @@ reconstruction_species_4 <- suppoRt::submit_to_cluster(fun = shar::reconstruct_p
                                                        n_jobs = length(n_random_hpc),
                                                        template = list(job_name = "exmpl_recon_spec_4",
                                                                        queue = "medium",
-                                                                       walltime = "01:00",
+                                                                       walltime = "01:00:00",
+                                                                       mem_cpu = "2048",
                                                                        processes = 1, 
                                                                        log_file = "exmpl_recon_spec_4.log"))
 

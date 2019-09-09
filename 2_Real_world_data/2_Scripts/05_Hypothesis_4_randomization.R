@@ -60,7 +60,8 @@ reconstructed_beech_living <- suppoRt::submit_to_cluster(fun = shar::reconstruct
                                                          n_jobs = length(n_random_hpc),
                                                          template = list(job_name = "beech_living_recon",
                                                                          queue = "medium",
-                                                                         walltime = "48:00",
+                                                                         walltime = "01:00:00",
+                                                                         mem_cpu = "3072",
                                                                          processes = 1,
                                                                          log_file = "beech_living_recon.log"))
 
@@ -103,7 +104,8 @@ reconstructed_beech_dead <- suppoRt::submit_to_cluster(fun = shar::reconstruct_p
                                                        n_jobs = length(n_random_hpc),
                                                        template = list(job_name = "beech_dead_recon",
                                                                        queue = "medium",
-                                                                       walltime = "48:00",
+                                                                       walltime = "01:00:00",
+                                                                       mem_cpu = "3072",
                                                                        processes = 1,
                                                                        log_file = "beech_dead_recon.log"))
 
