@@ -64,7 +64,7 @@ reconstructed_beech_small <- suppoRt::submit_to_cluster(fun = shar::reconstruct_
                                                                      simplify = TRUE,
                                                                      verbose = FALSE),
                                                         seed = 42,
-                                                        n_jobs = length(n_random_hpc),
+                                                        n_jobs = n_random,
                                                         template = list(job_name = "beech_small_rec",
                                                                         queue = "medium",
                                                                         walltime = "01:00:00",
@@ -72,10 +72,10 @@ reconstructed_beech_small <- suppoRt::submit_to_cluster(fun = shar::reconstruct_
                                                                         processes = 1,
                                                                         log_file = "log_beech_small_rec.log"))
 # add observed pattern
-reconstructed_beech_small[[length(n_random) + 1]] <- beech_small
+reconstructed_beech_small[[n_random + 1]] <- beech_small
 
 # add names to list
-names(reconstructed_beech_small) <- c(paste0("randomized_", seq_along(n_random)),
+names(reconstructed_beech_small) <- c(paste0("randomized_", 1:n_random),
                                       "observed")
 
 fitted_beech_small <- shar::fit_point_process(beech_small, n_random = n_random_large,
@@ -107,7 +107,7 @@ reconstructed_beech_medium <- suppoRt::submit_to_cluster(fun = shar::reconstruct
                                                                       simplify = TRUE,
                                                                       verbose = FALSE),
                                                          seed = 42,
-                                                         n_jobs = length(n_random_hpc),
+                                                         n_jobs = n_random,
                                                          template = list(job_name = "beech_medium_rec",
                                                                          queue = "medium",
                                                                          walltime = "01:00:00",
@@ -116,10 +116,10 @@ reconstructed_beech_medium <- suppoRt::submit_to_cluster(fun = shar::reconstruct
                                                                          log_file = "log_beech_medium_rec.log"))
 
 # add observed pattern
-reconstructed_beech_medium[[length(n_random) + 1]] <- beech_medium
+reconstructed_beech_medium[[n_random + 1]] <- beech_medium
 
 # add names to list
-names(reconstructed_beech_medium) <- c(paste0("randomized_", seq_along(n_random)),
+names(reconstructed_beech_medium) <- c(paste0("randomized_", 1:n_random),
                                        "observed")
 
 fitted_beech_medium <- shar::fit_point_process(beech_medium, n_random = n_random_large,
@@ -151,7 +151,7 @@ reconstructed_beech_large <- suppoRt::submit_to_cluster(fun = shar::reconstruct_
                                                                      simplify = TRUE,
                                                                      verbose = FALSE),
                                                         seed = 42,
-                                                        n_jobs = length(n_random_hpc),
+                                                        n_jobs = n_random,
                                                         template = list(job_name = "beech_large_rec",
                                                                         queue = "medium",
                                                                         walltime = "01:00:00",
@@ -160,10 +160,10 @@ reconstructed_beech_large <- suppoRt::submit_to_cluster(fun = shar::reconstruct_
                                                                         log_file = "log_beech_large_rec.log"))
 
 # add observed pattern
-reconstructed_beech_large[[length(n_random) + 1]] <- beech_large
+reconstructed_beech_large[[n_random + 1]] <- beech_large
 
 # add names to list
-names(reconstructed_beech_large) <- c(paste0("randomized_", seq_along(n_random)),
+names(reconstructed_beech_large) <- c(paste0("randomized_", 1:n_random),
                                       "observed")
 
 fitted_beech_large <- shar::fit_point_process(beech_large, n_random = n_random_large,

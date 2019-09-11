@@ -62,7 +62,7 @@ reconstructed_beech <- suppoRt::submit_to_cluster(fun = shar::reconstruct_patter
                                                                return_input = FALSE,
                                                                simplify = TRUE),
                                                   seed = 42,
-                                                  n_jobs = length(n_random_hpc),
+                                                  n_jobs = n_random,
                                                   template = list(job_name = "beech_rec",
                                                                   queue = "medium",
                                                                   walltime = "01:00:00",
@@ -71,10 +71,10 @@ reconstructed_beech <- suppoRt::submit_to_cluster(fun = shar::reconstruct_patter
                                                                   log_file = "log_beech_rec.log"))
 
 # add observed pattern
-reconstructed_beech[[length(n_random) + 1]] <- beech
+reconstructed_beech[[n_random + 1]] <- beech
 
 # add names to list
-names(reconstructed_beech) <- c(paste0("randomized_", seq_along(n_random)),
+names(reconstructed_beech) <- c(paste0("randomized_", 1:n_random),
                                 "observed")
 
 # fit point process
@@ -107,7 +107,7 @@ reconstructed_ash <- suppoRt::submit_to_cluster(fun = reconstruct_pattern_cluste
                                                              simplify = TRUE,
                                                              verbose = FALSE),
                                                 seed = 42,
-                                                n_jobs = length(n_random_hpc),
+                                                n_jobs = n_random,
                                                 template = list(job_name = "ash_rec",
                                                                 queue = "medium",
                                                                 walltime = "01:00:00",
@@ -116,10 +116,10 @@ reconstructed_ash <- suppoRt::submit_to_cluster(fun = reconstruct_pattern_cluste
                                                                 log_file = "log_ash_rec.log"))
 
 # add observed pattern
-reconstructed_ash[[length(n_random) + 1]] <- ash
+reconstructed_ash[[n_random + 1]] <- ash
 
 # add names to list
-names(reconstructed_ash) <- c(paste0("randomized_", seq_along(n_random)),
+names(reconstructed_ash) <- c(paste0("randomized_", 1:n_random),
                               "observed")
 
 # fit point process
@@ -152,7 +152,7 @@ reconstructed_hornbeam <- suppoRt::submit_to_cluster(fun = shar::reconstruct_pat
                                                                   simplify = TRUE,
                                                                   verbose = FALSE),
                                                      seed = 42,
-                                                     n_jobs = length(n_random_hpc),
+                                                     n_jobs = n_random,
                                                      template = list(job_name = "hornbeam_rec",
                                                                      queue = "medium",
                                                                      walltime = "01:00:00",
@@ -161,10 +161,10 @@ reconstructed_hornbeam <- suppoRt::submit_to_cluster(fun = shar::reconstruct_pat
                                                                      log_file = "log_hornbeam_rec.log"))
 
 # add observed pattern
-reconstructed_hornbeam[[length(n_random) + 1]] <- hornbeam
+reconstructed_hornbeam[[n_random + 1]] <- hornbeam
 
 # add names to list
-names(reconstructed_hornbeam) <- c(paste0("randomized_", seq_along(n_random)),
+names(reconstructed_hornbeam) <- c(paste0("randomized_", 1:n_random),
                                    "observed")
 
 # fit point process
@@ -197,7 +197,7 @@ reconstructed_sycamore <- suppoRt::submit_to_cluster(fun = shar::reconstruct_pat
                                                                   simplify = TRUE,
                                                                   verbose = FALSE),
                                                      seed = 42,
-                                                     n_jobs = length(n_random_hpc),
+                                                     n_jobs = n_random,
                                                      template = list(job_name = "sycamore_rec",
                                                                      queue = "medium",
                                                                      walltime = "01:00:00",
@@ -206,10 +206,10 @@ reconstructed_sycamore <- suppoRt::submit_to_cluster(fun = shar::reconstruct_pat
                                                                      log_file = "log_sycamore_rec.log"))
 
 # add observed pattern
-reconstructed_sycamore[[length(n_random) + 1]] <- sycamore
+reconstructed_sycamore[[n_random + 1]] <- sycamore
 
 # add names to list
-names(reconstructed_sycamore) <- c(paste0("randomized_", seq_along(n_random)),
+names(reconstructed_sycamore) <- c(paste0("randomized_", 1:n_random),
                                    "observed")
 
 # fit point process
@@ -242,7 +242,7 @@ reconstructed_others <- suppoRt::submit_to_cluster(fun = shar::reconstruct_patte
                                                                 simplify = TRUE,
                                                                 verbose = FALSE),
                                                    seed = 42,
-                                                   n_jobs = length(n_random_hpc),
+                                                   n_jobs = n_random,
                                                    template = list(job_name = "others_rec",
                                                                    queue = "medium",
                                                                    walltime = "01:00:00",
@@ -251,10 +251,10 @@ reconstructed_others <- suppoRt::submit_to_cluster(fun = shar::reconstruct_patte
                                                                    log_file = "log_others_rec.log"))
 
 # add observed pattern
-reconstructed_others[[length(n_random) + 1]] <- others
+reconstructed_others[[n_random + 1]] <- others
 
 # add names to list
-names(reconstructed_others) <- c(paste0("randomized_", seq_along(n_random)),
+names(reconstructed_others) <- c(paste0("randomized_", 1:n_random),
                                  "observed")
 
 # fit point process

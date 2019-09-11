@@ -9,11 +9,8 @@
 #### Real-world data - Classify habitats using MRT ####
 
 #### Load packages ####
-library(mvpart) # devtools::install_github("mvignon/mvpart")
 library(suppoRt) # devtools::install_github("mhesselbarth/suppoRt)
 library(raster)
-library(rgeos)
-library(rpart)
 library(spatstat)
 library(tidyverse)
 
@@ -25,7 +22,7 @@ pattern_2007 <- readr::read_rds("2_Real_world_data/1_Data/02_pattern_2007_ppp.rd
 mrt_model_species <- readr::read_rds("2_Real_world_data/3_Results/mrt_model_species.rds")
 
 # convert to data frame
-pattern_2007_df <- tibble::as_tibble(pattern_2007) %>%
+pattern_2007_df_living <- tibble::as_tibble(pattern_2007) %>%
   dplyr::filter(type == "living")
 
 #### Plot results ####
@@ -64,16 +61,31 @@ suppoRt::save_ggplot(plot = plot_classified,
 #### Results classification
 
 # number of cells in each habitat
-table(raster::values(classification_raster_list$species))
+raster::values(classification_raster_list$species) %>% 
+  table()
 
-sum(table(raster::values(classification_raster_list$species)))
+raster::values(classification_raster_list$species) %>% 
+  table() %>% 
+  sum()
 
 # area in ha
-(table(raster::values(classification_raster_list$species)) * prod(raster::res(classification_raster_list$species))) / 10000
+raster::values(classification_raster_list$species) %>% 
+  table() %>% 
+  magrittr::multiply_by(prod(raster::res(classification_raster_list$species))) %>% 
+  magrittr::divide_by(10000)
 
-(sum(table(raster::values(classification_raster_list$species))) * prod(raster::res(classification_raster_list$species))) / 10000
+raster::values(classification_raster_list$species) %>% 
+  table() %>% 
+  magrittr::multiply_by(prod(raster::res(classification_raster_list$species))) %>% 
+  magrittr::divide_by(10000) %>% 
+  sum()
 
 # trees in each habitat
 raster::extract(x = classification_raster_list$species, 
-                y = pattern_2007_df[, 1:2]) %>% 
+                y = pattern_2007_df_living[, 1:2]) %>% 
   table(useNA = "ifany")
+
+raster::extract(x = classification_raster_list$species, 
+                y = pattern_2007_df_living[, 1:2]) %>% 
+  table(useNA = "ifany") %>% 
+  sum()

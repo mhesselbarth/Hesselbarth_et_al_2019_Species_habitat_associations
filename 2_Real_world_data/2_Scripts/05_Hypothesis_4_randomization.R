@@ -11,7 +11,7 @@
 # Load packages #
 
 library(clustermq)
-library(helpeR) # devtools::install_github("mhesselbarth/helpeR)
+library(suppoRt) # devtools::install_github("mhesselbarth/suppoRt)
 library(raster)
 library(shar) # devtools::install_github("r-spatialecology/shar")
 library(spatstat)
@@ -57,7 +57,7 @@ reconstructed_beech_living <- suppoRt::submit_to_cluster(fun = shar::reconstruct
                                                                       simplify = TRUE,
                                                                       verbose = FALSE),
                                                          seed = 42,
-                                                         n_jobs = length(n_random_hpc),
+                                                         n_jobs = n_random,
                                                          template = list(job_name = "beech_living_rec",
                                                                          queue = "medium",
                                                                          walltime = "01:00:00",
@@ -66,22 +66,22 @@ reconstructed_beech_living <- suppoRt::submit_to_cluster(fun = shar::reconstruct
                                                                          log_file = "log_beech_living_rec.log"))
 
 # add observed pattern
-reconstructed_beech_living[[length(n_random) + 1]] <- spatstat::unmark(beech_living)
+reconstructed_beech_living[[n_random + 1]] <- spatstat::unmark(beech_living)
 
 # add names to list
-names(reconstructed_beech_living) <- c(paste0("randomized_", seq_along(n_random)),
+names(reconstructed_beech_living) <- c(paste0("randomized_", 1:n_random),
                                        "observed")
 
 fitted_beech_living <- shar::fit_point_process(beech_living, n_random = n_random_large,
                                                process = "cluster")
 
 # save reconstructed pattern
-helpeR::save_rds(object = reconstructed_beech_living,
+suppoRt::save_rds(object = reconstructed_beech_living,
                            filename = "reconstructed_beech_living.rds",
                            path = paste0(getwd(), "/2_Real_world_data/3_Results"))
 
 # save reconstructed pattern
-helpeR::save_rds(object = fitted_beech_living,
+suppoRt::save_rds(object = fitted_beech_living,
                            filename = "fitted_beech_living.rds",
                            path = paste0(getwd(), "/2_Real_world_data/3_Results"))
 
@@ -101,7 +101,7 @@ reconstructed_beech_dead <- suppoRt::submit_to_cluster(fun = shar::reconstruct_p
                                                                     simplify = TRUE,
                                                                     verbose = FALSE),
                                                        seed = 42,
-                                                       n_jobs = length(n_random_hpc),
+                                                       n_jobs = n_random,
                                                        template = list(job_name = "beech_dead_rec",
                                                                        queue = "medium",
                                                                        walltime = "01:00:00",
@@ -110,21 +110,21 @@ reconstructed_beech_dead <- suppoRt::submit_to_cluster(fun = shar::reconstruct_p
                                                                        log_file = "log_beech_dead_rec.log"))
 
 # add observed pattern
-reconstructed_beech_dead[[length(n_random) + 1]] <- spatstat::unmark(beech_dead)
+reconstructed_beech_dead[[n_random + 1]] <- spatstat::unmark(beech_dead)
 
 # add names to list
-names(reconstructed_beech_dead) <- c(paste0("randomized_", seq_along(n_random)),
+names(reconstructed_beech_dead) <- c(paste0("randomized_", 1:n_random),
                                      "observed")
 
 fitted_beech_dead <- shar::fit_point_process(beech_dead, n_random = n_random_large,
                                              process = "cluster")
 
 # save reconstructed pattern
-helpeR::save_rds(object = reconstructed_beech_dead,
+suppoRt::save_rds(object = reconstructed_beech_dead,
                            filename = "reconstructed_beech_dead.rds",
                            path = paste0(getwd(), "/2_Real_world_data/3_Results"))
 
 # save reconstructed pattern
-helpeR::save_rds(object = fitted_beech_dead,
+suppoRt::save_rds(object = fitted_beech_dead,
                            filename = "fitted_beech_dead.rds",
                            path = paste0(getwd(), "/2_Real_world_data/3_Results"))
