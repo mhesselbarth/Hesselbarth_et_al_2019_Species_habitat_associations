@@ -83,7 +83,8 @@ strength_association_correct_ggplot <- ggplot(data = results) +
   labs(x = expression(paste("Association strength ", alpha)), y = "Correct detection rate") +
   guides(fill = guide_legend(ncol = 2, nrow = 2)) + 
   theme_classic(base_size = 12.5) + 
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom", 
+        legend.key.width = unit(12.5, "mm"))
 
 # plot wrong detections
 strength_association_false_ggplot <- ggplot(data = results) +
@@ -98,7 +99,8 @@ strength_association_false_ggplot <- ggplot(data = results) +
   labs(x = expression(paste("Association strength ", alpha)), y = "False detection rate") +
   guides(fill = guide_legend(ncol = 2, nrow = 2)) + 
   theme_classic(base_size = 12.5) + 
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom", 
+        legend.key.width = unit(12.5, "mm"))
 
 # plot together
 overall_ggplot <- ggplot(data = results) +
@@ -117,7 +119,8 @@ overall_ggplot <- ggplot(data = results) +
   guides(fill = guide_legend(ncol = 2, nrow = 2), 
          linetype = guide_legend(nrow = 2)) + 
   theme_classic(base_size = 12.5) + 
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom", 
+        legend.key.width = unit(12.5, "mm"))
 
 #### 4. Save plots ####
 
