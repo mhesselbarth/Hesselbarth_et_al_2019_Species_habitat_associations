@@ -120,7 +120,8 @@ overall_ggplot <- ggplot(data = results) +
          linetype = guide_legend(nrow = 2)) + 
   theme_classic(base_size = 12.5) + 
   theme(legend.position = "bottom", 
-        legend.key.width = unit(12.5, "mm"))
+        legend.key.width = unit(12.5, "mm"), 
+        text = element_text(family = "Calibri Light"))
 
 #### 4. Save plots ####
 
@@ -133,25 +134,32 @@ dpi <- 300
 overwrite <- FALSE
 
 # save plots
-suppoRt::save_ggplot(plot = strength_association_correct_ggplot, 
-                     path = "1_Simulation_study/4_Figures",
-                     filename = "simulation_study_correct.png",
-                     width = width, height = height, units = units,
-                     dpi = dpi,
-                     overwrite = overwrite)
-
-suppoRt::save_ggplot(plot = strength_association_false_ggplot, 
-                     path = "1_Simulation_study/4_Figures",
-                     filename = "simulation_study_false.png",
-                     width = width, height = height, units = units,
-                     dpi = dpi,
-                     overwrite = overwrite)
+# suppoRt::save_ggplot(plot = strength_association_correct_ggplot, 
+#                      path = "1_Simulation_study/4_Figures",
+#                      filename = "simulation_study_correct.png",
+#                      width = width, height = height, units = units,
+#                      dpi = dpi,
+#                      overwrite = overwrite)
+# 
+# suppoRt::save_ggplot(plot = strength_association_false_ggplot, 
+#                      path = "1_Simulation_study/4_Figures",
+#                      filename = "simulation_study_false.png",
+#                      width = width, height = height, units = units,
+#                      dpi = dpi,
+#                      overwrite = overwrite)
+# 
+# suppoRt::save_ggplot(plot = overall_ggplot, 
+#                      path = "1_Simulation_study/4_Figures",
+#                      filename = "overall_ggplot.png",
+#                      width = width, height = height, units = units,
+#                      dpi = dpi,
+#                      overwrite = overwrite)
 
 suppoRt::save_ggplot(plot = overall_ggplot, 
-                     path = "1_Simulation_study/4_Figures",
-                     filename = "overall_ggplot.png",
-                     width = width, height = height, units = units,
-                     dpi = dpi,
-                     overwrite = overwrite)
+                     path = "C:/Users/Maximilian/ownCloud/13_Disputation/Figures/",
+                     filename = "association_simstudy.png",
+                     width = 235, height = 135, units = "mm",
+                     dpi = 300,
+                     overwrite = FALSE)
 
 

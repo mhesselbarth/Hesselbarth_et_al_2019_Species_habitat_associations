@@ -50,13 +50,21 @@ plot_classified <- ggplot2::ggplot() +
   # ggplot2::facet_wrap(~ type) +
   ggplot2::coord_equal() + 
   ggplot2::scale_fill_viridis_d(name = "Habitat") + 
-  ggplot2::labs(x = "x coordinate", y = "y coordinate") +
-  ggplot2::theme_bw(base_size = 15)
+  # ggplot2::labs(x = "x coordinate", y = "y coordinate") +
+  ggplot2::theme_void(base_size = 15) + 
+  ggplot2::theme(legend.position = "bottom",
+                 text = element_text(family = "Calibri Light"))
 
-suppoRt::save_ggplot(plot = plot_classified, 
-                     filename = "plot_classified.png", 
-                     path = "2_Real_world_data/4_Figures", 
-                     dpi = 300, width = 210, height = 120, units = "mm")
+# suppoRt::save_ggplot(plot = plot_classified, 
+#                      filename = "plot_classified.png", 
+#                      path = "2_Real_world_data/4_Figures", 
+#                      dpi = 300, width = 210, height = 120, units = "mm")
+
+suppoRt::save_ggplot(plot = plot_classified,
+                     filename = "hainich_classified.png",
+                     path = "C:/Users/Maximilian/ownCloud/13_Disputation/Figures/",
+                     dpi = 300, width = 100, height = 100, units = "mm", 
+                     overwrite = T)
 
 #### Results classification
 
