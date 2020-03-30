@@ -64,7 +64,7 @@ suppoRt::save_ggplot(plot = plot_classified,
                      filename = "hainich_classified.png",
                      path = "C:/Users/Maximilian/ownCloud/13_Disputation/Figures/",
                      dpi = 300, width = 100, height = 100, units = "mm", 
-                     overwrite = T)
+                     overwrite = FALSE)
 
 #### Results classification
 

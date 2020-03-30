@@ -11,6 +11,7 @@
 
 # Packages #
 library(dplyr)
+library(extrafont)
 library(suppoRt) # devtools::install_github("mhesselbarth/suppoRt)
 library(shar)
 library(spatstat)
@@ -86,11 +87,13 @@ plot_method_comparison <- ggplot() +
   scale_fill_manual(name = "", values = c("#0D0887FF", "#CC4678FF")) + 
   labs(x = "r [m]", y = expression(italic("g(r)"))) +
   theme_classic(base_size = 12.5) +  
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom", 
+        text = element_text(family = "Calibri Light"))
 
 #### 4. Save result ####
 suppoRt::save_ggplot(plot = plot_method_comparison, 
-                     path = "3_Various/2_Figures",
                      filename = "gamma_vs_reconstruction.png",
-                     dpi = 300, width = 210, height = 297 * 1/3, units = "mm", 
-                     overwrite = overwrite)
+                     path = "C:/Users/Maximilian/ownCloud/13_Disputation/Figures/",
+                     dpi = 300, units = "mm",
+                     width = 225, height = 150, 
+                     overwrite = FALSE)

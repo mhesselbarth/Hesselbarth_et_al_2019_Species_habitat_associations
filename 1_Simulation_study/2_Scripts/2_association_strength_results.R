@@ -9,6 +9,7 @@
 #### Simulation study - Results ####
 
 # Packages #
+library(extrafont)
 library(shar)
 library(spatstat)
 library(suppoRt) # devtools::install_github("mhesselbarth/suppoRt)
@@ -75,6 +76,7 @@ strength_association_correct_ggplot <- ggplot(data = results) +
   geom_line(aes(x = variable, y = correct_mean, col = method, group = method), size = 1) +
   geom_ribbon(aes(x = variable, ymin = correct_lo, ymax = correct_hi, fill = method, group = method), alpha = 0.25) +
   geom_hline(yintercept = 0.5, linetype = 3, col = "grey", size = 0.75) + 
+  geom_vline(xintercept = 0.5, linetype = 3, col = "grey", size = 0.75) + 
   facet_wrap(~ species_type, nrow = 2, ncol = 2) + 
   scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.25)) +
   scale_x_continuous(limits = c(0.05, 1), breaks = seq(0, 1, 0.1)) +
@@ -84,13 +86,15 @@ strength_association_correct_ggplot <- ggplot(data = results) +
   guides(fill = guide_legend(ncol = 2, nrow = 2)) + 
   theme_classic(base_size = 12.5) + 
   theme(legend.position = "bottom", 
-        legend.key.width = unit(12.5, "mm"))
+        legend.key.width = unit(12.5, "mm"), 
+        text = element_text(family = "Calibri Light"))
 
 # plot wrong detections
 strength_association_false_ggplot <- ggplot(data = results) +
   geom_line(aes(x = variable, y = false_mean, col = method, group = method), size = 1) +
   geom_ribbon(aes(x = variable, ymin = false_lo, ymax = false_hi, fill = method, group = method), alpha = 0.25) +
   geom_hline(yintercept = 0.5, linetype = 3, col = "grey", size = 0.75) + 
+  geom_vline(xintercept = 0.5, linetype = 3, col = "grey", size = 0.75) + 
   facet_wrap(~ species_type, nrow = 2, ncol = 2) + 
   scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.25)) +
   scale_x_continuous(limits = c(0.05, 1), breaks = seq(0, 1, 0.1)) +
@@ -100,7 +104,8 @@ strength_association_false_ggplot <- ggplot(data = results) +
   guides(fill = guide_legend(ncol = 2, nrow = 2)) + 
   theme_classic(base_size = 12.5) + 
   theme(legend.position = "bottom", 
-        legend.key.width = unit(12.5, "mm"))
+        legend.key.width = unit(12.5, "mm"), 
+        text = element_text(family = "Calibri Light"))
 
 # plot together
 overall_ggplot <- ggplot(data = results) +
@@ -108,57 +113,50 @@ overall_ggplot <- ggplot(data = results) +
   geom_ribbon(aes(x = variable, ymin = false_lo, ymax = false_hi, fill = method, group = method), alpha = 0.25) +
   geom_line(aes(x = variable, y = correct_mean, col = method, group = method, linetype = "Correct"), size = 1) +
   geom_line(aes(x = variable, y = false_mean, col = method, group = method, linetype = "False"), size = 1) +
-  geom_hline(yintercept = 0.5, linetype = 3, col = "grey", size = 0.75) + 
-  facet_wrap(~ species_type, nrow = 2, ncol = 2) + 
+  geom_hline(yintercept = 0.5, linetype = 3, col = "grey", size = 0.75) +
+  geom_vline(xintercept = 0.5, linetype = 3, col = "grey", size = 0.75) + 
+  facet_wrap(~ species_type, nrow = 2, ncol = 2) +
   scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.25)) +
   scale_x_continuous(limits = c(0.05, 1), breaks = seq(0, 1, 0.1)) +
   scale_fill_viridis_d(name = "", option = "C") +
   scale_colour_viridis_d(name = "", option = "C") +
   scale_linetype_manual(name = "", values = c("Correct" = 1, "False" = 2)) +
   labs(x = expression(paste("Association strength ", alpha)), y = "Detection rate") +
-  guides(fill = guide_legend(ncol = 2, nrow = 2), 
-         linetype = guide_legend(nrow = 2)) + 
-  theme_classic(base_size = 12.5) + 
-  theme(legend.position = "bottom", 
-        legend.key.width = unit(12.5, "mm"), 
+  guides(fill = guide_legend(ncol = 2, nrow = 2),
+         linetype = guide_legend(nrow = 2)) +
+  theme_classic(base_size = 12.5) +
+  theme(legend.position = "bottom",
+        legend.key.width = unit(12.5, "mm"),
         text = element_text(family = "Calibri Light"))
 
 #### 4. Save plots ####
 
 # set parameters for plot
-width <- 210
-height <- 297 * 1/2
-units <- "mm"
-dpi <- 300
-
-overwrite <- FALSE
+# width <- 210
+# height <- 297 * 1/2
+# units <- "mm"
+# dpi <- 300
+# overwrite <- FALSE
 
 # save plots
-# suppoRt::save_ggplot(plot = strength_association_correct_ggplot, 
-#                      path = "1_Simulation_study/4_Figures",
-#                      filename = "simulation_study_correct.png",
-#                      width = width, height = height, units = units,
-#                      dpi = dpi,
-#                      overwrite = overwrite)
-# 
-# suppoRt::save_ggplot(plot = strength_association_false_ggplot, 
-#                      path = "1_Simulation_study/4_Figures",
-#                      filename = "simulation_study_false.png",
-#                      width = width, height = height, units = units,
-#                      dpi = dpi,
-#                      overwrite = overwrite)
-# 
-# suppoRt::save_ggplot(plot = overall_ggplot, 
-#                      path = "1_Simulation_study/4_Figures",
-#                      filename = "overall_ggplot.png",
-#                      width = width, height = height, units = units,
-#                      dpi = dpi,
-#                      overwrite = overwrite)
+suppoRt::save_ggplot(plot = strength_association_correct_ggplot,
+                     path = "C:/Users/Maximilian/ownCloud/13_Thesis_defense/Figures/",
+                     filename = "simulation_study_correct.png",
+                     width = 245, height = 165, units = "mm",
+                     dpi = 300,
+                     overwrite = FALSE)
+
+suppoRt::save_ggplot(plot = strength_association_false_ggplot,
+                     path = "C:/Users/Maximilian/ownCloud/13_Thesis_defense/Figures/",
+                     filename = "simulation_study_false.png",
+                     width = 245, height = 165, units = "mm",
+                     dpi = 300,
+                     overwrite = FALSE)
 
 suppoRt::save_ggplot(plot = overall_ggplot, 
-                     path = "C:/Users/Maximilian/ownCloud/13_Disputation/Figures/",
+                     path = "C:/Users/Maximilian/ownCloud/13_Thesis_defense/Figures/",
                      filename = "association_simstudy.png",
-                     width = 235, height = 135, units = "mm",
+                     width = 245, height = 165, units = "mm",
                      dpi = 300,
                      overwrite = FALSE)
 

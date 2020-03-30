@@ -330,13 +330,16 @@ mrt_model_species <- mvpart::mvpart(form = species_iv ~ acidity + light_conditio
                                       nitrogen + soil_depth + water_content_spring + 
                                       water_content_summer + water_content,
                                     data = environmental_data_df,
-                                    size = 4, 
+                                    size = 4,
+                                    # xv = "pick",
                                     xvmult = 1000, 
-                                    xval = 100)
+                                    xval = 100, 
+                                    pretty = FALSE, bars = FALSE, legend = FALSE)
 
 suppoRt::save_rds(object = mrt_model_species, 
                   filename = "mrt_model_species.rds", 
-                  path = "2_Real_world_data/3_Results/")
+                  path = "2_Real_world_data/3_Results/", 
+                  overwrite = FALSE)
 
 # mrt_model_size <- mvpart::mvpart(form = species_iv_size ~ acidity + light_conditions + 
 #                                    nitrogen + soil_depth + water_content_spring + 
@@ -402,4 +405,5 @@ landscapetools::show_landscape(raster::stack(classification_raster_list))
 
 suppoRt::save_rds(object = classification_raster_list,
                  path = "2_Real_world_data/3_Results",
-                 filename = "classification_raster_list.rds")
+                 filename = "classification_raster_list.rds", 
+                 overwrite = FALSE)
