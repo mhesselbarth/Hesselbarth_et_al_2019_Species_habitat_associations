@@ -11,7 +11,7 @@
 # Packages #
 library(shar)
 library(spatstat)
-library(suppoRt) # devtools::install_github("mhesselbarth/suppoRt)
+library(suppoRt) # devtools::install_github("mhesselbarth/suppoRt")
 library(tidyverse)
 
 # import results simulation study
@@ -32,10 +32,11 @@ names(results) <- stringr::str_sub(names_result, start = 1, end = -13)
 results <- purrr::map_dfr(results, function(current_result) {
   
   dplyr::mutate(current_result,
-                species_type = dplyr::case_when(species_code == 1 ~ "(a) CSR (positive association)",
-                species_code == 2 ~ "(b) Cluster process (positive association)",
-                species_code == 3 ~ "(c) CSR (negative association)",
-                species_code == 4 ~ "(d) Cluster process (negative association)")) %>%
+                species_type = dplyr::case_when(
+                  species_code == 1 ~ "(a) CSR (positive association)",
+                  species_code == 2 ~ "(b) Cluster process (positive association)",
+                  species_code == 3 ~ "(c) CSR (negative association)",
+                  species_code == 4 ~ "(d) Cluster process (negative association)")) %>%
     dplyr::group_by(species_type, variable) %>%
     dplyr::summarise(correct_mean = mean(correct),
                      correct_hi = mean(correct) + (stats::sd(correct, na.rm = TRUE) / sqrt(length(correct))),
@@ -43,8 +44,8 @@ results <- purrr::map_dfr(results, function(current_result) {
                      
                      false_mean = mean(false),
                      false_hi = mean(false) + (stats::sd(false, na.rm = TRUE) / sqrt(length(false))),
-                     false_lo = mean(false) - (stats::sd(false, na.rm = TRUE) / sqrt(length(false)))
-                     )
+                     false_lo = mean(false) - (stats::sd(false, na.rm = TRUE) / sqrt(length(false))),
+                     .groups = "keep")
   }, .id = "method")
 
 # Rename method for nicer plotting
@@ -153,5 +154,3 @@ suppoRt::save_ggplot(plot = overall_ggplot,
                      width = width, height = height, units = units,
                      dpi = dpi,
                      overwrite = overwrite)
-
-

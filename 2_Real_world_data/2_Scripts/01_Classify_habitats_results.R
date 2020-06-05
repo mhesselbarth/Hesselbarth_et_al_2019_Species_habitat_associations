@@ -51,7 +51,7 @@ plot_classified <- ggplot2::ggplot() +
   ggplot2::coord_equal() + 
   ggplot2::scale_fill_viridis_d(name = "Habitat") + 
   ggplot2::labs(x = "x coordinate", y = "y coordinate") +
-  ggplot2::theme_bw(base_size = 15)
+  ggplot2::theme_classic(base_size = 15)
 
 suppoRt::save_ggplot(plot = plot_classified, 
                      filename = "plot_classified.png", 

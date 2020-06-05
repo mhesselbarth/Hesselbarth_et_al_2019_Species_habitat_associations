@@ -10,7 +10,7 @@
 
 # Load packages #
 
-library(suppoRt) # devtools::install_github("mhesselbarth/suppoRt)
+library(suppoRt) # devtools::install_github("mhesselbarth/suppoRt")
 library(raster)
 library(shar) # devtools::install_github("r-spatialecology/shar")
 library(spatstat)
@@ -38,7 +38,6 @@ beech_medium <- spatstat::unmark(spatstat::subset.ppp(beech, dbh_group_07 == "me
 
 beech_large <- spatstat::unmark(spatstat::subset.ppp(beech, dbh_group_07 == "large"))
 
-
 #### import environmental data ####
 classification_raster_list <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/classification_raster_list.rds"))
 
@@ -49,13 +48,13 @@ random_habitats_species <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3
 
 # import reconstructed pattern
 reconstructed_beech_small <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/reconstructed_beech_small.rds"))
-reconstructed_beech_small <- create_random_pat(reconstructed_beech_small, method = "reconstruct_pattern_cluster()")
+# reconstructed_beech_small <- create_random_pat(reconstructed_beech_small, method = "reconstruct_pattern_cluster()")
 
 reconstructed_beech_medium <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/reconstructed_beech_medium.rds"))
-reconstructed_beech_medium <- create_random_pat(reconstructed_beech_medium, method = "reconstruct_pattern_cluster()")
+# reconstructed_beech_medium <- create_random_pat(reconstructed_beech_medium, method = "reconstruct_pattern_cluster()")
 
 reconstructed_beech_large <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/reconstructed_beech_large.rds"))
-reconstructed_beech_large <- create_random_pat(reconstructed_beech_large, method = "reconstruct_pattern_cluster()")
+# reconstructed_beech_large <- create_random_pat(reconstructed_beech_large, method = "reconstruct_pattern_cluster()")
 
 # import fitted pattern
 fitted_beech_small <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/fitted_beech_small.rds"))

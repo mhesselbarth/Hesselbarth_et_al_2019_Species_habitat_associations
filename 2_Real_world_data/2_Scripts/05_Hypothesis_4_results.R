@@ -10,7 +10,7 @@
 
 # Load packages #
 
-library(suppoRt) # devtools::install_github("mhesselbarth/suppoRt)
+library(suppoRt) # devtools::install_github("mhesselbarth/suppoRt")
 library(raster)
 library(shar) # devtools::install_github("r-spatialecology/shar")
 library(spatstat)
@@ -40,10 +40,10 @@ random_habitats_species <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3
 
 # import reconstructed patterns
 reconstructed_beech_living <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/reconstructed_beech_living.rds"))
-reconstructed_beech_living <- create_random_pat(reconstructed_beech_living, method = "reconstruct_pattern_cluster()")
+# reconstructed_beech_living <- create_random_pat(reconstructed_beech_living, method = "reconstruct_pattern_cluster()")
 
 reconstructed_beech_dead <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/reconstructed_beech_dead.rds"))
-reconstructed_beech_dead <- create_random_pat(reconstructed_beech_dead, method = "reconstruct_pattern_cluster()")
+# reconstructed_beech_dead <- create_random_pat(reconstructed_beech_dead, method = "reconstruct_pattern_cluster()")
 
 # import fitted patterns
 fitted_beech_living <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/fitted_beech_living.rds"))
