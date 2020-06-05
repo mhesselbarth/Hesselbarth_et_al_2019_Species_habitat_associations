@@ -81,7 +81,8 @@
 
 simulate_torus_trans_association_strength <- function(simulation_habitat,
                                                       simulation_pattern,
-                                                      association_strength) {
+                                                      association_strength, 
+                                                      n_random) {
   
   # names include association type of species
   names_species <- as.character(unique(simulation_pattern$marks$species))
@@ -89,6 +90,11 @@ simulate_torus_trans_association_strength <- function(simulation_habitat,
   # randomize raster using torus translation
   random_habitats <- shar::translate_raster(raster = simulation_habitat, 
                                             verbose = FALSE)
+  
+  # sample n_random raster
+  subset_id <- sample(x = seq_along(random_habitats$randomized), size = n_random)
+  
+  random_habitats$randomized <- random_habitats$randomized[subset_id]
   
   # Species 1
   # get habitat associations

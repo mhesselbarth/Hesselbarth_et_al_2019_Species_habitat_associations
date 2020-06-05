@@ -109,21 +109,21 @@ calc_energy_helper <- function(pattern_randomized, pattern_observed,
   return(result)
 }
 
-create_random_pat <- function(x, method) {
-  
-  randomized <- x[names(x) != "observed"]
-  observed <- x$observed
-  
-  # combine to one list
-  random_pat <- list(randomized = randomized,
-                     observed = observed,
-                     method = method,
-                     energy_df = "NA",
-                     stop_criterion = "NA",
-                     iterations = NA)
-  
-  # set class of result
-  class(random_pat) <- "rd_pat"
-  
-  return(random_pat)
-}
+# create_random_pat <- function(x, method) {
+# 
+#   randomized <- x[names(x) != "observed"]
+#   observed <- x$observed
+# 
+#   # combine to one list
+#   random_pat <- list(randomized = randomized,
+#                      observed = observed,
+#                      method = method,
+#                      energy_df = "NA",
+#                      stop_criterion = "NA",
+#                      iterations = NA)
+# 
+#   # set class of result
+#   class(random_pat) <- "rd_pat"
+# 
+#   return(random_pat)
+# }

@@ -158,6 +158,7 @@ torus_translation <- suppoRt::submit_to_cluster(fun = simulate_torus_trans_assoc
                                                 simulation_habitat = input_data$habitats,
                                                 simulation_pattern = input_data$patterns,
                                                 association_strength = rep(association_strength, each = simulation_runs),
+                                                const = list(n_random = n_random),
                                                 export = list(detect_habitat_associations = detect_habitat_associations),
                                                 seed = 42,
                                                 n_jobs = length(input_data$habitats),

@@ -44,19 +44,19 @@ random_habitats_species <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3
 
 # import reconstructed pattern
 reconstructed_beech <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/reconstructed_beech.rds"))
-reconstructed_beech <- create_random_pat(x = reconstructed_beech, method = "reconstruct_pattern_cluster()")
+# reconstructed_beech <- create_random_pat(x = reconstructed_beech, method = "reconstruct_pattern_cluster()")
 
 reconstructed_ash <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/reconstructed_ash.rds"))
-reconstructed_ash <- create_random_pat(x = reconstructed_ash, method = "reconstruct_pattern_cluster()")
+# reconstructed_ash <- create_random_pat(x = reconstructed_ash, method = "reconstruct_pattern_cluster()")
 
 reconstructed_hornbeam <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/reconstructed_hornbeam.rds"))
-reconstructed_hornbeam <- create_random_pat(x = reconstructed_hornbeam, method = "reconstruct_pattern_cluster()")
+# reconstructed_hornbeam <- create_random_pat(x = reconstructed_hornbeam, method = "reconstruct_pattern_cluster()")
 
 reconstructed_sycamore <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/reconstructed_sycamore.rds"))
-reconstructed_sycamore <- create_random_pat(x = reconstructed_sycamore, method = "reconstruct_pattern_cluster()")
+# reconstructed_sycamore <- create_random_pat(x = reconstructed_sycamore, method = "reconstruct_pattern_cluster()")
 
 reconstructed_others <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/reconstructed_others.rds"))
-reconstructed_others <- create_random_pat(x = reconstructed_others, method = "reconstruct_pattern_cluster()")
+# reconstructed_others <- create_random_pat(x = reconstructed_others, method = "reconstruct_pattern_cluster()")
 
 # import fitted pattern
 fitted_beech <- readr::read_rds(paste0(getwd(), "/2_Real_world_data/3_Results/fitted_beech.rds"))

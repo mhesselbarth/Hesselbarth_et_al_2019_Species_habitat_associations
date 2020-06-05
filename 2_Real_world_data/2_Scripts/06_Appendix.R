@@ -10,7 +10,7 @@
 
 # Load packages #
 
-library(suppoRt) # devtools::install_github("mhesselbarth/suppoRt)
+library(suppoRt) # devtools::install_github("mhesselbarth/suppoRt")
 library(onpoint) # devtools::install_github("mhesselbarth/onpoint")
 library(raster)
 library(shar) # devtools::install_github("r-spatialecology/shar")
@@ -84,11 +84,11 @@ species_abundance <- ggplot2::ggplot(data = dplyr::filter(abundance,
                      position = position_dodge(width = 1), vjust = -1) +
   ggplot2::scale_fill_viridis_d(name = "", labels = c("n_rel" = "Number of stems", "ba_rel" = "Basal area")) + 
   ggplot2::scale_y_continuous(breaks = seq(from = 0, to = 100, by = 20), limits = c(0, 100)) + 
-  ggplot2::scale_x_discrete(labels = c("beech" = "F. sylvatica", "ash" = "F. exelcsior ", 
-                                       "hornbeam" = "C. betulus ", "sycamore" = "A. pseudoplatanus ", 
+  ggplot2::scale_x_discrete(labels = c("beech" = "F. sylvatica", "ash" = "F. excelsior", 
+                                       "hornbeam" = "C. betulus", "sycamore" = "A. pseudoplatanus", 
                                        "others" = "others")) +
   ggplot2::labs(x = "Species", y = "Relative value [%]") + 
-  ggplot2::theme_bw(base_size = base_size) + 
+  ggplot2::theme_classic(base_size = base_size) + 
   ggplot2::theme(legend.position = "bottom")
 
 suppoRt::save_ggplot(plot = species_abundance, 
@@ -120,7 +120,7 @@ dbh_distribution <- ggplot2::ggplot(data = dbh) +
   ggplot2::scale_x_continuous(breaks = seq(from = 0, to = max(dbh$smaller_than), by = 10), 
                               limits = c(0, 100)) + 
   ggplot2::labs(x = "dbh [cm]", y = "Count") + 
-  ggplot2::theme_bw(base_size = base_size) + 
+  ggplot2::theme_classic(base_size = base_size) + 
   ggplot2::theme(legend.position = "bottom")
 
 suppoRt::save_ggplot(plot = dbh_distribution, 
@@ -201,35 +201,49 @@ plot_all <- onpoint::plot_quantums(envelope_all, title = "All species",
                                    ylab = expression(italic("g(r)")), xlab = "r [m]", 
                                    legend_position = "none",
                                    quantum_position = 0, 
-                                   base_size = base_size)
+                                   base_size = base_size) + 
+  theme_classic() + 
+  theme(legend.position = "none")
 
 plot_beech <- onpoint::plot_quantums(envelope_beech, title = expression(italic("F. sylvatica")), 
                                      legend_position = "none", 
                                      ylab = expression(italic("g(r)")), xlab = "r [m]", 
-                                     base_size = base_size)
+                                     base_size = base_size) + 
+  theme_classic() + 
+  theme(legend.position = "none")
 
 plot_ash <- onpoint::plot_quantums(envelope_ash, title = expression(italic("F. excelsior")), 
                                    legend_position = "none", 
                                    ylab = expression(italic("g(r)")), xlab = "r [m]", 
-                                   base_size = base_size)
+                                   base_size = base_size) + 
+  theme_classic() + 
+  theme(legend.position = "none")
 
 plot_hornbeam <- onpoint::plot_quantums(envelope_hornbeam, title = expression(italic("C. betulus")), 
                                         legend_position = "none", 
                                         ylab = expression(italic("g(r)")), xlab = "r [m]", 
-                                        base_size = base_size)
+                                        base_size = base_size) + 
+  theme_classic() + 
+  theme(legend.position = "none")
 
 plot_sycamore <- onpoint::plot_quantums(envelope_sycamore, title = expression(italic("A. pseudoplatanus")), 
                                         legend_position = "none", 
                                         ylab = expression(italic("g(r)")), xlab = "r [m]", 
-                                        base_size = base_size)
+                                        base_size = base_size) + 
+  theme_classic() + 
+  theme(legend.position = "none")
 
 plot_others <- onpoint::plot_quantums(envelope_others, title = "others", 
                                       legend_position = "none", 
                                       ylab = expression(italic("g(r)")), xlab = "r [m]", 
-                                      base_size = base_size)
+                                      base_size = base_size) + 
+  theme_classic() + 
+  theme(legend.position = "none")
 
 # combine to one large plot
-plot_overall <- plot_all + {plot_beech + plot_ash + plot_hornbeam + plot_sycamore + plot_others} + plot_layout(nrow = 2)
+plot_overall <- plot_all + 
+  {plot_beech + plot_ash + plot_hornbeam + plot_sycamore + plot_others} +
+  plot_layout(nrow = 2)
 
 # save plot
 suppoRt::save_ggplot(plot = plot_overall, filename = "pcf_overall.png", 
@@ -237,7 +251,7 @@ suppoRt::save_ggplot(plot = plot_overall, filename = "pcf_overall.png",
                      width = width, height = height * 3/4, units = "mm", 
                      dpi = dpi, overwrite = overwrite)
 
-#### Random labeling 
+#### Random labeling ####
 # beech_full <- spatstat::subset.ppp(pattern_2007, species == "beech", select = type)
 # 
 # beech_rl <- spatstat::rlabel(beech_full, nsim = nsim)
@@ -289,25 +303,33 @@ plot_beech_dl <- onpoint::plot_quantums(envelope_beech_dl, title = "",
                                         ylab = expression(italic(paste(rho["dead,living"], "(r)"))), xlab = "r [m]", 
                                         labels = c("Positive correlation", "No correlation", "Negative correlation"), 
                                         legend_position = "none",
-                                        base_size = base_size)
+                                        base_size = base_size) + 
+  theme_classic() + 
+  theme(legend.position = "none")
 
 plot_beech_ld <- onpoint::plot_quantums(envelope_beech_ld, title = "",
                                         ylab = expression(italic(paste(rho["living,dead"], "(r)"))), xlab = "r [m]", 
                                         labels = c("Positive correlation", "No correlation", "Negative correlation"), 
                                         legend_position = "none",
-                                        base_size = base_size)
+                                        base_size = base_size) + 
+  theme_classic() + 
+  theme(legend.position = "none")
 
 plot_beech_dd <- onpoint::plot_quantums(envelope_beech_dd, title = "",
                                         ylab = expression(italic(paste(rho["dead,dead"], "(r)"))), xlab = "r [m]", 
                                         labels = c("Positive correlation", "No correlation", "Negative correlation"), 
                                         legend_position = "none",
-                                        base_size = base_size)
+                                        base_size = base_size) + 
+  theme_classic() + 
+  theme(legend.position = "none")
 
 plot_beech_ll <- onpoint::plot_quantums(envelope_beech_ll, title = "",
                                         ylab = expression(italic(paste(rho["living,living"], "(r)"))), xlab = "r [m]", 
                                         labels = c("Positive correlation", "No correlation", "Negative correlation"), 
                                         legend_position = "none",
-                                        base_size = base_size)
+                                        base_size = base_size) + 
+  theme_classic() + 
+  theme(legend.position = "none")
 
 plot_labelling_overall <- plot_beech_ll + plot_beech_ld + 
   plot_beech_dl + plot_beech_dd + plot_layout(nrow = 2, ncol = 2)
@@ -316,3 +338,100 @@ suppoRt::save_ggplot(plot = plot_labelling_overall, filename = "plot_labelling_o
                     path = "2_Real_world_data/4_Figures/Appendix/",
                     dpi = dpi, width = width, height = height * 1/2, units = "mm", 
                     overwrite = overwrite)
+
+
+#### Point pattern ####
+
+pattern_2007_living_df <- as.data.frame(pattern_2007_living) %>% 
+  dplyr::mutate(species = factor(species, 
+                                 levels = c("beech", "ash", "hornbeam", 
+                                            "sycamore", "others"), 
+                                 labels = c("beech" = "F. sylvatica", "ash" = "F. excelsior", 
+                                            "hornbeam" = "C. betulus", "sycamore" = "A. pseudoplatanus", 
+                                            "others" = "others")))
+
+pattern_2007_living_df$species %>% table()
+
+point_pattern_beech <- ggplot2::ggplot(data = dplyr::filter(pattern_2007_living_df, 
+                                     species == "F. sylvatica")) + 
+  ggplot2::geom_point(ggplot2::aes(x = x, y = y), pch = 1) + 
+  ggplot2::geom_polygon(data = as.data.frame(pattern_2007_living$window),
+                        ggplot2::aes(x = x, y = y),
+                        fill = NA, col = "black", size = 1) +
+  ggplot2::facet_wrap(~ species, ncol = 3) +
+  ggplot2::coord_equal() + 
+  ggplot2::theme_classic(base_size = base_size) + 
+  ggplot2::theme(legend.position = "bottom", 
+                 axis.text = element_blank(), axis.ticks = element_blank(), 
+                 axis.title = element_blank())
+
+point_pattern_ash <- ggplot2::ggplot(data = dplyr::filter(pattern_2007_living_df, 
+                                                            species == "F. excelsior")) + 
+  ggplot2::geom_point(ggplot2::aes(x = x, y = y), pch = 1) + 
+  ggplot2::geom_polygon(data = as.data.frame(pattern_2007_living$window),
+                        ggplot2::aes(x = x, y = y),
+                        fill = NA, col = "black", size = 1) +
+  ggplot2::facet_wrap(~ species, ncol = 3) +
+  ggplot2::coord_equal() + 
+  ggplot2::theme_classic(base_size = base_size) + 
+  ggplot2::theme(legend.position = "bottom", 
+                 axis.text = element_blank(), axis.ticks = element_blank(), 
+                 axis.title = element_blank())
+
+point_pattern_hornbeam <- ggplot2::ggplot(data = dplyr::filter(pattern_2007_living_df, 
+                                                            species == "C. betulus")) + 
+  ggplot2::geom_point(ggplot2::aes(x = x, y = y), pch = 1) + 
+  ggplot2::geom_polygon(data = as.data.frame(pattern_2007_living$window),
+                        ggplot2::aes(x = x, y = y),
+                        fill = NA, col = "black", size = 1) +
+  ggplot2::facet_wrap(~ species, ncol = 3) +
+  ggplot2::coord_equal() + 
+  ggplot2::theme_classic(base_size = base_size) + 
+  ggplot2::theme(legend.position = "bottom", 
+                 axis.text = element_blank(), axis.ticks = element_blank(), 
+                 axis.title = element_blank())
+
+point_pattern_sycamore <- ggplot2::ggplot(data = dplyr::filter(pattern_2007_living_df, 
+                                                            species == "A. pseudoplatanus")) + 
+  ggplot2::geom_point(ggplot2::aes(x = x, y = y), pch = 1) + 
+  ggplot2::geom_polygon(data = as.data.frame(pattern_2007_living$window),
+                        ggplot2::aes(x = x, y = y),
+                        fill = NA, col = "black", size = 1) +
+  ggplot2::facet_wrap(~ species, ncol = 3) +
+  ggplot2::coord_equal() + 
+  ggplot2::theme_classic(base_size = base_size) + 
+  ggplot2::theme(legend.position = "bottom", 
+                 axis.text = element_blank(), axis.ticks = element_blank(), 
+                 axis.title = element_blank())
+
+point_pattern_others <- ggplot2::ggplot(data = dplyr::filter(pattern_2007_living_df, 
+                                                            species == "others")) + 
+  ggplot2::geom_point(ggplot2::aes(x = x, y = y), pch = 1) + 
+  ggplot2::geom_polygon(data = as.data.frame(pattern_2007_living$window),
+                        ggplot2::aes(x = x, y = y),
+                        fill = NA, col = "black", size = 1) +
+  ggplot2::facet_wrap(~ species, ncol = 3) +
+  ggplot2::coord_equal() + 
+  ggplot2::theme_classic(base_size = base_size) + 
+  ggplot2::theme(legend.position = "bottom", 
+                 axis.text = element_blank(), axis.ticks = element_blank(), 
+                 axis.title = element_blank())
+
+point_pattern_overall <- point_pattern_beech + 
+  {point_pattern_ash + point_pattern_hornbeam + point_pattern_sycamore + point_pattern_others}
+
+# point_pattern <- ggplot2::ggplot(data = pattern_2007_living_df) + 
+#   ggplot2::geom_point(ggplot2::aes(x = x, y = y), pch = 1, size = 0.75) + 
+#   ggplot2::geom_polygon(data = as.data.frame(pattern_2007_living$window),
+#                         ggplot2::aes(x = x, y = y),
+#                         fill = NA, col = "black", size = 1) +
+#   ggplot2::facet_wrap(~ species, ncol = 3) +
+#   ggplot2::coord_equal() + 
+#   ggplot2::theme_classic(base_size = base_size) + 
+#   ggplot2::theme(legend.position = "bottom", 
+#                  axis.text = element_blank(), axis.ticks = element_blank())
+
+suppoRt::save_ggplot(plot = point_pattern_overall, filename = "point_pattern.png", 
+                     path = "2_Real_world_data/4_Figures/Appendix/", 
+                     width = width, height = height * 1/2, units = "mm", 
+                     dpi = dpi, overwrite = overwrite)

@@ -35,7 +35,7 @@ beech_dead <- spatstat::unmark(spatstat::subset.ppp(beech, type == "dead"))
 # set parameters
 n_random <- 199 # 199
 n_random_hpc <- rep(x = 1, times = n_random) # if HPC is used
-n_random_large <- 4999
+# n_random_large <- 4999
 
 max_runs <- 20000 # 20000
 
@@ -65,14 +65,14 @@ reconstructed_beech_living <- suppoRt::submit_to_cluster(fun = shar::reconstruct
                                                                          processes = 1,
                                                                          log_file = "log_beech_living_rec.log"))
 
-# add observed pattern
-reconstructed_beech_living[[n_random + 1]] <- spatstat::unmark(beech_living)
+# # add observed pattern
+# reconstructed_beech_living[[n_random + 1]] <- spatstat::unmark(beech_living)
+# 
+# # add names to list
+# names(reconstructed_beech_living) <- c(paste0("randomized_", 1:n_random),
+#                                        "observed")
 
-# add names to list
-names(reconstructed_beech_living) <- c(paste0("randomized_", 1:n_random),
-                                       "observed")
-
-fitted_beech_living <- shar::fit_point_process(beech_living, n_random = n_random_large,
+fitted_beech_living <- shar::fit_point_process(beech_living, n_random = n_random,
                                                process = "cluster")
 
 # save reconstructed pattern
@@ -109,14 +109,14 @@ reconstructed_beech_dead <- suppoRt::submit_to_cluster(fun = shar::reconstruct_p
                                                                        processes = 1,
                                                                        log_file = "log_beech_dead_rec.log"))
 
-# add observed pattern
-reconstructed_beech_dead[[n_random + 1]] <- spatstat::unmark(beech_dead)
+# # add observed pattern
+# reconstructed_beech_dead[[n_random + 1]] <- spatstat::unmark(beech_dead)
+# 
+# # add names to list
+# names(reconstructed_beech_dead) <- c(paste0("randomized_", 1:n_random),
+#                                      "observed")
 
-# add names to list
-names(reconstructed_beech_dead) <- c(paste0("randomized_", 1:n_random),
-                                     "observed")
-
-fitted_beech_dead <- shar::fit_point_process(beech_dead, n_random = n_random_large,
+fitted_beech_dead <- shar::fit_point_process(beech_dead, n_random = n_random,
                                              process = "cluster")
 
 # save reconstructed pattern

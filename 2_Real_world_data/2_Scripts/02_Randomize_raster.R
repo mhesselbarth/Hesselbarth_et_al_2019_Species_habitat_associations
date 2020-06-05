@@ -9,7 +9,7 @@
 #### Real-world data - Classify habitats using MRT ####
 
 #### Load packages ####
-library(suppoRt) # devtools::install_github("mhesselbarth/suppoRt)
+library(suppoRt) # devtools::install_github("mhesselbarth/suppoRt")
 library(raster)
 library(shar)
 library(tidyverse)
@@ -21,7 +21,7 @@ classification_raster_list <- readr::read_rds("2_Real_world_data/3_Results/class
 classification_raster_species <- classification_raster_list$species
 
 random_habitats_species <- shar::randomize_raster(raster = classification_raster_species, 
-                                                  n_random = 4999)
+                                                  n_random = 199)
 
 shar::plot_randomized_raster(random_habitats_species, col = viridis::viridis(n = 4))
 

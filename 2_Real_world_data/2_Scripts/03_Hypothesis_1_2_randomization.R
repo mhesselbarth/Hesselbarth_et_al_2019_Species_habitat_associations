@@ -11,7 +11,7 @@
 # Load packages #
 
 library(clustermq)
-library(suppoRt) # devtools::install_github("mhesselbarth/suppoRt)
+library(suppoRt) # devtools::install_github("mhesselbarth/suppoRt")
 library(raster)
 library(shar) # devtools::install_github("r-spatialecology/shar")
 library(spatstat)
@@ -39,7 +39,7 @@ others <- spatstat::unmark(subset.ppp(pattern_2007_living, species == "others"))
 # set parameters
 n_random <- 199 # 199
 n_random_hpc <- rep(x = 1, times = n_random) # if HPC is used
-n_random_large <- 4999
+# n_random_large <- 4999
 
 max_runs <- 20000 # 20000
 
@@ -70,15 +70,15 @@ reconstructed_beech <- suppoRt::submit_to_cluster(fun = shar::reconstruct_patter
                                                                   processes = 1,
                                                                   log_file = "log_beech_rec.log"))
 
-# add observed pattern
-reconstructed_beech[[n_random + 1]] <- beech
-
-# add names to list
-names(reconstructed_beech) <- c(paste0("randomized_", 1:n_random),
-                                "observed")
+# # add observed pattern
+# reconstructed_beech[[n_random + 1]] <- beech
+# 
+# # add names to list
+# names(reconstructed_beech) <- c(paste0("randomized_", 1:n_random),
+#                                 "observed")
 
 # fit point process
-fitted_beech <- shar::fit_point_process(beech, n_random = n_random_large,
+fitted_beech <- shar::fit_point_process(beech, n_random = n_random,
                                         process = "cluster")
 
 # save reconstructed pattern
@@ -115,15 +115,15 @@ reconstructed_ash <- suppoRt::submit_to_cluster(fun = reconstruct_pattern_cluste
                                                                 processes = 1,
                                                                 log_file = "log_ash_rec.log"))
 
-# add observed pattern
-reconstructed_ash[[n_random + 1]] <- ash
-
-# add names to list
-names(reconstructed_ash) <- c(paste0("randomized_", 1:n_random),
-                              "observed")
+# # add observed pattern
+# reconstructed_ash[[n_random + 1]] <- ash
+# 
+# # add names to list
+# names(reconstructed_ash) <- c(paste0("randomized_", 1:n_random),
+#                               "observed")
 
 # fit point process
-fitted_ash <- shar::fit_point_process(ash, n_random = n_random_large,
+fitted_ash <- shar::fit_point_process(ash, n_random = n_random,
                                       process = "cluster")
 
 # save reconstructed pattern
@@ -160,15 +160,15 @@ reconstructed_hornbeam <- suppoRt::submit_to_cluster(fun = shar::reconstruct_pat
                                                                      processes = 1,
                                                                      log_file = "log_hornbeam_rec.log"))
 
-# add observed pattern
-reconstructed_hornbeam[[n_random + 1]] <- hornbeam
-
-# add names to list
-names(reconstructed_hornbeam) <- c(paste0("randomized_", 1:n_random),
-                                   "observed")
+# # add observed pattern
+# reconstructed_hornbeam[[n_random + 1]] <- hornbeam
+# 
+# # add names to list
+# names(reconstructed_hornbeam) <- c(paste0("randomized_", 1:n_random),
+#                                    "observed")
 
 # fit point process
-fitted_hornbeam <- shar::fit_point_process(hornbeam, n_random = n_random_large,
+fitted_hornbeam <- shar::fit_point_process(hornbeam, n_random = n_random,
                                            process = "cluster")
 
 # save reconstructed pattern
@@ -205,15 +205,15 @@ reconstructed_sycamore <- suppoRt::submit_to_cluster(fun = shar::reconstruct_pat
                                                                      processes = 1,
                                                                      log_file = "log_sycamore_rec.log"))
 
-# add observed pattern
-reconstructed_sycamore[[n_random + 1]] <- sycamore
-
-# add names to list
-names(reconstructed_sycamore) <- c(paste0("randomized_", 1:n_random),
-                                   "observed")
+# # add observed pattern
+# reconstructed_sycamore[[n_random + 1]] <- sycamore
+# 
+# # add names to list
+# names(reconstructed_sycamore) <- c(paste0("randomized_", 1:n_random),
+#                                    "observed")
 
 # fit point process
-fitted_sycamore <- shar::fit_point_process(sycamore, n_random = n_random_large,
+fitted_sycamore <- shar::fit_point_process(sycamore, n_random = n_random,
                                            process = "cluster")
 
 # save reconstructed pattern
@@ -250,15 +250,15 @@ reconstructed_others <- suppoRt::submit_to_cluster(fun = shar::reconstruct_patte
                                                                    processes = 1,
                                                                    log_file = "log_others_rec.log"))
 
-# add observed pattern
-reconstructed_others[[n_random + 1]] <- others
-
-# add names to list
-names(reconstructed_others) <- c(paste0("randomized_", 1:n_random),
-                                 "observed")
+# # add observed pattern
+# reconstructed_others[[n_random + 1]] <- others
+# 
+# # add names to list
+# names(reconstructed_others) <- c(paste0("randomized_", 1:n_random),
+#                                  "observed")
 
 # fit point process
-fitted_others <- shar::fit_point_process(others, n_random = n_random_large,
+fitted_others <- shar::fit_point_process(others, n_random = n_random,
                                          process = "cluster")
 
 # save reconstructed pattern
